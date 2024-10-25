@@ -19,7 +19,7 @@ CREATE TABLE Place (
 	OpeningTime VARCHAR2(8),
 	ClosingTime VARCHAR2(8),
 	Description VARCHAR(255),
-	StopID INT, NOT NULL
+	StopID INT NOT NULL,
 	PRIMARY KEY (Name, Address),
 	FOREIGN KEY (StopID) REFERENCES TransitStop(StopID) ON DELETE CASCADE,
 	CHECK (ClosingTime > OpeningTime)
