@@ -32,4 +32,42 @@ INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, 
 VALUES ('Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R 4J1', '(604) 654-3210', '09:00:00', '19:00:00', 'A long suspension bridge offering forest views.', 5);
 ```
 
+### Task Breakdown
+Overview:
+Our timeline has four major parts: (1) Writing SQL queries (2) Creating an API to integrate backend (queries) with front end (REACT app). (3) Create GUI and integrate API into it (4) Debugging/Testing/Bugger space
+
+The task breakdown is as follows:
+
+Parsa:
+(1) 2.1.1 INSERT
+(2) 2.1.6 Join
+(3) 2.1.7 Aggregation with GROUP BY
+
+Ethan:
+(1) 2.1.8 Aggregation with HAVING
+(2) 2.1.5 Projection
+(3) 2.1.4 Selection
+
+Matthew:
+(1) 2.1.3 DELETE
+(2) 2.1.2 UPDATE
+(3) 2.1.9 Nested aggregation with GROUP BY
+
+
+GROUP TASKS:
+Implementing the API to connect our backend (our database) with our front end (GUI). Each group member will specifically develop the necessary API calls for their above QUERIES
+
+
+GUI: As we approach the building GUI phase, we will have a better understanding of specific tasks. For now, we have left it so that each team member will be working on it together
+
+
+### Deadlines:
+
+Novemeber 5th: Group members have finished their individual queries and tests them 
+
+November 15: Group members have created the necessary API parts for their above written queries
+
+Novemeber 22: GUI and API integration are finished 
+
+The remaining time until the deadline is left as a buffer period, and a period to continue testing.
 ### Enjoy!
