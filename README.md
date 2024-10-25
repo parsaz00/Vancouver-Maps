@@ -108,4 +108,11 @@ November 15: Group members have created the necessary API parts for their above 
 Novemeber 22: GUI and API integration are finished 
 
 The remaining time until the deadline is left as a buffer period, and a period to continue testing.
+
+## Potential Challenges:
+1. Knowing the tech stack: Potential bottleneck for task completition if group memeber does not have a appropriate understand of the tech stack to be used: JS, OracleDB and REACT. To counterattack this, group has comitted to finish tutorials 5, 6 and 7 as soon as possible, to leave buffer time to get extra practice and help as needed.
+2. Midterms and other deadlines: The team has left adequate time for each task and has committed to working on the project a minimum of 30 minutes a day starting from October 28th. This will ensure that each team member is making progress each day. Further we have allocated a 1 week buffer before the deadline to account for extraneous circumstances that may impede progress
+3. Group member accountability. To address that all members are doing an equal amount of work, we will be meeting three times a week for a "standup" following traditional scrum methodologies where we will highlight what we have worked on since the last meeting, what we are currently working on, and any roadbloacks that we are facing.
+
+
 ### Enjoy!
