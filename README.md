@@ -32,14 +32,14 @@ INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, 
 VALUES ('Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R 4J1', '(604) 654-3210', '09:00:00', '19:00:00', 'A long suspension bridge offering forest views.', 5);
 ```
 
-## Task Breakdown
+# Task Breakdown
 Overview:
 Our timeline has four major parts: (1) Writing SQL queries (2) Creating an API to integrate backend (queries) with front end (REACT app). (3) Create GUI and integrate API into it (4) Debugging/Testing/Bugger space
 
 The task breakdown is as follows:
 
 Timeline:
-# Queries done by November 5th (Broken down below):
+## Queries done by November 5th (Broken down below):
 
 Parsa:
 (1) 2.1.1 INSERT
@@ -57,7 +57,7 @@ Matthew:
 (3) 2.1.9 Nested aggregation with GROUP BY
 
 
-# API done by November 15th 
+## API done by November 15th 
 This task will require colloboration as needed. For individual tasks:
 Parsa implement HTTPS protocols for the following:
 (1) 2.1.1 INSERT
@@ -74,11 +74,11 @@ Matthew implement HTTPS protocols for the following:
 (2) 2.1.2 UPDATE
 (3) 2.1.9 Nested aggregation with GROUP BY
 
-# Group: Once individual parts are finished, meet and test integration of entire API together. 
+## Group: Once individual parts are finished, meet and test integration of entire API together. 
 
-# GUI and API integration November 22nd
+## GUI and API integration November 22nd
 
-# Group task: Meet and design front end concept by November 17th 
+## Group task: Meet and design front end concept by November 17th 
 
 Parsa implement front-end/GUI features that demonstrate the following capabilities:
 (1) 2.1.1 INSERT
