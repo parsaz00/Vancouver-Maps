@@ -38,6 +38,9 @@ Our timeline has four major parts: (1) Writing SQL queries (2) Creating an API t
 
 The task breakdown is as follows:
 
+Timeline:
+# Queries done by November 5th (Broken down below):
+
 Parsa:
 (1) 2.1.1 INSERT
 (2) 2.1.6 Join
@@ -54,14 +57,49 @@ Matthew:
 (3) 2.1.9 Nested aggregation with GROUP BY
 
 
-GROUP TASKS:
-Implementing the API to connect our backend (our database) with our front end (GUI). Each group member will specifically develop the necessary API calls for their above QUERIES
+# API done by November 15th 
+This task will require colloboration as needed. For individual tasks:
+Parsa implement HTTPS protocols for the following:
+(1) 2.1.1 INSERT
+(2) 2.1.6 Join
+(3) 2.1.7 Aggregation with GROUP BY
+
+Ethan implement HTTPS protocols for the following:
+(1) 2.1.8 Aggregation with HAVING
+(2) 2.1.5 Projection
+(3) 2.1.4 Selection
+
+Matthew implement HTTPS protocols for the following:
+(1) 2.1.3 DELETE
+(2) 2.1.2 UPDATE
+(3) 2.1.9 Nested aggregation with GROUP BY
+
+# Group: Once individual parts are finished, meet and test integration of entire API together. 
+
+# GUI and API integration November 22nd
+
+# Group task: Meet and design front end concept by November 17th 
+
+Parsa implement front-end/GUI features that demonstrate the following capabilities:
+(1) 2.1.1 INSERT
+(2) 2.1.6 Join
+(3) 2.1.7 Aggregation with GROUP BY
+
+Ethan implement front-end/GUI features that demonstrate the following capabilities:
+(1) 2.1.8 Aggregation with HAVING
+(2) 2.1.5 Projection
+(3) 2.1.4 Selection
+
+Matthew implement front-end/GUI features that demonstrate the following capabilities:
+(1) 2.1.3 DELETE
+(2) 2.1.2 UPDATE
+(3) 2.1.9 Nested aggregation with GROUP BY
 
 
-GUI: As we approach the building GUI phase, we will have a better understanding of specific tasks. For now, we have left it so that each team member will be working on it together
+Group work: Throughout we will be holding re-occuring standups to evaluate if any of our above features can be worked on in conjunction between multiple team members. For example, if group decides to create a drop down selection to chose whether you want to add (INSERT) or delete (DELETE) something, Matthew and Parsa would design this feature together. 
 
 
-### Deadlines:
+### Deadlines Summary:
 
 Novemeber 5th: Group members have finished their individual queries and tests them 
 
