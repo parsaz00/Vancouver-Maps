@@ -32,7 +32,7 @@ INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, 
 VALUES ('Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R 4J1', '(604) 654-3210', '09:00:00', '19:00:00', 'A long suspension bridge offering forest views.', 5);
 ```
 
-### Task Breakdown
+## Task Breakdown
 Overview:
 Our timeline has four major parts: (1) Writing SQL queries (2) Creating an API to integrate backend (queries) with front end (REACT app). (3) Create GUI and integrate API into it (4) Debugging/Testing/Bugger space
 
