@@ -33,25 +33,25 @@ VALUES ('Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R
 ```
 
 # Task Breakdown
-Overview:
+**Overview:** 
 Our timeline has four major parts: (1) Writing SQL queries (2) Creating an API to integrate backend (queries) with front end (REACT app). (3) Create GUI and integrate API into it (4) Debugging/Testing/Bugger space
 
 The task breakdown is as follows:
 
-Timeline:
+# Timeline:
 ## Queries done by November 5th (Broken down below):
 
-Parsa:
+**Parsa:**
 (1) 2.1.1 INSERT
 (2) 2.1.6 Join
 (3) 2.1.7 Aggregation with GROUP BY
 
-Ethan:
+**Ethan:**
 (1) 2.1.8 Aggregation with HAVING
 (2) 2.1.5 Projection
 (3) 2.1.4 Selection
 
-Matthew:
+**Matthew:**
 (1) 2.1.3 DELETE
 (2) 2.1.2 UPDATE
 (3) 2.1.9 Nested aggregation with GROUP BY
