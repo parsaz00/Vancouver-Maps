@@ -105,7 +105,7 @@ Group work: Throughout we will be holding re-occuring standups to evaluate if an
 
 **November 15th:** Group members have created the necessary API parts for their above written queries
 
-**Novemeber 22th:** GUI and API integration are finished 
+**Novemeber 22nd:** GUI and API integration are finished 
 
 The remaining time until the deadline is left as a buffer period, and a period to continue testing.
 
