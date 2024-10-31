@@ -1,18 +1,21 @@
 CREATE TABLE Users (
-    user_id NUMBER PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    created_at DATE DEFAULT SYSDATE 
+    UserID INT PRIMARY KEY,
+    Phone VARCHAR(15) UNIQUE,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Points INT
 );
 
-CREATE TABLE Locations (
-    location_id NUMBER PRIMARY KEY,
-    name VARCHAR2(100) NOT NULL,
-    description VARCHAR2(500),
-    address VARCHAR2(200),
-    city VARCHAR2(50) DEFAULT 'Vancouver',
-    postal_code VARCHAR2(10),
-    created_at DATE DEFAULT SYSDATE
+CREATE TABLE EmailName (
+    Email VARCHAR(100) PRIMARY KEY,
+    Name VARCHAR(100)
+);
+
+CREATE TABLE TransitStop (
+    StopID INT PRIMARY KEY,
+    Type VARCHAR(50),
+    Latitude DECIMAL(9, 6),
+    Longitude DECIMAL(9, 6),
+    CHECK (Latitude BETWEEN -90 AND 90),
+    CHECK (Longitude BETWEEN -180 AND 180)
 );
 
