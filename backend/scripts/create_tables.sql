@@ -1,3 +1,11 @@
+-- Boys before running @create_tables.sql run these
+-- DROP TABLE Users CASCADE CONSTRAINTS;
+-- DROP TABLE EmailName CASCADE CONSTRAINTS;
+-- DROP TABLE TransitStop CASCADE CONSTRAINTS;
+
+-- Tif you want to check your created tables : SELECT table_name FROM user_tables;
+
+
 CREATE TABLE Users (
     UserID INT PRIMARY KEY,
     Phone VARCHAR(15) UNIQUE,
