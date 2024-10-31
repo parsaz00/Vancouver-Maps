@@ -1,4 +1,5 @@
--- Boys before running @create_tables.sql run these
+-- Boys before running @create_tables.sql run these. Please add the relevant drop statements whenever you create a table. 
+-- We won't need this once we are finalized on our all our table creation statements and create it for good
 -- DROP TABLE Users CASCADE CONSTRAINTS;
 -- DROP TABLE EmailName CASCADE CONSTRAINTS;
 -- DROP TABLE TransitStop CASCADE CONSTRAINTS;
