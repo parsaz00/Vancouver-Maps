@@ -1,3 +1,8 @@
+-- TO RUN QUERIES IN HERE:
+-- (1) ensure the tables are created (check create_tables.sql script on how to check)
+-- (2) Ensure that we have data populating the tables (to populate data run @test_data.sql)
+-- (3) To run the queries, run the command (@queries.sql)
+
 -- Formatting (grabbed from chat gpt) to make output more clean
 -- Set column formatting for readability
 COLUMN UserID FORMAT 9999;
