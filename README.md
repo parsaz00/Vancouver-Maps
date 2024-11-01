@@ -115,5 +115,5 @@ The remaining time until the deadline is left as a buffer period, and a period t
 2. Midterms and other deadlines: The team has left adequate time for each task and has committed to working on the project a minimum of 30 minutes a day starting from October 28th. This will ensure that each team member is making progress each day. Further we have allocated a 1 week buffer before the deadline to account for extraneous circumstances that may impede progress
 3. Group member accountability. To address that all members are doing an equal amount of work, we will be meeting three times a week for a "standup" following traditional scrum methodologies where we will highlight what we have worked on since the last meeting, what we are currently working on, and any roadbloacks that we are facing.
 
-
+ 
 ### Enjoy!
