@@ -9,7 +9,7 @@ WHERE Cuisine = 'Chinese'
 GROUP BY 
     rest.Name 
 HAVING 
-    AVG(r.Rating) > 3
+    AVG(r.Rating) > 3;
 
 
 
