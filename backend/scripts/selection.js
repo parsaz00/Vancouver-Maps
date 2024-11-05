@@ -1,7 +1,7 @@
+/*
 const db = ('oracledb');
-//this needs to wait for our core account
-async function validateAttribute()
-
+//wait on this function because of end to end
+//async function validateAttribute
 function setSelect(input, table) {
     // Set all the input to tokens
     const tokens = input.match("/\S+/g");
@@ -22,3 +22,4 @@ function setSelect(input, table) {
 
 
 }
+*/
