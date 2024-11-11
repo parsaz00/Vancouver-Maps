@@ -64,5 +64,36 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+/**
+ * Accept a request from client that specifies table name, cols, and values 
+ * Validate input to ensure correct format
+ * Call insertWithForeignKeyCheck fun in appService.js to perform actual insert operation
+ * Return success or failure to client based on outcome of insert
+ */
+router.post('/insert', async (req, res) => {
+    const { tableName, columns, values } = req.body;
+
+    // Basic validation of input 
+    if (!tableName || !Array.isArray(columns) || !Array.isArray(values)) {
+        return res.status(400).json({ success: false, message: 'Invalid input format. Ensure that tableName, columns, and values are provided in the correct format.' });
+    }
+    if (columns.length !== values.length) {
+        return res.status(400).json({ success: false, message: 'The number of columns and values must match.' });
+    }
+
+    try {
+        // Call insert func in appService.js
+        const result = await appService.insertWithForeignKeyCheck(tableName, columns, values);
+        if (result.success) {
+            res.status(200).json(result); // Success response
+        } else {
+            res.status(400).json(result); // Failure response due to foreign key or other constraint violation
+        }
+    } catch (error) {
+        console.error('Insert operation failed: ', error);
+        res.status(500).json({ success: false, message: 'An error occurred while inserting the record.' });
+    }
+});
+
 
 module.exports = router;

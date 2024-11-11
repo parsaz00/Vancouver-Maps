@@ -142,6 +142,39 @@ async function countDemotable() {
     });
 }
 
+async function insertWithForeignKeyCheck(tableName, columns, values) {
+    return await withOracleDB(async (connection) => {
+        try {
+            // Construct the column list and placeholder list for the SQL statement
+            const columnsList = columns.join(', ');
+            const placeholders = columns.map((_, index) => `:${index + 1}`).join(', ');
+
+            // Dynamic SQL INSERT statement 
+            const sql = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
+
+            // Execute statement with the provided vals
+            const result = await connection.execute(sql, values, { autoCommit: false});
+
+            // Check if insert was successful 
+            if (result.rowsAffected && result.rowsAffected > 0) {
+                await connection.commit();
+                return { success: true, message: 'Record inserted successfully.' };
+            } else {
+                return { success: false, message: 'Insertion failed.' };
+            }
+        } catch (error) {
+            if (error.errorNum === 2291) { // ORA-02291: integrity constraint (foreign key constraint) violated
+                return {
+                    success: false,
+                    message: `Foreign key constraint violated. Please make sure referenced values exist.`,
+                };
+            }
+            console.error('Error in insertWithForeignKeyCheck: ', error);
+            throw error;
+        }
+    });
+}
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
