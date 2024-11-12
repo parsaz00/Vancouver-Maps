@@ -229,6 +229,25 @@ async function getUserNotifications(userId) {
     });
 }
 
+/**
+ * Function to retrieve the giftcards owned by a user 
+ * Gets them based on UserId
+ */
+async function getUserGiftCards(userId) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query to obtain giftcards owned by User: ", userId);
+        const result = await connection.execute(
+            `SELECT u.UserID, u.Email, gc.GCID, gc.Value, gc.Franchise
+             FROM Users u
+             JOIN GiftCard gc ON u.UserID = gc.UserID
+             WHERE u.UserID = :userId`,
+            [userId] // binds userId to :userId in the quer
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    })
+}
+
 
 
 module.exports = {
@@ -238,6 +257,7 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
+    getUserGiftCards,
     insertWithForeignKeyCheck,
     getUserNotifications
 };

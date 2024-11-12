@@ -112,5 +112,21 @@ router.get('/user-notifications', async (req, res) => {
     }
 });
 
+// Get giftards for user with id === UserId
+router.get('/user-giftcards', async (req, res) => {
+    const { userId} = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserId is required' });
+    }
+
+    try {
+        const giftCards = await appService.getUserGiftCards(userId);
+        res.status(200).json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching giftcards:', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+    }
+});
 
 module.exports = router;
