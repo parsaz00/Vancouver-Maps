@@ -1,5 +1,6 @@
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
+const { connect } = require('./appController');
 
 const envVariables = loadEnvFile('./.env');
 
@@ -211,6 +212,24 @@ async function insertWithForeignKeyCheck(tableName, columns, values) {
     });
 }
 
+// Dynamic join
+async function getUserNotifications(userId) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query for notifications...");
+        const result = await connection.execute(
+            `SELECT u.UserID, u.Email, n.Time, n.Message
+             FROM Users u
+             JOIN Receives r ON u.UserID = r.UserID
+             JOIN Notification n ON r.NotifID = n.NotifID
+             WHERE u.UserID = :userId`,
+            [userId] // binds userId to :userId in the query
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
+
+
 
 module.exports = {
     testOracleConnection,
@@ -219,5 +238,6 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
-    insertWithForeignKeyCheck
+    insertWithForeignKeyCheck,
+    getUserNotifications
 };

@@ -95,5 +95,22 @@ router.post('/insert', async (req, res) => {
     }
 });
 
+// getUserNotifications
+router.get('/user-notifications', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    try {
+        const notifications = await appService.getUserNotifications(userId);
+        res.status(200).json({ sucess: true, data: notifications });
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
 
 module.exports = router;
