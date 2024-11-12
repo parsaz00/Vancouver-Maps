@@ -248,6 +248,24 @@ async function getUserGiftCards(userId) {
     })
 }
 
+/**
+ * Find all events occuring at a Place, example of join
+ */
+async function getEventsAtPlace(placeName, placeAddress) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query to obtain all events occuring in a place: ", placeName, placeAddress);
+        const result = await connection.execute(
+            `SELECT p.Name, p.Address, e.EventID, e.Title, e.EventDate, e.Description
+             FROM Place p
+             JOIN Event e ON p.Name = e.Name AND p.Address = e.Address
+             WHERE p.Name = :placeName AND p.Address = :placeAddress`,
+            [placeName, placeAddress] // binds placeName and placeAddress to query parameters
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    })
+}
+
 
 
 module.exports = {
@@ -258,6 +276,7 @@ module.exports = {
     updateNameDemotable, 
     countDemotable,
     getUserGiftCards,
+    getEventsAtPlace,
     insertWithForeignKeyCheck,
     getUserNotifications
 };

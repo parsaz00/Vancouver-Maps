@@ -1,5 +1,6 @@
 const express = require('express');
 const appService = require('./appService');
+const { events } = require('oracledb');
 
 const router = express.Router();
 
@@ -128,5 +129,22 @@ router.get('/user-giftcards', async (req, res) => {
         res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
     }
 });
+
+// Get all events occuring at a place
+router.get('/place-events', async (req, res) => {
+    const { placeName, placeAddress} = req.query;
+
+    if (!placeName || placeAddress) {
+        return res.status(400).json({ success: false, message: "placeAddress and placeName is required" });
+    }
+
+    try {
+        const events = await appService.getEventsAtPlace(placeName, placeAddress);
+        res.status(200).json({ success: true, data: events });
+    } catch (error) {
+        console.error('Error fetching events: ', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+    }
+})
 
 module.exports = router;
