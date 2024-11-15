@@ -1,5 +1,6 @@
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
+const { connect } = require('./appController');
 
 const envVariables = loadEnvFile('./.env');
 
@@ -142,11 +143,158 @@ async function countDemotable() {
     });
 }
 
+// async function insertWithForeignKeyCheck(tableName, columns, values) {
+//     return await withOracleDB(async (connection) => {
+//         try {
+//             // Construct the column list and placeholder list for the SQL statement
+//             const columnsList = columns.join(', ');
+//             const placeholders = columns.map((_, index) => `:${index + 1}`).join(', ');
+
+//             // Dynamic SQL INSERT statement 
+//             const sql = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
+
+//             // Execute statement with the provided vals
+//             const result = await connection.execute(sql, values, { autoCommit: false});
+
+//             // Check if insert was successful 
+//             if (result.rowsAffected && result.rowsAffected > 0) {
+//                 await connection.commit();
+//                 return { success: true, message: 'Record inserted successfully.' };
+//             } else {
+//                 return { success: false, message: 'Insertion failed.' };
+//             }
+//         } catch (error) {
+//             if (error.errorNum === 2291) { // ORA-02291: integrity constraint (foreign key constraint) violated
+//                 return {
+//                     success: false,
+//                     message: `Foreign key constraint violated. Please make sure referenced values exist.`,
+//                 };
+//             }
+//             console.error('Error in insertWithForeignKeyCheck: ', error);
+//             throw error;
+//         }
+//     });
+// }
+
+async function insertWithForeignKeyCheck(tableName, columns, values) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const columnsList = columns.join(', ');
+            const placeholders = columns.map((_, index) => `:${index + 1}`).join(', ');
+            const sql = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
+
+            const result = await connection.execute(sql, values, { autoCommit: true });
+
+            if (result.rowsAffected && result.rowsAffected > 0) {
+                return { success: true, message: 'Record inserted successfully.' };
+            } else {
+                return { success: false, message: 'Insertion failed.' };
+            }
+        } catch (error) {
+            console.error('Error in insertWithForeignKeyCheck:', error);
+            if (error.errorNum === 2291) { // ORA-02291: foreign key constraint violation
+                return {
+                    success: false,
+                    message: `Foreign key constraint violated. Ensure referenced values exist.`,
+                };
+            } else if (error.errorNum === 1) { // ORA-00001: unique constraint violation
+                return {
+                    success: false,
+                    message: `Unique constraint violated. Record with this primary key may already exist.`,
+                };
+            } else {
+                return {
+                    success: false,
+                    message: `An unexpected error occurred: ${error.message}`,
+                };
+            }
+        }
+    });
+}
+
+// Dynamic join
+async function getUserNotifications(userId) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query for notifications...");
+        const result = await connection.execute(
+            `SELECT u.UserID, u.Email, n.Time, n.Message
+             FROM Users u
+             JOIN Receives r ON u.UserID = r.UserID
+             JOIN Notification n ON r.NotifID = n.NotifID
+             WHERE u.UserID = :userId`,
+            [userId] // binds userId to :userId in the query
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
+
+/**
+ * Function to retrieve the giftcards owned by a user 
+ * Gets them based on UserId
+ */
+async function getUserGiftCards(userId) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query to obtain giftcards owned by User: ", userId);
+        const result = await connection.execute(
+            `SELECT u.UserID, u.Email, gc.GCID, gc.Value, gc.Franchise
+             FROM Users u
+             JOIN GiftCard gc ON u.UserID = gc.UserID
+             WHERE u.UserID = :userId`,
+            [userId] // binds userId to :userId in the quer
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    })
+}
+
+/**
+ * Find all events occuring at a Place, example of join
+ */
+async function getEventsAtPlace(placeName, placeAddress) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query to obtain all events occuring in a place: ", placeName, placeAddress);
+        const result = await connection.execute(
+            `SELECT p.Name, p.Address, e.EventID, e.Title, e.EventDate, e.Description
+             FROM Place p
+             JOIN Event e ON p.Name = e.Name AND p.Address = e.Address
+             WHERE p.Name = :placeName AND p.Address = :placeAddress`,
+            [placeName, placeAddress] // binds placeName and placeAddress to query parameters
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    })
+}
+
+/**
+ * Query to get average rating of events at each place
+ * To support 2.1.7
+ */
+async function getAverageEventRatingPerPlace() {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing aggregation query for average event rating per place");
+        const result = await connection.execute(
+            `SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
+            FROM Event e
+            GROUP BY e.Name, e.Address`
+       );
+       console.log("Query executed successfully: ", result.rows);
+       return result.rows;
+    });
+}
+
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable
+    countDemotable,
+    getUserGiftCards,
+    getEventsAtPlace,
+    getAverageEventRatingPerPlace,
+    insertWithForeignKeyCheck,
+    getUserNotifications
 };

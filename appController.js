@@ -1,5 +1,6 @@
 const express = require('express');
 const appService = require('./appService');
+const { events } = require('oracledb');
 
 const router = express.Router();
 
@@ -64,5 +65,97 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+/**
+ * Accept a request from client that specifies table name, cols, and values 
+ * Validate input to ensure correct format
+ * Call insertWithForeignKeyCheck fun in appService.js to perform actual insert operation
+ * Return success or failure to client based on outcome of insert
+ */
+router.post('/insert', async (req, res) => {
+    const { tableName, columns, values } = req.body;
+
+    // Basic validation of input 
+    if (!tableName || !Array.isArray(columns) || !Array.isArray(values)) {
+        return res.status(400).json({ success: false, message: 'Invalid input format. Ensure that tableName, columns, and values are provided in the correct format.' });
+    }
+    if (columns.length !== values.length) {
+        return res.status(400).json({ success: false, message: 'The number of columns and values must match.' });
+    }
+
+    try {
+        // Call insert func in appService.js
+        const result = await appService.insertWithForeignKeyCheck(tableName, columns, values);
+        if (result.success) {
+            res.status(200).json(result); // Success response
+        } else {
+            res.status(400).json(result); // Failure response due to foreign key or other constraint violation
+        }
+    } catch (error) {
+        console.error('Insert operation failed: ', error);
+        res.status(500).json({ success: false, message: 'An error occurred while inserting the record.' });
+    }
+});
+
+// getUserNotifications
+router.get('/user-notifications', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    try {
+        const notifications = await appService.getUserNotifications(userId);
+        res.status(200).json({ sucess: true, data: notifications });
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// Get giftards for user with id === UserId
+router.get('/user-giftcards', async (req, res) => {
+    const { userId} = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserId is required' });
+    }
+
+    try {
+        const giftCards = await appService.getUserGiftCards(userId);
+        res.status(200).json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching giftcards:', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// Get all events occuring at a place
+router.get('/place-events', async (req, res) => {
+    const { placeName, placeAddress} = req.query;
+
+    if (!placeName || !placeAddress) {
+        return res.status(400).json({ success: false, message: "placeAddress and placeName is required" });
+    }
+
+    try {
+        const events = await appService.getEventsAtPlace(placeName, placeAddress);
+        res.status(200).json({ success: true, data: events });
+    } catch (error) {
+        console.error('Error fetching events: ', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// Get average rating of events occuring at a place
+router.get('/average-event-rating', async (req, res) => {
+    try {
+        const ratings = await appService.getAverageEventRatingPerPlace();
+        res.status(200).json({ success: true, data: ratings });
+    } catch (error) {
+        console.error('Error fetching average event rating:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
+    }
+});
 
 module.exports = router;
