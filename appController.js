@@ -145,6 +145,17 @@ router.get('/place-events', async (req, res) => {
         console.error('Error fetching events: ', error);
         res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
     }
-})
+});
+
+// Get average rating of events occuring at a place
+router.get('/average-event-rating', async (req, res) => {
+    try {
+        const ratings = await appService.getAverageEventRatingPerPlace();
+        res.status(200).json({ success: true, data: ratings });
+    } catch (error) {
+        console.error('Error fetching average event rating:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
+    }
+});
 
 module.exports = router;
