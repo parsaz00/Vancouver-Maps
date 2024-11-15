@@ -11,6 +11,8 @@ SQL> SELECT * FROM Users WHERE email = 'testuse16r@example.com';
 
  curl -X GET "http://localhost:65535/user-notifications?userId=1"
  curl -X GET "http://localhost:65535/user-giftcards?userId=1"
+ curl -X GET "http://localhost:65535/place-events?placeName=Parsa&placeAddress=709%20Braemar"
+
 
  curl -X POST http://localhost:65535/insert \
     -H "Content-Type: application/json" \
@@ -19,3 +21,32 @@ SQL> SELECT * FROM Users WHERE email = 'testuse16r@example.com';
           "columns": ["GCID", "Value", "Franchise", "UserID"],
           "values": [1, 125.31, "Tim Hortons", 1]
         }'
+
+PLACE COMMAND
+curl -X POST http://localhost:65535/insert \
+    -H "Content-Type: application/json" \
+    -d '{
+          "tableName": "Place",
+          "columns": ["Name", "Address", "Phone", "OpeningTime", "ClosingTime", "Description", "StopID"],
+          "values": ["Parsa", "709 Braemar", "6049703783", "1:00 pm", "5:00 pm", "Parsa House", 1]
+        }'
+
+EVENT COMMAND
+curl -X POST http://localhost:65535/insert \
+    -H "Content-Type: application/json" \
+    -d '{
+          "tableName": "Event",
+          "columns": ["EventID", "Name", "Address", "Title", "EventDate", "Rating", "Description"],
+          "values": [1, "Parsa", "709 Braemar", "Parsa Event 1", "15-NOV-2024", 4, "Parsa Event"]
+        }'
+
+curl -X POST http://localhost:65535/insert \
+    -H "Content-Type: application/json" \
+    -d '{
+          "tableName": "Event",
+          "columns": ["EventID", "Name", "Address", "Title", "EventDate", "Rating", "Description"],
+          "values": [2, "Parsa", "709 Braemar", "Parsa Event 2", "16-NOV-2024", 5, "Parsa Event Continued"]
+        }'
+
+
+NOTE: the format of date ^

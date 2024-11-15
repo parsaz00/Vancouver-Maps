@@ -134,7 +134,7 @@ router.get('/user-giftcards', async (req, res) => {
 router.get('/place-events', async (req, res) => {
     const { placeName, placeAddress} = req.query;
 
-    if (!placeName || placeAddress) {
+    if (!placeName || !placeAddress) {
         return res.status(400).json({ success: false, message: "placeAddress and placeName is required" });
     }
 
