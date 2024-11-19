@@ -158,4 +158,21 @@ router.get('/average-event-rating', async (req, res) => {
     }
 });
 
+// Project attributes from a particular place 
+router.get('/projectFromPlace', async (req, res) => {
+    const { attributes } = req.query;
+    if(!attributes){
+        return res.status(400).json({ success: false, message: "attributes are required" });
+    }
+
+    const listAttributes = atttributes.split(",");
+    try {
+        const projectionResult = await appService.projectFromPlace(listAttributes);
+        res.status(200).json({ success: true, data: projectionResult });
+    } catch (error) {
+        console.error('Error in /project-place:', error);
+        res.status(500).json({ success: false, message: 'Failed to execute projection' });
+    }
+});
+
 module.exports = router;

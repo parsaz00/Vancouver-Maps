@@ -273,7 +273,6 @@ async function projectFromPlace(selectedAttributes) {
     return await withOracleDB(async (connection) => {
         const validAttributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
         let column = "";
-
         for (let i = 0; i < selectedAttributes.length; i++) {
             if (!validAttributes.includes(selectedAttributes[i])) {
                 throw new Error(`Invalid attribute: ${selectedAttributes[i]}`);
