@@ -302,13 +302,14 @@ async function projectFromPlace(selectedAttributes) {
 async function getAverageEventRatingPerPlace() {
     return await withOracleDB(async (connection) => {
         console.log("Executing aggregation query for average event rating per place");
-        const result = await connection.execute(
-            `SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
+        const query = `
+            SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
             FROM Event e
-            GROUP BY e.Name, e.Address`
-       );
-       console.log("Query executed successfully: ", result.rows);
-       return result.rows;
+            GROUP BY e.Name, e.Address
+        `;
+        const result = await connection.execute(query);
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
     });
 }
 
@@ -318,14 +319,31 @@ async function getAverageEventRatingPerPlace() {
 async function getCuisinesAboveThreshold(threshold) {
     return await withOracleDB(async (connection) => {
         console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
-        const result = await connection.execute(
-            `SELECT r.Cuisine, AVG(rv.Rating) AS AverageRating
-             FROM Restaurant r
-             JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
-             GROUP BY r.Cuisine
-             HAVING AVG(rv.Rating) > :threshold`,
-            [threshold] 
-        );
+
+        const query = `
+            SELECT r.Cuisine, AVG(rv.Rating) AS AverageRating
+            FROM Restaurant r
+            JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
+            GROUP BY r.Cuisine
+            HAVING AVG(rv.Rating) > :threshold
+        `;
+        const result = await connection.execute(query, { threshold });
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
+/*
+2.1.6 Selection
+**/
+async function selectingPlace(inputString) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing query to select a place", inputString);
+        const query = `
+            SELECT *
+            FROM Place
+            WHERE :inputString
+        `;
+        const result = await connection.execute(query, { inputString });
         console.log("Query executed successfully:", result.rows);
         return result.rows;
     });
@@ -345,5 +363,6 @@ module.exports = {
     insertWithForeignKeyCheck,
     getUserNotifications,
     projectFromPlace,
-    getCuisinesAboveThreshold
+    getCuisinesAboveThreshold,
+    selectingPlace
 };

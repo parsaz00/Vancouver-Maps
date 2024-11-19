@@ -158,6 +158,56 @@ router.get('/average-event-rating', async (req, res) => {
     }
 });
 
+router.get('/selectingPlace', async (req, res) => {
+    const{ inputString } = req.query;
+    if(!inputString){
+        return res.status(400).json({ success: false, message: "an input is required" });
+    }
+    const trimmed = inputString.trim();
+    const tokenizedInput = trimmed.split(" ");
+    const operators = ["=", "<", ">", "<=", ">=", "<>"];
+    const tokenOutput = [];
+
+    for(let i = 0; i < tokenizedInput.length; i++){
+        let token = tokenizedInput[i].toLowerCase();
+        if(token === "and" || token === "or"){
+            // for AND / OR
+            tokenOutput.push(token.toUpperCase());
+        } else if (operators.includes(token)){
+            tokenOutput.push(token);
+        } else if (i > 0 && operators.includes(tokenizedInput[i - 1])){
+            let value = token;
+
+            //checks the next value 
+            while (i + 1 < tokenizedInput.length && tokenizedInput[i + 1].toLowerCase() !== "or" && tokenizedInput[i + 1].toLowerCase() !== "and" &&  !operators.includes(tokenizedInput[i + 1])
+            ) {
+                value += " " + tokenizedInput[i++];
+            }
+            //check if it is an integer via regex 
+            if (/^\d+$/.test(value) && !value.includes(" ")) {
+                tokenOutput.push(value);
+            } else {
+                value = '"' + value + '"';
+                tokenOutput.push(value);
+            }
+            
+        } else {
+            // Push keys (or other standalone tokens) as is
+            tokenOutput.push(token);
+        }
+    }
+
+    
+    const cleaned_string = tokenOutput.join(" ");
+    try {
+        const ratings = await appService.selectingPlace(cleaned_string);
+        res.status(200).json({ success: true, data: ratings });
+    } catch (error) {
+        console.error('Error fetching average event rating:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
+    }
+});
+
 // Project attributes from a particular place 
 router.get('/projectFromPlace', async (req, res) => {
     const { attributes } = req.query;
