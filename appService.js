@@ -312,6 +312,24 @@ async function getAverageEventRatingPerPlace() {
     });
 }
 
+/*
+2.1.8 Aggregation with Having (Ranked Cusisine Types)
+**/
+async function getCuisinesAboveThreshold(threshold) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
+        const result = await connection.execute(
+            `SELECT r.Cuisine, AVG(rv.Rating) AS AverageRating
+             FROM Restaurant r
+             JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
+             GROUP BY r.Cuisine
+             HAVING AVG(rv.Rating) > :threshold`,
+            [threshold] 
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
 
 
 module.exports = {
@@ -326,5 +344,6 @@ module.exports = {
     getAverageEventRatingPerPlace,
     insertWithForeignKeyCheck,
     getUserNotifications,
-    projectFromPlace
+    projectFromPlace,
+    getCuisinesAboveThreshold
 };

@@ -175,4 +175,19 @@ router.get('/projectFromPlace', async (req, res) => {
     }
 });
 
+router.get('/getCuisinesAboveThreshold', async (req, res) => {
+    const { threshold } = req.query;
+    if(!threshold){
+        return res.status(400).json({ success: false, message: "threshold are required" });
+    }
+    const numberThreshold = parseFloat(trheshold)
+    try {
+        const projectionResult = await appService.getCuisinesAboveThreshold(numberThreshold);
+        res.status(200).json({ success: true, data: projectionResult });
+    } catch (error) {
+        console.error('Error in /cusines-above-threshold:', error);
+        res.status(500).json({ success: false, message: 'Failed to execute aggregation query' });
+    }
+});
+
 module.exports = router;
