@@ -266,6 +266,36 @@ async function getEventsAtPlace(placeName, placeAddress) {
     })
 }
 
+/** 
+ * 2.1.5 Projection 
+*/
+async function projectFromPlace(selectedAttributes) {
+    return await withOracleDB(async (connection) => {
+        const validAttributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
+        let column = "";
+
+        for (let i = 0; i < selectedAttributes.length; i++) {
+            if (!validAttributes.includes(selectedAttributes[i])) {
+                throw new Error(`Invalid attribute: ${selectedAttributes[i]}`);
+            }
+            column += selectedAttributes[i];
+            if (i < selectedAttributes.length - 1) {
+                column += ", ";
+            }
+        }
+
+        const result = await connection.execute(
+            `SELECT ${column} FROM Place`
+        );
+        console.log("Successful query", result.rows);
+
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error in projectFromPlace:', err);
+        throw err;
+    });
+}
+
 /**
  * Query to get average rating of events at each place
  * To support 2.1.7
@@ -296,5 +326,6 @@ module.exports = {
     getEventsAtPlace,
     getAverageEventRatingPerPlace,
     insertWithForeignKeyCheck,
-    getUserNotifications
+    getUserNotifications,
+    projectFromPlace
 };
