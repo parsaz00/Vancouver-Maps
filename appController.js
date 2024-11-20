@@ -159,54 +159,60 @@ router.get('/average-event-rating', async (req, res) => {
 });
 
 router.get('/selectingPlace', async (req, res) => {
-    const{ inputString } = req.query;
-    if(!inputString){
-        return res.status(400).json({ success: false, message: "an input is required" });
+    const { inputString } = req.query;
+    if (!inputString) {
+        return res.status(400).json({ success: false, message: "An input is required" });
     }
     const trimmed = inputString.trim();
     const tokenizedInput = trimmed.split(" ");
     const operators = ["=", "<", ">", "<=", ">=", "<>"];
     const tokenOutput = [];
 
-    for(let i = 0; i < tokenizedInput.length; i++){
-        let token = tokenizedInput[i].toLowerCase();
-        if(token === "and" || token === "or"){
-            // for AND / OR
+    for (let i = 0; i < tokenizedInput.length; i++) {
+        let token = tokenizedInput[i];
+        if (token.toLowerCase() === "and" || token.toLowerCase() === "or") {
+            // tor AND / OR
             tokenOutput.push(token.toUpperCase());
-        } else if (operators.includes(token)){
+        } else if (operators.includes(token)) {
+            // for operators
             tokenOutput.push(token);
-        } else if (i > 0 && operators.includes(tokenizedInput[i - 1])){
+        } else if (i > 0 && operators.includes(tokenizedInput[i - 1])) {
+            // value after an operator
             let value = token;
 
-            //checks the next value 
-            while (i + 1 < tokenizedInput.length && tokenizedInput[i + 1].toLowerCase() !== "or" && tokenizedInput[i + 1].toLowerCase() !== "and" &&  !operators.includes(tokenizedInput[i + 1])
-            ) {
-                value += " " + tokenizedInput[i++];
+            // collect spaces like 'Stanley Park'
+            while (i + 1 < tokenizedInput.length && !operators.includes(tokenizedInput[i + 1]) &&
+            tokenizedInput[i + 1].toLowerCase() !== "and" && tokenizedInput[i + 1].toLowerCase() !== "or") {
+                //must increment this way
+                value += " " + tokenizedInput[++i];
             }
-            //check if it is an integer via regex 
-            if (/^\d+$/.test(value) && !value.includes(" ")) {
+
+            // integer check for < > etc
+            if (/^\d+$/.test(value)) {
                 tokenOutput.push(value);
             } else {
-                value = '"' + value + '"';
+                // double quotes were not working sooo try single in this instance
+                value = `'${value.replace(/'/g, "''")}'`;
                 tokenOutput.push(value);
             }
-            
         } else {
-            // Push keys (or other standalone tokens) as is
+            // push key
             tokenOutput.push(token);
         }
     }
 
-    
     const cleaned_string = tokenOutput.join(" ");
+    console.log('Cleaned query string:', cleaned_string);
+
     try {
-        const ratings = await appService.selectingPlace(cleaned_string);
-        res.status(200).json({ success: true, data: ratings });
+        const places = await appService.selectingPlace(cleaned_string);
+        res.status(200).json({ success: true, data: places });
     } catch (error) {
-        console.error('Error fetching average event rating:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
+        console.error('Error fetching places:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch places' });
     }
 });
+
 
 // Project attributes from a particular place 
 router.get('/projectFromPlace', async (req, res) => {
