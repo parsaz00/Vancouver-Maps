@@ -2,6 +2,8 @@ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const { connect } = require('./appController');
 
+
+
 const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
@@ -364,8 +366,9 @@ module.exports = {
     getEventsAtPlace,
     getAverageEventRatingPerPlace,
     insertWithForeignKeyCheck,
-    getUserNotifications,
     projectFromPlace,
     getCuisinesAboveThreshold,
-    selectingPlace
+    selectingPlace,
+    withOracleDB,
+    getUserNotifications
 };

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vancouver Map App - User Signup</title>
+</head>
+<body>
+    <h2>User Signup</h2>
+    <form id="signupForm">
+        <label for="signupUserId">User ID:</label>
+        <input type="number" id="signupUserId" placeholder="Enter User ID" required><br><br>
+
+        <label for="signupPhone">Phone Number:</label>
+        <input type="text" id="signupPhone" placeholder="Enter Phone Number" required><br><br>
+
+        <label for="signupEmail">Email:</label>
+        <input type="email" id="signupEmail" placeholder="Enter Email" required><br><br>
+
+        <label for="signupPoints">Points:</label>
+        <input type="number" id="signupPoints" value="0" readonly><br><br>
+
+        <button type="submit">Signup</button>
+    </form>
+    <div id="signupResultMsg"></div>
+
+    <a href="index.html">Back to Login</a>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

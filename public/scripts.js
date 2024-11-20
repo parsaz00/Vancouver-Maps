@@ -14,27 +14,45 @@
 
 
 // This function checks the database connection and updates its status on the frontend.
+// async function checkDbConnection() {
+//     const statusElem = document.getElementById('dbStatus');
+//     const loadingGifElem = document.getElementById('loadingGif');
+
+//     const response = await fetch('/check-db-connection', {
+//         method: "GET"
+//     });
+
+//     // Hide the loading GIF once the response is received.
+//     loadingGifElem.style.display = 'none';
+//     // Display the statusElem's text in the placeholder.
+//     statusElem.style.display = 'inline';
+
+//     response.text()
+//     .then((text) => {
+//         statusElem.textContent = text;
+//     })
+//     .catch((error) => {
+//         statusElem.textContent = 'connection timed out';  // Adjust error handling if required.
+//     });
+// }
+
 async function checkDbConnection() {
     const statusElem = document.getElementById('dbStatus');
     const loadingGifElem = document.getElementById('loadingGif');
 
-    const response = await fetch('/check-db-connection', {
-        method: "GET"
-    });
-
-    // Hide the loading GIF once the response is received.
-    loadingGifElem.style.display = 'none';
-    // Display the statusElem's text in the placeholder.
-    statusElem.style.display = 'inline';
-
-    response.text()
-    .then((text) => {
+    try {
+        const response = await fetch('/check-db-connection', { method: "GET" });
+        const text = await response.text();
+        console.log('Database connection response:', text);
+        loadingGifElem.style.display = 'none';
+        statusElem.style.display = 'inline';
         statusElem.textContent = text;
-    })
-    .catch((error) => {
-        statusElem.textContent = 'connection timed out';  // Adjust error handling if required.
-    });
+    } catch (error) {
+        console.error('Error checking DB connection:', error);
+        statusElem.textContent = 'connection timed out';
+    }
 }
+
 
 // Fetches data from the demotable and displays it.
 async function fetchAndDisplayUsers() {
@@ -154,21 +172,128 @@ async function countDemotable() {
     }
 }
 
+// Function to handle signup functionality -- Parsa
+async function signupUser(event) {
+    event.preventDefault();
+
+    const userId = document.getElementById('signupUserId').value;
+    const phone = document.getElementById('signupPhone').value;
+    const email = document.getElementById('signupEmail').value;
+    const points = document.getElementById('signupPoints').value;
+
+    const response = await fetch('/insert', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            tableName: "Users",
+            columns: ["UserID", "Phone", "Email", "Points"],
+            values: [userId, phone, email, points]
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('signupResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Signup successful, welcome to the app!";
+    } else {
+        messageElement.textContent = `Signup failed: ${responseData.message}`;
+    }
+}
+
+async function loginUser(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('loginEmail').value;
+    const phone = document.getElementById('loginPhone').value;
+
+    // Have to make sure at least one field (phone or email) is filled
+    if (!email && !phone) {
+        const messageElement = document.getElementById('loginResultMsg');
+        messageElement.textContent = "Please enter either your email or phone number used to signup!";
+        return;
+    }
+
+    const queryParams = email ? `email=${email}` : `phone=${phone}`;
+    const response = await fetch(`/login?${queryParams}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('loginResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Login was successful, redirecting you to the app bang!";
+        // actually redirect them 
+        window.location.href = "mainApp.html";
+    } else {
+        messageElement.textContent = `Login failed: ${responseData.message}`;
+    }
+}
+// document.getElementById('loginForm').addEventListener('submit', loginUser);
+
 
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
+// window.onload = function() {
+//     checkDbConnection();
+//     fetchTableData();
+//     document.getElementById('signupForm').addEventListener('submit', signupUser);
+//     document.getElementById('loginForm').addEventListener('submit', loginUser);
+//     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+//     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
+//     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
+//     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+// };
+
 window.onload = function() {
     checkDbConnection();
+
+    // Attach event listeners only if the corresponding elements exist
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', signupUser);
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', loginUser);
+    }
+
+    const resetButton = document.getElementById("resetDemotable");
+    if (resetButton) {
+        resetButton.addEventListener("click", resetDemotable);
+    }
+
+    const insertDemotableForm = document.getElementById("insertDemotable");
+    if (insertDemotableForm) {
+        insertDemotableForm.addEventListener("submit", insertDemotable);
+    }
+
+    const updateNameForm = document.getElementById("updataNameDemotable");
+    if (updateNameForm) {
+        updateNameForm.addEventListener("submit", updateNameDemotable);
+    }
+
+    const countButton = document.getElementById("countDemotable");
+    if (countButton) {
+        countButton.addEventListener("click", countDemotable);
+    }
+
+    // Fetch table data only if the demotable exists
     fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
-    document.getElementById("countDemotable").addEventListener("click", countDemotable);
 };
+
 
 // General function to refresh the displayed table data. 
 // You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
-    fetchAndDisplayUsers();
+    const tableElement = document.getElementById('demotable');
+    if (tableElement) {
+        fetchAndDisplayUsers();
+    }
 }
+
