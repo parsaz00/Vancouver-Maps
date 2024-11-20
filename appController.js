@@ -1,6 +1,7 @@
 const express = require('express');
 const appService = require('./appService');
 const { events } = require('oracledb');
+const { withOracleDB } = require('./appService');
 
 const router = express.Router();
 
@@ -159,3 +160,33 @@ router.get('/average-event-rating', async (req, res) => {
 });
 
 module.exports = router;
+
+// Login endpoint 
+router.get('/login', async (req, res) => {
+    const { email, phone } = req.query;
+
+    if (!email && !phone) {
+        return res.status(400).json({ success: false, message: "Email or phone number is required" });
+    }
+
+    try {
+        const query = email
+            ? `SELECT * FROM Users WHERE Email = :email`
+            : `SELECT * FROM Users WHERE Phone = :phone`;
+
+        const value = email || phone;
+
+        const result = await withOracleDB(async (connection) => {
+            return await connection.execute(query, [value]);
+        });
+
+        if (result.rows.length > 0) {
+            res.status(200).json({ success: true, data: result.rows });
+        } else {
+            res.status(404).json({ success: false, message: "User not found" });
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ success: false, message: "Login failed" });
+    }
+});
