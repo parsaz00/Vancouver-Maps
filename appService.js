@@ -2,6 +2,8 @@ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const { connect } = require('./appController');
 
+
+
 const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
@@ -266,6 +268,23 @@ async function getEventsAtPlace(placeName, placeAddress) {
     })
 }
 
+/**
+ * Query to get average rating of events at each place
+ * To support 2.1.7
+ */
+async function getAverageEventRatingPerPlace() {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing aggregation query for average event rating per place");
+        const result = await connection.execute(
+            `SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
+            FROM Event e
+            GROUP BY e.Name, e.Address`
+       );
+       console.log("Query executed successfully: ", result.rows);
+       return result.rows;
+    });
+}
+
 
 
 module.exports = {
@@ -277,6 +296,8 @@ module.exports = {
     countDemotable,
     getUserGiftCards,
     getEventsAtPlace,
+    getAverageEventRatingPerPlace,
     insertWithForeignKeyCheck,
+    withOracleDB,
     getUserNotifications
 };
