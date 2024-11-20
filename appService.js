@@ -285,6 +285,76 @@ async function getAverageEventRatingPerPlace() {
     });
 }
 
+// Fetch events happening after a certain date
+async function fetchEventsAfterDate(date) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT EventID, Title, EventDate, Description, Name, Address 
+             FROM Event 
+             WHERE EventDate >= :currentDate 
+             ORDER BY EventDate ASC`,
+            [date] // Bind the current date to the query
+        );
+        return result.rows;
+    });
+}
+
+// Fetch events happening before a certain date
+async function fetchEventsBeforeDate(date) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT EventID, Title, EventDate, Description, Name, Address 
+             FROM Event 
+             WHERE EventDate < :currentDate 
+             ORDER BY EventDate DESC`,
+            [date] // Bind the current date to the query
+        );
+        return result.rows;
+    });
+}
+
+async function addEvent(eventData) {
+    const { title, date, description, name, address } = eventData;
+
+    return await withOracleDB(async (connection) => {
+        try {
+            // Fetch the maximum EventID and calculate the next ID
+            const result = await connection.execute(`SELECT NVL(MAX(EventID), 0) + 1 AS NextEventID FROM Event`);
+            const nextEventID = result.rows[0][0];
+
+            // Insert the new event
+            const insertResult = await connection.execute(
+                `INSERT INTO Event (EventID, Title, EventDate, Description, Name, Address) 
+                 VALUES (:eventID, :title, TO_DATE(:eventDate, 'YYYY-MM-DD'), :description, :name, :address)`,
+                {
+                    eventID: nextEventID,
+                    title,
+                    eventDate: date,
+                    description,
+                    name,
+                    address
+                },
+                { autoCommit: true }
+            );
+
+            if (insertResult.rowsAffected > 0) {
+                return { success: true };
+            } else {
+                return { success: false, message: 'Failed to insert event' };
+            }
+        } catch (error) {
+            console.error('Error adding event:', error);
+
+            if (error.errorNum === 2291) {
+                return { success: false, message: 'Foreign key constraint violation. Ensure place exists.' };
+            } else {
+                throw error;
+            }
+        }
+    });
+}
+
+
 
 
 module.exports = {
@@ -299,5 +369,8 @@ module.exports = {
     getAverageEventRatingPerPlace,
     insertWithForeignKeyCheck,
     withOracleDB,
-    getUserNotifications
+    getUserNotifications,
+    fetchEventsAfterDate,
+    fetchEventsBeforeDate,
+    addEvent
 };

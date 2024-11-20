@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Page</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            background-color: #4caf50;
+            color: white;
+            padding: 20px 0;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            margin-top: 30px;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #555;
+        }
+
+        /* Event List Section */
+        #upcomingEventsList, #pastEventsList {
+            max-width: 800px;
+            margin: 20px auto;
+            list-style: none;
+            padding: 0;
+        }
+
+        #upcomingEventsList li, #pastEventsList li {
+            background-color: white;
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #upcomingEventsList li span, #pastEventsList li span {
+            font-weight: bold;
+        }
+
+        /* Form Section */
+        form {
+            max-width: 600px;
+            margin: 30px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form input, form button {
+            width: 48%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        form button {
+            width: 100%;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Back to Main Page Button */
+        #backToMainButton {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #backToMainButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Events</h1>
+
+    <h2>Upcoming Events</h2>
+    <ul id="upcomingEventsList"></ul>
+
+    <h2>Past Events</h2>
+    <ul id="pastEventsList"></ul>
+
+    <h2>Add a New Event</h2>
+    <form id="addEventForm">
+        <input type="text" id="eventTitle" placeholder="Title" required>
+        <input type="date" id="eventDate" required>
+        <input type="text" id="eventDescription" placeholder="Description">
+        <input type="text" id="eventName" placeholder="Place Name" required>
+        <input type="text" id="eventAddress" placeholder="Place Address" required>
+        <button type="submit">Add Event</button>
+    </form>
+
+    <button id="backToMainButton">Back to Main Page</button>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

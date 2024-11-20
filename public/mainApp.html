@@ -3,13 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vancouver Map App</title>
+    <title>Discover Vancouver</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #a7e6f2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        nav .login-button {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: #f0f9ff;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* Events Section */
+        .events {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #f9f7ff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .events h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .events ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .events ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .events ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        .events ul li span {
+            font-size: 1rem;
+        }
+
+        .events ul li button {
+            background-color: #6a4bf6;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .events ul li button:hover {
+            background-color: #5a3be6;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Vancouver Map App</h1>
-    <p>Explore the city and its hidden gems!</p>
-    <!-- Add app content here -->
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">Discover Vancouver</div>
+        <ul>
+            <li><a href="event.html">Events</a></li> <!-- Event button -->
+            <li><a href="#">Gift Cards</a></li>
+            <li><a href="#">My Reviews</a></li>
+        </ul>
+        <button id="logoutButton" class="login-button">Logout</button>
+    </nav>
 
-    <a href="index.html">Logout</a>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Upcoming Events in Vancouver</h1>
+        <p>Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading</p>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events">
+        <h2>Upcoming Events</h2>
+        <ul>
+            <li>
+                <span>List item</span>
+                <button>View</button>
+            </li>
+            <li>
+                <span>List item</span>
+                <button>View</button>
+            </li>
+            <li>
+                <span>List item</span>
+                <button>View</button>
+            </li>
+            <li>
+                <span>List item</span>
+                <button>View</button>
+            </li>
+            <li>
+                <span>List item</span>
+                <button>View</button>
+            </li>
+            <li>
+                <span>List item</span>
+                <button>View</button>
+            </li>
+        </ul>
+    </section>
+<script src="scripts.js"></script>
 </body>
 </html>
