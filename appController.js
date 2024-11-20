@@ -215,7 +215,7 @@ router.get('/projectFromPlace', async (req, res) => {
         return res.status(400).json({ success: false, message: "attributes are required" });
     }
 
-    const listAttributes = atttributes.split(",");
+    const listAttributes = attributes.split(",");
     try {
         const projectionResult = await appService.projectFromPlace(listAttributes);
         res.status(200).json({ success: true, data: projectionResult });
@@ -230,7 +230,7 @@ router.get('/getCuisinesAboveThreshold', async (req, res) => {
     if(!threshold){
         return res.status(400).json({ success: false, message: "threshold are required" });
     }
-    const numberThreshold = parseFloat(trheshold)
+    const numberThreshold = parseFloat(threshold)
     try {
         const projectionResult = await appService.getCuisinesAboveThreshold(numberThreshold);
         res.status(200).json({ success: true, data: projectionResult });

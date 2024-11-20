@@ -334,16 +334,13 @@ async function getCuisinesAboveThreshold(threshold) {
 }
 /*
 2.1.6 Selection
+Parsing logic is in the appController
 **/
 async function selectingPlace(inputString) {
     return await withOracleDB(async (connection) => {
         console.log("Executing query to select a place", inputString);
-        const query = `
-            SELECT *
-            FROM Place
-            WHERE :inputString
-        `;
-        const result = await connection.execute(query, { inputString });
+        const query = `SELECT * FROM Place WHERE ${inputString}`;
+        const result = await connection.execute(query);
         console.log("Query executed successfully:", result.rows);
         return result.rows;
     });
