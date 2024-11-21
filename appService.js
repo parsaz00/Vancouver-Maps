@@ -268,6 +268,35 @@ async function getEventsAtPlace(placeName, placeAddress) {
     })
 }
 
+/** 
+ * 2.1.5 Projection 
+*/
+async function projectFromPlace(selectedAttributes) {
+    return await withOracleDB(async (connection) => {
+        const validAttributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
+        let column = "";
+        for (let i = 0; i < selectedAttributes.length; i++) {
+            if (!validAttributes.includes(selectedAttributes[i])) {
+                throw new Error(`Invalid attribute: ${selectedAttributes[i]}`);
+            }
+            column += selectedAttributes[i];
+            if (i < selectedAttributes.length - 1) {
+                column += ", ";
+            }
+        }
+
+        const result = await connection.execute(
+            `SELECT ${column} FROM Place`
+        );
+        console.log("Successful query", result.rows);
+
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error in projectFromPlace:', err);
+        throw err;
+    });
+}
+
 /**
  * Query to get average rating of events at each place
  * To support 2.1.7
@@ -275,13 +304,52 @@ async function getEventsAtPlace(placeName, placeAddress) {
 async function getAverageEventRatingPerPlace() {
     return await withOracleDB(async (connection) => {
         console.log("Executing aggregation query for average event rating per place");
-        const result = await connection.execute(
-            `SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
+        const query = `
+            SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
             FROM Event e
-            GROUP BY e.Name, e.Address`
-       );
-       console.log("Query executed successfully: ", result.rows);
-       return result.rows;
+            GROUP BY e.Name, e.Address
+        `;
+        const result = await connection.execute(query);
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
+
+/*
+2.1.8 Aggregation with Having (Ranked Cusisine Types)
+**/
+async function getCuisinesAboveThreshold(threshold) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
+
+        const query = `
+            SELECT r.Cuisine, AVG(rv.Rating) AS AverageRating
+            FROM Restaurant r
+            JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
+            GROUP BY r.Cuisine
+            HAVING AVG(rv.Rating) > :threshold
+        `;
+        const result = await connection.execute(query, { threshold });
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
+/*
+2.1.6 Selection
+Parsing logic is in the appController
+**/
+async function selectingPlace(condition) {
+    return await withOracleDB(async (connection) => {
+        const query = `SELECT * FROM Place WHERE ${condition}`;
+        console.log('Executing query to select a place:', query);
+
+        const result = await connection.execute(query);
+        console.log("Successful query", result.rows);
+
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error in selectingPlace:', err);
+        throw err;
     });
 }
 
@@ -298,6 +366,9 @@ module.exports = {
     getEventsAtPlace,
     getAverageEventRatingPerPlace,
     insertWithForeignKeyCheck,
+    projectFromPlace,
+    getCuisinesAboveThreshold,
+    selectingPlace,
     withOracleDB,
     getUserNotifications
 };
