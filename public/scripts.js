@@ -232,7 +232,67 @@ async function loginUser(event) {
         messageElement.textContent = `Login failed: ${responseData.message}`;
     }
 }
-// document.getElementById('loginForm').addEventListener('submit', loginUser);
+
+async function fetchEvents() {
+    try {
+        const response = await fetch('/events');
+        const { upcomingEvents, pastEvents } = await response.json();
+
+        const upcomingList = document.getElementById('upcomingEventsList');
+        const pastList = document.getElementById('pastEventsList');
+
+        upcomingList.innerHTML = '';
+        pastList.innerHTML = '';
+
+        upcomingEvents.forEach(event => {
+            const li = document.createElement('li');
+            li.textContent = `${event[1]} on ${event[2]} at ${event[4]}`;
+            upcomingList.appendChild(li);
+        });
+
+        pastEvents.forEach(event => {
+            const li = document.createElement('li');
+            li.textContent = `${event[1]} on ${event[2]} at ${event[4]}`;
+            pastList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error fetching events:', error);
+    }
+}
+
+async function addEvent(event) {
+    event.preventDefault();
+    const title = document.getElementById('eventTitle').value;
+    const date = document.getElementById('eventDate').value;
+    const description = document.getElementById('eventDescription').value;
+    const name = document.getElementById('eventName').value;
+    const address = document.getElementById('eventAddress').value;
+
+    try {
+        const response = await fetch('/add-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, date, description, name, address }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Event added successfully!');
+            fetchEvents();
+        } else {
+            alert(result.message || 'Failed to add event.');
+        }
+    } catch (error) {
+        console.error('Error adding event:', error);
+    }
+}
+
+async function handleLogout() {
+    console.log("Logout button clicked");
+    window.location.href = "index.html";
+}
+
+
 
 
 // ---------------------------------------------------------------
@@ -251,6 +311,7 @@ async function loginUser(event) {
 
 window.onload = function() {
     checkDbConnection();
+    fetchEvents();
 
     // Attach event listeners only if the corresponding elements exist
     const signupForm = document.getElementById('signupForm');
@@ -283,6 +344,26 @@ window.onload = function() {
         countButton.addEventListener("click", countDemotable);
     }
 
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+        console.log("Adding event listener to logout button...");
+        logoutButton.addEventListener("click", handleLogout);
+    } else {
+        console.log("Logout button not found.");
+    }
+    
+    const addEventForm = document.getElementById('addEventForm');
+    if (addEventForm) {
+        addEventForm.addEventListener('submit', addEvent);
+    }
+
+    const backToMainButton = document.getElementById("backToMainButton");
+    if (backToMainButton) {
+    backToMainButton.addEventListener("click", () => {
+        window.location.href = "mainApp.html"; // Redirect to main page
+    });
+}
+
     // Fetch table data only if the demotable exists
     fetchTableData();
 };
@@ -296,4 +377,5 @@ function fetchTableData() {
         fetchAndDisplayUsers();
     }
 }
+
 

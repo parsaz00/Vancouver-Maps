@@ -330,3 +330,40 @@ router.get('/login', async (req, res) => {
     }
 });
 
+
+// Fetch all events (upcoming and past)
+router.get('/events', async (req, res) => {
+    const currentDate = new Date();
+
+    try {
+        const upcomingEvents = await appService.fetchEventsAfterDate(currentDate);
+        const pastEvents = await appService.fetchEventsBeforeDate(currentDate);
+
+        res.json({ upcomingEvents, pastEvents });
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ error: 'Failed to fetch events' });
+    }
+});
+
+// Add a new event
+router.post('/add-event', async (req, res) => {
+    const { title, date, description, name, address } = req.body;
+
+    if (!title || !date || !name || !address) {
+        return res.status(400).json({ error: 'Missing required fields: title, date, name, address' });
+    }
+
+    try {
+        const result = await appService.addEvent({ title, date, description, name, address });
+
+        if (result.success) {
+            res.json({ success: true, message: 'Event added successfully!' });
+        } else {
+            res.status(400).json({ success: false, message: result.message });
+        }
+    } catch (error) {
+        console.error('Error adding event:', error);
+        res.status(500).json({ error: 'Failed to add event' });
+    }
+});
