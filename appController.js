@@ -367,3 +367,66 @@ router.post('/add-event', async (req, res) => {
         res.status(500).json({ error: 'Failed to add event' });
     }
 });
+
+// Fetch the reviews made by User with userId
+router.get('/user-reviews', async (req,res) => {
+    const { userId } = req.query;
+    
+    if(!userId) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    try {
+        const reviews = await appService.getReviewsByUser(userId);
+        res.status(200).json({ success: true, data: reviews });
+    } catch(error) {
+        console.error("Error fetching reviews: ", error);
+        res.status(500).json({ success: false, message: 'Failed to fetch reviews, please contact administrator' });
+    }
+});
+
+// Fetch all places
+router.get('/places', async (req, res) => {
+    try {
+        const places = await appService.getAllPlaces();
+        res.status(200).json({ success: true, data: places });
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch places.' });
+    }
+});
+
+// // Reviews and places
+// router.get('/reviews-and-places', async (req, res) => {
+//     const { userId } = req.query;
+
+//     if (!userId) {
+//         return res.status(400).json({ success: false, message: 'UserID is required' });
+//     }
+
+//     try {
+//         const reviewsAndPlaces = await appService.getReviewsAndPlaces(userId);
+//         res.status(200).json({ success: true, ...reviewsAndPlaces });
+//     } catch (error) {
+//         console.error('Error fetching reviews and places:', error);
+//         res.status(500).json({ success: false, message: 'Failed to fetch reviews and places.' });
+//     }
+// });
+
+// Reviews and places
+router.get('/reviews-and-places', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    try {
+        const reviewsAndPlaces = await appService.getReviewsAndPlaces(userId);
+        res.status(200).json({ success: true, ...reviewsAndPlaces });
+    } catch (error) {
+        console.error('Error fetching reviews and places:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch reviews and places.' });
+    }
+});
+
