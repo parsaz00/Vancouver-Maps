@@ -248,6 +248,55 @@ router.get('/getCuisinesAboveThreshold', async (req, res) => {
     }
 });
 
+router.delete('/reviews', async (req, res) => {
+    const { reviewID, userID } = req.body;
+    if (!reviewID || !userID) {
+        return res.status(400).json({ success: false, message: "reviewID and userID are required" });
+    }
+
+    try {
+        const rowsDeleted = await appService.deleteReview(reviewID, userID);
+        if (rowsDeleted > 0) {
+            res.status(200).json({ success: true, message: 'Review deleted successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'Review not found or not authorized to delete'});
+        }
+    } catch (error) {
+        console.error('Error deleting review:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete review' });
+    }
+});
+
+router.put('/reviews', async (req, res) => {
+    const { reviewID, userID, newMessage } = req.body;
+
+    if (!reviewID || !userID || !newMessage) {
+        return res.status(400).json({ success: false, message: "reviewID, userID, and newMessage are required" });
+    }
+
+    try {
+        const rowsUpdated = await appService.updateReview(reviewID, userID, newMessage);
+        if (rowsUpdated > 0) {
+            res.status(200).json({ success: true, message: 'Review updated successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'Review not found or not authorized to update' });
+        }
+    } catch (error) {
+        console.error('Error updating review:', error);
+        res.status(500).json({ success: false, message: 'Failed to update review' });
+    }
+});
+
+router.get('/highest-average-rating', async (req, res) => {
+    try {
+        const data = await appService.getHighestAverageRatingPerPlaceType();
+        res.status(200).json({ success: true, data: data });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch data' });
+    }
+});
+
 module.exports = router;
 
 

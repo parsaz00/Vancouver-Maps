@@ -353,6 +353,68 @@ async function selectingPlace(condition) {
     });
 }
 
+/*
+2.1.3 Delete
+**/
+async function deleteReview(reviewID, userID) {
+    return await withOracleDB(async (connection) => {
+        console.log("Deleting review with ID:", reviewID, "by user:", userID);
+        const result = await connection.execute(
+            `DELETE FROM Reviews
+             WHERE ReviewID = :reviewID AND UserID = :userID`,
+            {
+                reviewID: reviewID,
+                userID: userID
+            },
+            { autoCommit: true }
+        );
+        console.log("Rows deleted:", result.rowsAffected);
+        return result.rowsAffected;
+    });
+}
+
+/*
+2.1.2 Update
+**/
+async function updateReview(reviewID, userID, newMessage) {
+    return await withOracleDB(async (connection) => {
+        console.log("Updating review message for review ID:", reviewID, "by user:", userID);
+        const result = await connection.execute(
+            `UPDATE Reviews
+             SET Message = :newMessage
+             WHERE ReviewID = :reviewID AND UserID = :userID`,
+            {
+                newMessage: newMessage,
+                reviewID: reviewID,
+                userID: userID
+            },
+            { autoCommit: true }
+        );
+        console.log("Rows updated:", result.rowsAffected);
+        return result.rowsAffected;
+    });
+}
+
+/*
+2.1.9 Nested Group By
+**/
+async function getHighestAverageRatingPerPlaceType() {
+    return await withOracleDB(async (connection) => {
+        console.log("Fetching highest average rating per place type");
+        const result = await connection.execute(
+            `SELECT p.Type, MAX(AvgRating) AS MaxRating
+             FROM (
+                 SELECT p.Type, p.Name, p.Address, AVG(r.Rating) AS AvgRating
+                 FROM Place p
+                 JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
+                 GROUP BY p.Type, p.Name, p.Address
+             ) PlaceRatings
+             GROUP BY p.Type`
+        );
+        console.log("Query executed successfully");
+        return result.rows;
+    });
+}
 
 
 module.exports = {
@@ -370,5 +432,8 @@ module.exports = {
     getCuisinesAboveThreshold,
     selectingPlace,
     withOracleDB,
-    getUserNotifications
+    getUserNotifications,
+    deleteReview,
+    updateReview,
+    getHighestAverageRatingPerPlaceType
 };
