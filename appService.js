@@ -504,7 +504,7 @@ module.exports = {
     getUserNotifications,
     deleteReview,
     updateReview,
-    getHighestAverageRatingPerPlaceType
+    getHighestAverageRatingPerPlaceType,
     fetchEventsAfterDate,
     fetchEventsBeforeDate,
     addEvent
