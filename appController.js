@@ -159,7 +159,97 @@ router.get('/average-event-rating', async (req, res) => {
     }
 });
 
+
+router.get('/selectingPlace', async (req, res) => {
+    const { inputString } = req.query;
+    if (!inputString) {
+        return res.status(400).json({ success: false, message: "An input is required" });
+    }
+    const trimmed = inputString.trim();
+    const tokenizedInput = trimmed.split(" ");
+    const operators = ["=", "<", ">", "<=", ">=", "<>"];
+    const tokenOutput = [];
+
+    for (let i = 0; i < tokenizedInput.length; i++) {
+        let token = tokenizedInput[i];
+        if (token.toLowerCase() === "and" || token.toLowerCase() === "or") {
+            // tor AND / OR
+            tokenOutput.push(token.toUpperCase());
+        } else if (operators.includes(token)) {
+            // for operators
+            tokenOutput.push(token);
+        } else if (i > 0 && operators.includes(tokenizedInput[i - 1])) {
+            // value after an operator
+            let value = token;
+
+            // collect spaces like 'Stanley Park'
+            while (i + 1 < tokenizedInput.length && !operators.includes(tokenizedInput[i + 1]) &&
+            tokenizedInput[i + 1].toLowerCase() !== "and" && tokenizedInput[i + 1].toLowerCase() !== "or") {
+                //must increment this way
+                value += " " + tokenizedInput[++i];
+            }
+
+            // integer check for < > etc
+            if (/^\d+$/.test(value)) {
+                tokenOutput.push(value);
+            } else {
+                // double quotes were not working sooo try single in this instance
+                value = `'${value.replace(/'/g, "''")}'`;
+                tokenOutput.push(value);
+            }
+        } else {
+            // push key
+            tokenOutput.push(token);
+        }
+    }
+
+    const cleaned_string = tokenOutput.join(" ");
+    console.log('Cleaned query string:', cleaned_string);
+
+    try {
+        const places = await appService.selectingPlace(cleaned_string);
+        res.status(200).json({ success: true, data: places });
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch places' });
+    }
+});
+
+
+// Project attributes from a particular place 
+router.get('/projectFromPlace', async (req, res) => {
+    const { attributes } = req.query;
+    if(!attributes){
+        return res.status(400).json({ success: false, message: "attributes are required" });
+    }
+
+    const listAttributes = attributes.split(",");
+    try {
+        const projectionResult = await appService.projectFromPlace(listAttributes);
+        res.status(200).json({ success: true, data: projectionResult });
+    } catch (error) {
+        console.error('Error in /project-place:', error);
+        res.status(500).json({ success: false, message: 'Failed to execute projection' });
+    }
+});
+
+router.get('/getCuisinesAboveThreshold', async (req, res) => {
+    const { threshold } = req.query;
+    if(!threshold){
+        return res.status(400).json({ success: false, message: "threshold are required" });
+    }
+    const numberThreshold = parseFloat(threshold)
+    try {
+        const projectionResult = await appService.getCuisinesAboveThreshold(numberThreshold);
+        res.status(200).json({ success: true, data: projectionResult });
+    } catch (error) {
+        console.error('Error in /cusines-above-threshold:', error);
+        res.status(500).json({ success: false, message: 'Failed to execute aggregation query' });
+    }
+});
+
 module.exports = router;
+
 
 // Login endpoint 
 router.get('/login', async (req, res) => {
@@ -190,6 +280,7 @@ router.get('/login', async (req, res) => {
         res.status(500).json({ success: false, message: "Login failed" });
     }
 });
+
 
 // Fetch all events (upcoming and past)
 router.get('/events', async (req, res) => {
@@ -227,4 +318,3 @@ router.post('/add-event', async (req, res) => {
         res.status(500).json({ error: 'Failed to add event' });
     }
 });
-
