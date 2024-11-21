@@ -4,27 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vancouver Map App - User Signup</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* Card Container */
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        input[readonly] {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Link Styling */
+        .back-link {
+            margin-top: 10px;
+            display: inline-block;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h2>User Signup</h2>
-    <form id="signupForm">
-        <label for="signupUserId">User ID:</label>
-        <input type="number" id="signupUserId" placeholder="Enter User ID" required><br><br>
+    <div class="card">
+        <form id="signupForm">
+            <label for="signupUserId">User ID:</label>
+            <input type="number" id="signupUserId" placeholder="Enter User ID" required>
 
-        <label for="signupPhone">Phone Number:</label>
-        <input type="text" id="signupPhone" placeholder="Enter Phone Number" required><br><br>
+            <label for="signupPhone">Phone Number:</label>
+            <input type="text" id="signupPhone" placeholder="Enter Phone Number" required>
 
-        <label for="signupEmail">Email:</label>
-        <input type="email" id="signupEmail" placeholder="Enter Email" required><br><br>
+            <label for="signupEmail">Email:</label>
+            <input type="email" id="signupEmail" placeholder="Enter Email" required>
 
-        <label for="signupPoints">Points:</label>
-        <input type="number" id="signupPoints" value="0" readonly><br><br>
+            <label for="signupPoints">Points: You can't enter points yet ;) </label>
+            <input type="number" id="signupPoints" value="0" readonly>
 
-        <button type="submit">Signup</button>
-    </form>
-    <div id="signupResultMsg"></div>
-
-    <a href="index.html">Back to Login</a>
+            <button type="submit">Signup</button>
+        </form>
+        <div id="signupResultMsg"></div>
+        <a href="index.html" class="back-link">Back to Login</a>
+    </div>
 
     <script src="scripts.js"></script>
 </body>

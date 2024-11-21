@@ -5,38 +5,141 @@
     <link rel="icon" type="image/png" href="assets/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vancouver Map App - Welcome</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #555;
+            margin-top: 30px;
+        }
+
+        hr {
+            width: 80%;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        /* Card Container */
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            text-align: left;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Signup Button */
+        .signup-button {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .signup-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Connection Status */
+        .connection-status {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .loading-gif {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
     <!-- Database Connection Status -->
-    <h1>Database Connection Status: 
-        <!-- An in-line placeholder to display connection status. -->
-        <span id="dbStatus"> </span>
-        <!-- A loading GIF, will be hided once get the status. -->
-        <img id="loadingGif" class="loading-gif" src="assets/loading_100px.gif" alt="Loading...">
-    </h1>
-
-    <hr>
+    <h1>Vancouver Map App</h1>
+    <div class="card connection-status">
+        <p>Database Connection Status: 
+            <span id="dbStatus">Checking...</span>
+            <img id="loadingGif" class="loading-gif" src="assets/loading_100px.gif" alt="Loading...">
+        </p>
+    </div>
 
     <!-- Login Section -->
-    <h2>Login</h2>
-    <form id="loginForm">
-        <label for="loginEmail">Email:</label>
-        <input type="email" id="loginEmail" placeholder="Enter Email"><br><br>
+    <div class="card">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="loginEmail">Email:</label>
+            <input type="email" id="loginEmail" placeholder="Enter Email">
 
-        <label for="loginPhone">Phone Number:</label>
-        <input type="text" id="loginPhone" placeholder="Enter Phone Number"><br><br>
+            <label for="loginPhone">Phone Number:</label>
+            <input type="text" id="loginPhone" placeholder="Enter Phone Number">
 
-        <button type="submit">Login</button>
-    </form>
-    <div id="loginResultMsg"></div>
+            <button type="submit">Login</button>
+        </form>
+        <div id="loginResultMsg"></div>
+    </div>
 
-    <hr>
-
-    <!-- Signup Redirect -->
-    <h2>Don't have an account?</h2>
-    <a href="signup.html">
-        <button>Signup</button>
-    </a>
+    <!-- Signup Section -->
+    <div class="card">
+        <h2>Don't have an account?</h2>
+        <a href="signup.html">
+            <button class="signup-button">Signup</button>
+        </a>
+    </div>
 
     <script src="scripts.js"></script>
 </body>
