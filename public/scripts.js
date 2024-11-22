@@ -12,30 +12,6 @@
  * 
  */
 
-
-// This function checks the database connection and updates its status on the frontend.
-// async function checkDbConnection() {
-//     const statusElem = document.getElementById('dbStatus');
-//     const loadingGifElem = document.getElementById('loadingGif');
-
-//     const response = await fetch('/check-db-connection', {
-//         method: "GET"
-//     });
-
-//     // Hide the loading GIF once the response is received.
-//     loadingGifElem.style.display = 'none';
-//     // Display the statusElem's text in the placeholder.
-//     statusElem.style.display = 'inline';
-
-//     response.text()
-//     .then((text) => {
-//         statusElem.textContent = text;
-//     })
-//     .catch((error) => {
-//         statusElem.textContent = 'connection timed out';  // Adjust error handling if required.
-//     });
-// }
-
 async function checkDbConnection() {
     const statusElem = document.getElementById('dbStatus');
     const loadingGifElem = document.getElementById('loadingGif');
@@ -203,35 +179,6 @@ async function signupUser(event) {
     }
 }
 
-// async function loginUser(event) {
-//     event.preventDefault();
-
-//     const email = document.getElementById('loginEmail').value;
-//     const phone = document.getElementById('loginPhone').value;
-
-//     // Have to make sure at least one field (phone or email) is filled
-//     if (!email && !phone) {
-//         const messageElement = document.getElementById('loginResultMsg');
-//         messageElement.textContent = "Please enter either your email or phone number used to signup!";
-//         return;
-//     }
-
-//     const queryParams = email ? `email=${email}` : `phone=${phone}`;
-//     const response = await fetch(`/login?${queryParams}`, {
-//         method: 'GET'
-//     });
-
-//     const responseData = await response.json();
-//     const messageElement = document.getElementById('loginResultMsg');
-
-//     if (responseData.success) {
-//         messageElement.textContent = "Login was successful, redirecting you to the app bang!";
-//         // actually redirect them 
-//         window.location.href = "mainApp.html";
-//     } else {
-//         messageElement.textContent = `Login failed: ${responseData.message}`;
-//     }
-// }
 async function loginUser(event) {
     event.preventDefault();
 
@@ -322,55 +269,6 @@ async function handleLogout() {
     window.location.href = "index.html";
 }
 
-
-// async function fetchReviewsAndPlaces() {
-//     const userId = localStorage.getItem('userId');
-//     if (!userId) {
-//         console.error('UserID not found in localStorage. Please ensure the user is logged in.');
-//         return;
-//     }
-
-//     try {
-//         const response = await fetch(`/reviews-and-places?userId=${userId}`);
-//         const result = await response.json();
-
-//         if (result.success) {
-//             // Display Reviews
-//             const reviewsContainer = document.getElementById('reviewsContainer');
-//             reviewsContainer.innerHTML = '';
-//             if (result.reviews.length > 0) {
-//                 result.reviews.forEach(([name, address, reviewDate, rating, message]) => {
-//                     const reviewCard = document.createElement('div');
-//                     reviewCard.className = 'card';
-//                     reviewCard.innerHTML = `
-//                         <h3>${name} (${address})</h3>
-//                         <p><strong>Date:</strong> ${new Date(reviewDate).toLocaleDateString()}</p>
-//                         <p><strong>Rating:</strong> ${rating}/5</p>
-//                         <p><strong>Review:</strong> ${message || 'No message provided.'}</p>
-//                     `;
-//                     reviewsContainer.appendChild(reviewCard);
-//                 });
-//             } else {
-//                 reviewsContainer.innerHTML = '<p>No reviews found.</p>';
-//             }
-
-//             // Populate Places Dropdown
-//             const placeSelect = document.getElementById('placeSelect');
-//             placeSelect.innerHTML = '';
-//             result.places.forEach((place) => {
-//                 const option = document.createElement('option');
-//                 option.value = `${place.name},${place.address}`;
-//                 option.textContent = `${place.name} (${place.address})`;
-//                 placeSelect.appendChild(option);
-//             });
-//         } else {
-//             alert(result.message || 'Failed to fetch data.');
-//         }
-//     } catch (error) {
-//         console.error('Error fetching reviews and places:', error);
-//     }
-// }
-
 async function fetchReviewsAndPlacesSequentially() {
     const userId = localStorage.getItem('userId');
     if (!userId) {
@@ -417,123 +315,6 @@ async function fetchReviewsAndPlacesSequentially() {
         console.error('Error fetching reviews or places:', error);
     }
 }
-
-
-
-// // Fetching user reviews
-// async function fetchUserReviews() {
-//     const userId = localStorage.getItem('userId'); // Retrieve the logged-in user's ID
-
-//     if (!userId) {
-//         console.error('UserID not found in localStorage. Please ensure the user is logged in.');
-//         return;
-//     }
-
-//     try {
-//         const response = await fetch(`/user-reviews?userId=${userId}`);
-//         const result = await response.json();
-
-//         const reviewsContainer = document.getElementById('reviewsContainer');
-//         reviewsContainer.innerHTML = ''; // Clear existing content
-
-//         if (result.success && result.data.length > 0) {
-//             result.data.forEach(([name, address, reviewDate, rating, message]) => {
-//                 const reviewCard = document.createElement('div');
-//                 reviewCard.className = 'card';
-//                 reviewCard.innerHTML = `
-//                     <h3>${name} (${address})</h3>
-//                     <p><strong>Date:</strong> ${new Date(reviewDate).toLocaleDateString()}</p>
-//                     <p><strong>Rating:</strong> ${rating}/5</p>
-//                     <p><strong>Review:</strong> ${message || 'No message provided.'}</p>
-//                 `;
-//                 reviewsContainer.appendChild(reviewCard);
-//             });
-//         } else {
-//             reviewsContainer.innerHTML = '<p>No reviews found.</p>';
-//         }
-//     } catch (error) {
-//         console.error('Error fetching user reviews:', error);
-//     }
-// }
-
-// async function fetchPlaces() {
-//     try {
-//         const response = await fetch('/places');
-//         const result = await response.json();
-//         const placeSelect = document.getElementById('placeSelect');
-
-//         if (result.success && result.data.length > 0) {
-//             result.data.forEach((place) => {
-//                 const option = document.createElement('option');
-//                 option.value = `${place.name},${place.address}`;
-//                 option.textContent = `${place.name} (${place.address})`;
-//                 placeSelect.appendChild(option);
-//             });
-//         } else {
-//             const noOption = document.createElement('option');
-//             noOption.textContent = 'No places available';
-//             placeSelect.appendChild(noOption);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching places:', error);
-//     }
-// }
-
-// async function addReview(event) {
-//     event.preventDefault();
-
-//     const placeSelect = document.getElementById('placeSelect').value;
-//     const [name, address] = placeSelect.split(',');
-//     let reviewDate = document.getElementById('reviewDate').value;
-//     const rating = document.getElementById('rating').value;
-//     const message = document.getElementById('message').value;
-//     const userId = localStorage.getItem('userId');
-
-//     // Ensure inputs are valid
-//     if (!name || !address || !userId || !reviewDate || !rating) {
-//         alert('Invalid input. Please ensure all fields are filled out correctly.');
-//         return;
-//     }
-
-//     // Validate and ensure the date format is YYYY-MM-DD
-//     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-//     if (!dateRegex.test(reviewDate)) {
-//         alert('Invalid date format. Please use YYYY-MM-DD.');
-//         return;
-//     }
-
-//     console.log({
-//         userId, 
-//         name, 
-//         address, 
-//         reviewDate, 
-//         rating, 
-//         message
-//     });
-    
-//     try {
-//         // Send data to the backend
-//         const response = await fetch('/insert', {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({
-//                 tableName: 'Reviews',
-//                 columns: ['UserID', 'Name', 'Address', 'ReviewDate', 'Rating', 'Message'],
-//                 values: [userId, name, address, reviewDate, rating, message],
-//             }),
-//         });
-
-//         const result = await response.json();
-//         if (result.success) {
-//             alert('Review added successfully!');
-//             fetchUserReviews(); // Refresh reviews
-//         } else {
-//             alert(result.message || 'Failed to add review.');
-//         }
-//     } catch (error) {
-//         console.error('Error adding review:', error);
-//     }
-// }
 
 async function addReview(event) {
     event.preventDefault();
@@ -589,6 +370,148 @@ async function addReview(event) {
     }
 }
 
+// Fetch places from the backend and display them
+async function fetchAndDisplayPlaces() {
+    const placesList = document.getElementById('placesList');
+    placesList.innerHTML = '<li>Loading...</li>'; // Show a loading indicator
+
+    try {
+        const response = await fetch('/places'); // Endpoint to fetch places
+        const result = await response.json();
+
+        if (result.success) {
+            placesList.innerHTML = ''; // Clear loading indicator
+            result.data.forEach((place) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${place.name} (${place.address})</span>
+                `;
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = `<li>Error: ${result.message}</li>`;
+        }
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        placesList.innerHTML = '<li>Failed to fetch places.</li>';
+    }
+}
+
+// Call the function when the page loads
+if (window.location.pathname.endsWith('places.html')) {
+    fetchAndDisplayPlaces();
+    populatePlaceSelector();
+}
+
+// Populate the place selector dropdown
+async function populatePlaceSelector() {
+    const placeSelector = document.getElementById("placeSelector");
+
+    try {
+        const response = await fetch('/places');
+        const result = await response.json();
+
+        if (result.success) {
+            placeSelector.innerHTML = ""; // Clear previous options
+
+            // Populate dropdown with place options
+            result.data.forEach(({ name, address }) => {
+                const option = document.createElement("option");
+                option.value = `${name},${address}`;
+                option.textContent = `${name} (${address})`;
+                placeSelector.appendChild(option);
+            });
+        } else {
+            console.error("Failed to fetch places:", result.message);
+        }
+    } catch (error) {
+        console.error("Error fetching places:", error);
+    }
+}
+
+// Fetch and display events for the selected place
+async function fetchAndDisplayEventsForPlace(event) {
+    event.preventDefault();
+
+    const placeSelector = document.getElementById("placeSelector");
+    const eventsList = document.getElementById("eventsList");
+
+    const [placeName, placeAddress] = placeSelector.value.split(",");
+
+    try {
+        const response = await fetch(`/place-events?placeName=${encodeURIComponent(placeName)}&placeAddress=${encodeURIComponent(placeAddress)}`);
+        const result = await response.json();
+
+        if (result.success) {
+            eventsList.innerHTML = ""; // Clear previous events
+
+            if (result.data.length > 0) {
+                result.data.forEach(([_, __, eventID, title, eventDate, description]) => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        <strong>${title}</strong> - ${new Date(eventDate).toLocaleDateString()}<br>
+                        <p>${description}</p>
+                    `;
+                    eventsList.appendChild(listItem);
+                });
+            } else {
+                eventsList.innerHTML = "<li>No events found for this place.</li>";
+            }
+        } else {
+            eventsList.innerHTML = `<li>Error fetching events: ${result.message}</li>`;
+        }
+    } catch (error) {
+        console.error("Error fetching events:", error);
+        eventsList.innerHTML = "<li>Failed to fetch events.</li>";
+    }
+}
+
+
+// Fetch average ratings for each place and update the UI
+async function fetchAndDisplayAverageRatings() {
+    const placesList = document.getElementById('placesList');
+
+    try {
+        // Fetch average ratings
+        const response = await fetch('/average-event-rating');
+        const result = await response.json();
+
+        if (result.success) {
+            // Clear the current places list
+            placesList.innerHTML = '';
+
+            // Map the ratings data for easier lookup
+            const ratingsMap = new Map(
+                result.data.map(([name, address, averageRating]) => [
+                    `${name} (${address})`,
+                    averageRating.toFixed(1), // Format to 1 decimal
+                ])
+            );
+
+            // Rebuild the places list with ratings
+            result.data.forEach(([name, address, averageRating]) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <strong>${name}</strong> (${address})<br>
+                    Average Rating: ${averageRating.toFixed(1)}/5
+                `;
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = '<li>Error fetching ratings.</li>';
+        }
+    } catch (error) {
+        console.error('Error fetching average ratings:', error);
+        placesList.innerHTML = '<li>Failed to fetch ratings. Please try again later.</li>';
+    }
+}
+
+// // Attach event listener to the "Show Average Event Ratings" button
+// const showRatingsButton = document.getElementById('showRatingsButton');
+// if (showRatingsButton) {
+//     showRatingsButton.addEventListener('click', fetchAndDisplayAverageRatings);
+// }
+
 
 
 
@@ -614,6 +537,13 @@ window.onload = function() {
     // fetchUserReviews();
     // fetchPlaces();
     fetchReviewsAndPlacesSequentially();
+
+    // Attach event listener to the events form
+    const eventsForm = document.getElementById("eventsForm");
+    if (eventsForm) {
+    eventsForm.addEventListener("submit", fetchAndDisplayEventsForPlace);
+    }
+
 
     const addReviewForm = document.getElementById('addReviewForm');
     if (addReviewForm) {
@@ -688,3 +618,70 @@ function fetchTableData() {
 }
 
 
+let isRatingView = false; // To track if the user is viewing ratings
+
+// Function to toggle between places and ratings views
+function togglePlacesRatingsView() {
+    const titleElement = document.querySelector(".places-container h2");
+    const showRatingsButton = document.getElementById("showRatingsButton");
+    const backButton = document.querySelector(".back-button");
+
+    if (isRatingView) {
+        // Switch to places view
+        titleElement.textContent = "Places in Vancouver";
+        showRatingsButton.textContent = "Show Average Event Ratings for each place";
+    } else {
+        // Switch to ratings view
+        titleElement.textContent = "Average Rating of Events for Each Place";
+        showRatingsButton.textContent = "Back to Places";
+    }
+
+    isRatingView = !isRatingView; // Toggle the view state
+}
+
+// Fetch average ratings for each place and display them
+async function fetchAndDisplayPlacesWithRatings() {
+    const placesList = document.getElementById("placesList");
+
+    try {
+        const response = await fetch("/average-event-rating");
+        const result = await response.json();
+
+        if (result.success) {
+            // Clear the current places list
+            placesList.innerHTML = "";
+
+            // Display places with their average ratings
+            result.data.forEach(([name, address, averageRating]) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <span>${name} (${address})</span>
+                    <span class="rating">Average Rating: ${averageRating.toFixed(1)}/5</span>
+                `;
+                placesList.appendChild(listItem);
+            });
+
+            // Switch to the ratings view
+            togglePlacesRatingsView();
+        } else {
+            placesList.innerHTML = "<li>Error fetching ratings.</li>";
+        }
+    } catch (error) {
+        console.error("Error fetching average ratings:", error);
+        placesList.innerHTML = "<li>Failed to fetch ratings. Please try again later.</li>";
+    }
+}
+
+// Attach event listener to the button
+const showRatingsButton = document.getElementById("showRatingsButton");
+if (showRatingsButton) {
+    showRatingsButton.addEventListener("click", () => {
+        if (!isRatingView) {
+            fetchAndDisplayPlacesWithRatings();
+        } else {
+            // Switch back to places view
+            togglePlacesRatingsView();
+            fetchAndDisplayPlaces(); // Fetch the original places list
+        }
+    });
+}

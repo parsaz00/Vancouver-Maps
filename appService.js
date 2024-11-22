@@ -265,7 +265,7 @@ async function getUserGiftCards(userId) {
 }
 
 /**
- * Find all events occuring at a Place, example of join
+ * Find all events occuring at a Place, example of join --> WILL USE THIS FOR MY DYNAMIC JOIN FOR NOW, IF I HAVE TIME I WILL SUPPOPRT OTHER ONES
  */
 async function getEventsAtPlace(placeName, placeAddress) {
     return await withOracleDB(async (connection) => {
