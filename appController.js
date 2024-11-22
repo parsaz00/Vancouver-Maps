@@ -188,7 +188,8 @@ router.get('/selectingPlace', async (req, res) => {
                 //must increment this way
                 value += " " + tokenizedInput[++i];
             }
-
+            //I WANT TO CAPITALIZE MADE THAT OOPSEY WHEN MAKING SEARCH BAR
+            value = value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
             // integer check for < > etc
             if (/^\d+$/.test(value)) {
                 tokenOutput.push(value);
