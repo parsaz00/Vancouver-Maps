@@ -189,6 +189,7 @@ router.get('/selectingPlace', async (req, res) => {
                 value += " " + tokenizedInput[++i];
             }
             //I WANT TO CAPITALIZE MADE THAT OOPSEY WHEN MAKING SEARCH BAR
+            // Citation from where I learned how to capitalize: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
             value = value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
             // integer check for < > etc
             if (/^\d+$/.test(value)) {

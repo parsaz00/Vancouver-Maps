@@ -74,6 +74,51 @@
             color: #666;
         }
 
+        /* Search Bar Section */
+        .search-bar {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .search-bar input {
+            width: 70%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            background-color: #6a4bf6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar .results {
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .search-bar .results ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .search-bar .results ul li {
+            background-color: #fff;
+            margin: 0.5rem 0;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
         /* Events Section */
         .events {
             max-width: 800px;
@@ -146,6 +191,14 @@
         <p>Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading</p>
     </section>
 
+    <!-- Search Bar Section -->
+    <section class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search for a place...">
+        <button onclick="searchPlaces()">Search</button>
+        <div class="results" id="searchResults">
+        </div>
+    </section>
+
     <!-- Events Section -->
     <section class="events">
         <h2>Upcoming Events</h2>
@@ -176,6 +229,38 @@
             </li>
         </ul>
     </section>
-<script src="scripts.js"></script>
+<script>
+    // Used https://developer.mozilla.org/en-US/docs/Web/CSS/:root#:~:text=The%20%3Aroot%20CSS%20pseudo-class,that%20its%20specificity%20is%20higher.
+    // for these functions
+    async function searchPlaces() {
+    const inputString = document.getElementById('searchInput').value;
+    const searchResultsDiv = document.getElementById('searchResults');
+    searchResultsDiv.innerHTML = ''; // Clear previous results
+
+    if (!inputString) {
+        searchResultsDiv.innerHTML = '<p>Please enter a search query (Ex. name = stanley park)</p>';
+        return;
+    }
+
+    const response = await fetch(`/selectingPlace?inputString=${encodeURIComponent(inputString)}`);
+    const data = await response.json();
+
+    if (data.success && data.data.length > 0) {
+        const ul = document.createElement('ul');
+
+        for (let i = 0; i < data.data.length; i++) {
+            const place = data.data[i]; // access data 
+            const li = document.createElement('li'); // create new list 
+            li.textContent = `Name: ${place[0]}, Address: ${place[1]}`; 
+            ul.appendChild(li); // append 
+        }
+
+        searchResultsDiv.appendChild(ul);
+    } else {
+        searchResultsDiv.innerHTML = '<p>No places found.</p>';
+    }
+}
+
+</script>
 </body>
 </html>
