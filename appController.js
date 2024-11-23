@@ -2,7 +2,7 @@ const express = require('express');
 const appService = require('./appService');
 const { events } = require('oracledb');
 const { withOracleDB } = require('./appService');
-
+const { sanitization } = require('./utils');
 const router = express.Router();
 
 // ----------------------------------------------------------
@@ -192,6 +192,9 @@ router.get('/average-event-rating', async (req, res) => {
  */
 router.get('/selectingPlace', async (req, res) => {
     const { inputString } = req.query;
+    if (!sanitization(inputString)) {
+        return res.status(400).json({ success: false, message: 'Invalid input do not include special characters' });
+    }
     if (!inputString) {
         return res.status(400).json({ success: false, message: "An input is required" });
     }
