@@ -182,6 +182,17 @@ async function countDemotable() {
 //     });
 // }
 
+/** 
+ * 2.1.1 Insert
+ * Description - Inserts a table and checks for foreign key constraints
+ * 
+ * @async 
+ * @function insertWithForeignKeyCheck
+ * @param {string} tableName - Name of the table to insert into
+ * @param {Array<string>} columns - Columns for the insert 
+ * @param {Array<any>} values - Values corresponding to the columns
+ * @returns {Promise<Array<Object>>} A promise to resolve an array of place 
+*/
 async function insertWithForeignKeyCheck(tableName, columns, values) {
     return await withOracleDB(async (connection) => {
         try {
@@ -226,9 +237,15 @@ async function insertWithForeignKeyCheck(tableName, columns, values) {
     });
 }
 
-
-
-// Dynamic join
+/**
+ * 2.1.6 Join
+ * Retrieves notifications for a specific user by performing a join query
+ *
+ * @async
+ * @function getUserNotifications
+ * @param {number} userId - Gets the userID
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of notification promises
+ */
 async function getUserNotifications(userId) {
     return await withOracleDB(async (connection) => {
         console.log("Executing join query for notifications...");
@@ -246,8 +263,13 @@ async function getUserNotifications(userId) {
 }
 
 /**
- * Function to retrieve the giftcards owned by a user 
+ * Description - Function to retrieve the giftcards owned by a user 
  * Gets them based on UserId
+ * 
+ * @async 
+ * @function getUserGiftCards
+ * @param {number} userId - fetch userId
+ * @returns {Promise<Array<Object>} A promise for each array of gift cards
  */
 async function getUserGiftCards(userId) {
     return await withOracleDB(async (connection) => {
@@ -266,6 +288,12 @@ async function getUserGiftCards(userId) {
 
 /**
  * Find all events occuring at a Place, example of join --> WILL USE THIS FOR MY DYNAMIC JOIN FOR NOW, IF I HAVE TIME I WILL SUPPOPRT OTHER ONES
+ * 
+ * @aync 
+ * @function getEventsAtPlace
+ * @param {string} placeName - Name of place 
+ * @param {string} placeADdress - Address of place 
+ * @returns {Promise<Array<Object>>} - A promise to resolve an array of the event
  */
 async function getEventsAtPlace(placeName, placeAddress) {
     return await withOracleDB(async (connection) => {
@@ -284,6 +312,12 @@ async function getEventsAtPlace(placeName, placeAddress) {
 
 /** 
  * 2.1.5 Projection 
+ * Description - Projects attributes from all the places
+ * @async 
+ * @function projectFromPlace
+ * @param {Array<string>} selectedAttributes - Attributes of the table to select 
+ * @returns {Promise<Array<Object>>} A promise to resolve an array of place 
+ * @throws {Error} Throw an invalid attribute that is included in our selectedAttributes
 */
 async function projectFromPlace(selectedAttributes) {
     return await withOracleDB(async (connection) => {
@@ -312,8 +346,12 @@ async function projectFromPlace(selectedAttributes) {
 }
 
 /**
- * Query to get average rating of events at each place
- * To support 2.1.7
+ * 2.1.7 Aggregation with Group By
+ * Get the average rating of each event
+ * 
+ * @async 
+ * @function getAverageEventRatingPerPlace
+ * @returns {Promise<Array<Object>>} A promise to resolve an array of the object
  */
 async function getAverageEventRatingPerPlace() {
     return await withOracleDB(async (connection) => {
@@ -329,9 +367,17 @@ async function getAverageEventRatingPerPlace() {
     });
 }
 
-/*
-2.1.8 Aggregation with Having (Ranked Cusisine Types)
-**/
+/** 
+ * 2.1.8 Aggregation with Having 
+ * Description - Retrieves cuisines with an average rating above a specified threshold 
+ * 
+ * @async 
+ * @function getCuisinesAboveThreshold
+ * @param {number} threshold - Minimum average rating threshold
+ * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
+ */
+
+
 async function getCuisinesAboveThreshold(threshold) {
     return await withOracleDB(async (connection) => {
         console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
@@ -348,10 +394,18 @@ async function getCuisinesAboveThreshold(threshold) {
         return result.rows;
     });
 }
-/*
-2.1.6 Selection
-Parsing logic is in the appController
-**/
+
+/** 
+ * 2.1.6 Selection
+ * Description - Select records from the Place table based on a condition
+ * Parsing Logic and Where clause created via the app controller
+ * 
+ * @async 
+ * @function selectingPlace 
+ * @param {string} condition - The WHERE clause condition that was created via appController
+ * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
+ */
+
 async function selectingPlace(condition) {
     return await withOracleDB(async (connection) => {
         const query = `SELECT * FROM Place WHERE ${condition}`;
@@ -367,9 +421,16 @@ async function selectingPlace(condition) {
     });
 }
 
-/*
-2.1.3 Delete
-**/
+/** 
+ * 2.1.3 Delete
+ * Description - Delete a review from the Reviews table
+ * 
+ * @async 
+ * @function deleteReview
+ * @param {number} reviewID - The ID of the review to delete
+ * @param {number} userID - The ID of the user who wrote the review
+ * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
+ */
 async function deleteReview(reviewID, userID) {
     return await withOracleDB(async (connection) => {
         console.log("Deleting review with ID:", reviewID, "by user:", userID);
@@ -387,9 +448,17 @@ async function deleteReview(reviewID, userID) {
     });
 }
 
-/*
-2.1.2 Update
-**/
+/** 
+ * 2.1.2 Update
+ * Description - Updated message of a review in the Reviews table
+ * 
+ * @async 
+ * @function updateReview
+ * @param {number} reviewID - The ID of the review to update
+ * @param {number} userID - The ID of the user who wrote the review
+ * @param {string} newMessage - New Message for the review
+ * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
+ */
 async function updateReview(reviewID, userID, newMessage) {
     return await withOracleDB(async (connection) => {
         console.log("Updating review message for review ID:", reviewID, "by user:", userID);
@@ -409,9 +478,15 @@ async function updateReview(reviewID, userID, newMessage) {
     });
 }
 
-/*
-2.1.9 Nested Group By
-**/
+/** 
+ * 2.1.9 Nested Group by
+ * Description - Retrieves the highest average rating for each place type using a nested group 
+ * by query
+ * 
+ * @async 
+ * @function getHighestAverageRatingPerPlaceType
+ * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
+ */
 async function getHighestAverageRatingPerPlaceType() {
     return await withOracleDB(async (connection) => {
         console.log("Fetching highest average rating per place type");

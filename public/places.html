@@ -21,6 +21,10 @@
             align-items: center;
             padding: 1rem 2rem;
         }
+        a{
+            text-decoration: none;
+            color: #333;
+        }
 
         nav .logo {
             font-size: 1.5rem;
@@ -137,7 +141,7 @@
 <body>
     <!-- Navigation Bar -->
     <nav>
-        <div class="logo">Discover Vancouver</div>
+        <div class="logo"><a href="mainApp.html">Discover Vancouver</a></div>
         <ul>
             <li><a href="event.html">Events</a></li>
             <li><a href="#">Gift Cards</a></li>
@@ -150,10 +154,6 @@
     <!-- Places Section -->
     <section class="places-container">
         <h2>Places in Vancouver</h2>
-        <ul id="placesList">
-            <!-- Places will be dynamically added here -->
-        </ul>
-
         <!-- Form to select a place and display events -->
         <div id="eventFormContainer" style="margin-top: 2rem;">
             <h3>Find Events at a Place</h3>
@@ -171,6 +171,11 @@
         <!-- Show Ratings Button -->
         <button id="showRatingsButton" class="show-ratings-btn">Show Average Event Ratings for each place</button>
         <!-- Back to Main Page Button -->
+        <ul id="placesList">
+            <!-- Places will be dynamically added here -->
+        </ul>
+
+        
         <a href="mainApp.html" class="back-button">Back to Main Page</a>
     </section>
 
