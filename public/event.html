@@ -5,6 +5,7 @@
     <link rel="icon" type="image/png" href="assets/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events Page</title>
+    <link rel="stylesheet" href="navbar.css">
     <style>
         /* General Styles */
         body {
@@ -15,21 +16,28 @@
             color: #333;
         }
 
-        /* Header */
-        h1 {
-            text-align: center;
-            background-color: #4caf50;
-            color: white;
-            padding: 20px 0;
-            margin: 0;
-            font-size: 2.5rem;
-        }
-
         h2 {
             margin-top: 30px;
             font-size: 1.8rem;
             text-align: center;
             color: #555;
+        }
+
+         /* Hero Section */
+         .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: #f0f9ff;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
         }
 
         /* Event List Section */
@@ -112,7 +120,24 @@
     </style>
 </head>
 <body>
-    <h1>Events</h1>
+    <nav>
+        <div class="logo">
+            <img src="assets/nav0logo.png" alt="Nav Logo">
+            <a href="mainApp.html" class="logo-text">Discover Vancouver</a>
+        </div>
+        <ul>
+            <li><a href="event.html">Events</a></li> <!-- Event button -->
+            <li><a href="/giftcards.html">Gift Cards</a></li>
+            <li><a href="myReviews.html">My Reviews</a></li>
+            <li><a href="places.html">Places</a></li>
+        </ul>
+        <button id="logoutButton" class="login-button">Logout</button>
+    </nav>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Events in Vancouver</h1>
+        <p>View Upcoming Events in Vancouver or Plan One Yourself!</p>
+    </section>
 
     <h2>Upcoming Events</h2>
     <ul id="upcomingEventsList"></ul>
