@@ -71,6 +71,11 @@ router.get('/count-demotable', async (req, res) => {
  * Validate input to ensure correct format
  * Call insertWithForeignKeyCheck fun in appService.js to perform actual insert operation
  * Return success or failure to client based on outcome of insert
+ * 
+ * @route POST /insert
+ * @description Inserts record into the table
+ * @param {Request} req - Contains tableName, columns, and values 
+ * @param {Response} res - Returns success or failure status.
  */
 router.post('/insert', async (req, res) => {
     const { tableName, columns, values } = req.body;
@@ -97,7 +102,12 @@ router.post('/insert', async (req, res) => {
     }
 });
 
-// getUserNotifications
+/**
+ * @route GET /user-notifications
+ * @description Fetches notifications for a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's notifications
+ */
 router.get('/user-notifications', async (req, res) => {
     const { userId } = req.query;
 
@@ -114,7 +124,12 @@ router.get('/user-notifications', async (req, res) => {
     }
 });
 
-// Get giftards for user with id === UserId
+/**
+ * @route GET /user-giftcards
+ * @description Fetches gift cards owned by a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
 router.get('/user-giftcards', async (req, res) => {
     const { userId} = req.query;
 
@@ -131,7 +146,12 @@ router.get('/user-giftcards', async (req, res) => {
     }
 });
 
-// Get all events occuring at a place
+/**
+ * @route GET /place-events
+ * @description Retrieves events at a specific place
+ * @param {Request} req - Contains placeName and placeAddress in the query
+ * @param {Response} res - Returns events for the place
+ */
 router.get('/place-events', async (req, res) => {
     const { placeName, placeAddress} = req.query;
 
@@ -148,7 +168,12 @@ router.get('/place-events', async (req, res) => {
     }
 });
 
-// Get average rating of events occuring at a place
+/**
+ * @route GET /average-event-rating
+ * @description Fetches average event ratings for each place
+ * @param {Request} req
+ * @param {Response} res - Returns average ratings
+ */
 router.get('/average-event-rating', async (req, res) => {
     try {
         const ratings = await appService.getAverageEventRatingPerPlace();
@@ -159,7 +184,12 @@ router.get('/average-event-rating', async (req, res) => {
     }
 });
 
-
+/**
+ * @route GET /selectingPlace
+ * @description Fetches places based on a dynamic condition
+ * @param {Request} req - Contains inputString in the query
+ * @param {Response} res - Returns places matching the condition
+ */
 router.get('/selectingPlace', async (req, res) => {
     const { inputString } = req.query;
     if (!inputString) {
@@ -224,7 +254,12 @@ router.get('/selectingPlace', async (req, res) => {
 });
 
 
-// Project attributes from a particular place 
+/**
+ * @route GET /projectFromPlace
+ * @description Projects attributes from the Place table
+ * @param {Request} req - Contains attributes in the query
+ * @param {Response} res - Returns the projection result
+ */
 router.get('/projectFromPlace', async (req, res) => {
     const { attributes } = req.query;
     if(!attributes){
@@ -241,6 +276,12 @@ router.get('/projectFromPlace', async (req, res) => {
     }
 });
 
+/**
+ * @route GET /getCuisinesAboveThreshold
+ * @description Retrieves cuisines with ratings above a threshold
+ * @param {Request} req - Contains threshold in the query
+ * @param {Response} res - Returns cuisines exceeding the threshold
+ */
 router.get('/getCuisinesAboveThreshold', async (req, res) => {
     const { threshold } = req.query;
     if(!threshold){
@@ -256,6 +297,12 @@ router.get('/getCuisinesAboveThreshold', async (req, res) => {
     }
 });
 
+/**
+ * @route DELETE /reviews
+ * @description Deletes a review by ID and user ID.
+ * @param {Request} req - Contains reviewID and userID in the body
+ * @param {Response} res - Returns success or failure status
+ */
 router.delete('/reviews', async (req, res) => {
     const { reviewID, userID } = req.body;
     if (!reviewID || !userID) {
@@ -275,6 +322,13 @@ router.delete('/reviews', async (req, res) => {
     }
 });
 
+
+/**
+ * @route PUT /reviews
+ * @description Updates a review's message
+ * @param {Request} req - Contains reviewID, userID, and newMessage 
+ * @param {Response} res - Returns success or failure status
+ */
 router.put('/reviews', async (req, res) => {
     const { reviewID, userID, newMessage } = req.body;
 
@@ -295,6 +349,12 @@ router.put('/reviews', async (req, res) => {
     }
 });
 
+/**
+ * @route GET /highest-average-rating
+ * @description Fetches the highest average rating for each place type
+ * @param {Request} req
+ * @param {Response} res - Returns highest average ratings
+ */
 router.get('/highest-average-rating', async (req, res) => {
     try {
         const data = await appService.getHighestAverageRatingPerPlaceType();
