@@ -35,7 +35,7 @@
         }
 
         nav .logo-text {
-            font-size: 1.8rem;
+            font-size: 2rem; 
             font-weight: bold;
             color: #333;
             text-decoration: none; 
@@ -61,15 +61,12 @@
             flex-grow: 1;
         }
 
-        nav ul li {
-            position: relative;
-        }
-
         nav ul li a {
             text-decoration: none;
             color: #333;
             font-weight: bold;
-            padding: 0.5rem 1rem; /* Padding for button effect */
+            font-size: 1.2rem; 
+            padding: 0.7rem 1.2rem; 
             transition: all 0.3s ease;
         }
 
@@ -80,10 +77,11 @@
         }
 
         nav .login-button {
-            background-color: #6a5acd; 
+            background-color: #333; 
             color: #fff;
+            font-size: 1.2rem; 
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 2rem; 
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
@@ -91,33 +89,38 @@
         }
 
         nav .login-button:hover {
-            background-color: #483d8b; /* Darker shade on hover */
-            transform: scale(1.05); /* Slight scaling effect */
-        }
-
-        nav .center {
-            flex-grow: 1; 
-            display: flex;
-            justify-content: flex-start;
-            padding-left: 50 rem;
+            background-color: #000;
+            transform: scale(1.1); 
         }
 
         /* Hero Section */
         .hero {
+            height: 400px; 
+            background: url('assets/lee-unsplash.jpg') no-repeat center center/cover; 
+            background-position: bottom 15px;
             text-align: center;
-            padding: 3rem 1rem;
-            background-color: #f0f9ff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #f7f1e3; 
+            font-family: Arial, sans-serif; 
+            margin: 0;
+            padding: 0;
         }
 
         .hero h1 {
-            font-size: 2.5rem;
-            margin: 0.5rem 0;
+            font-size: 5rem;
+            margin-bottom: 1.4rem;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            color: #666;
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: bold;
         }
+
+
 
         /* Search Bar Section */
         .search-bar {
@@ -235,9 +238,12 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Upcoming Events in Vancouver</h1>
-        <p>Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading</p>
+        <div class="hero-overlay">
+            <h1>Upcoming Events in Vancouver</h1>
+            <p>Explore the best events and experiences this beautiful city has to offer</p>
+        </div>
     </section>
+
 
     <!-- Search Bar Section -->
     <section class="search-bar">
