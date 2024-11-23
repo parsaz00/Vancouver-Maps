@@ -484,7 +484,7 @@ async function updateReview(reviewID, userID, newMessage) {
  * by query
  * 
  * @async 
- * @function getHighestAverageRatingPerPlaceType
+ * @function getHighestAverageRatingRestaurant
  * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
  */
 /*
