@@ -487,18 +487,33 @@ async function updateReview(reviewID, userID, newMessage) {
  * @function getHighestAverageRatingPerPlaceType
  * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
  */
-async function getHighestAverageRatingPerPlaceType() {
+/*
+2.1.9 Nested Group By
+**/
+async function getHighestAverageRatingRestaurant() {
     return await withOracleDB(async (connection) => {
         console.log("Fetching highest average rating per place type");
         const result = await connection.execute(
-            `SELECT p.Type, MAX(AvgRating) AS MaxRating
+            `SELECT *
              FROM (
-                 SELECT p.Type, p.Name, p.Address, AVG(r.Rating) AS AvgRating
+                 SELECT p.Name, p.Address, AVG(r.Rating) AS AvgRating
                  FROM Place p
+                 JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
                  JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
-                 GROUP BY p.Type, p.Name, p.Address
-             ) PlaceRatings
-             GROUP BY p.Type`
+                 GROUP BY p.Name, p.Address
+                 HAVING AVG(r.Rating) = (
+                     SELECT MAX(AvgRating)
+                     FROM (
+                         SELECT AVG(r.Rating) AS AvgRating
+                         FROM Place p
+                        JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
+                         JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
+                         GROUP BY p.Name, p.Address
+                     )
+                 )
+                 ORDER BY p.Name
+             )
+             WHERE ROWNUM = 1;`
         );
         console.log("Query executed successfully");
         return result.rows;
@@ -679,7 +694,7 @@ module.exports = {
     getUserNotifications,
     deleteReview,
     updateReview,
-    getHighestAverageRatingPerPlaceType,
+    getHighestAverageRatingRestaurant,
     fetchEventsAfterDate,
     fetchEventsBeforeDate,
     addEvent
