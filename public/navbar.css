@@ -1,0 +1,86 @@
+/* Navigation Bar */
+
+nav {
+    position: sticky;
+    top: 0;
+    background-color: #a7e6f2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav .logo {
+    display: flex;
+    align-items: center; 
+    gap: 1.5rem; 
+}
+
+nav .logo-text {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none; 
+    transition: color 0.2s ease; 
+}
+
+nav .logo-text:hover {
+    color: #6a5acd;
+}
+
+nav .logo img {
+    height: 40px; 
+    width: auto; 
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 0.5rem 1rem; /* Padding for button effect */
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: rgba(0, 0, 0, 0.8); 
+    color: #fff;
+    border-radius: 15px; 
+}
+
+nav .login-button {
+    background-color: #6a5acd; 
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+nav .login-button:hover {
+    background-color: #483d8b; /* Darker shade on hover */
+    transform: scale(1.05); /* Slight scaling effect */
+}
+
+nav .center {
+    flex-grow: 1; 
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 50 rem;
+}

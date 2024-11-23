@@ -357,7 +357,7 @@ router.put('/reviews', async (req, res) => {
  */
 router.get('/highest-average-rating', async (req, res) => {
     try {
-        const data = await appService.getHighestAverageRatingPerPlaceType();
+        const data = await appService.getHighestAverageRatingRestaurant();
         res.status(200).json({ success: true, data: data });
     } catch (error) {
         console.error('Error fetching data:', error);

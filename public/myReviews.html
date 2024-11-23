@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Reviews</title>
+    <link rel="stylesheet" href="navbar.css">
     <style>
         /* General Styling */
         body {
@@ -92,6 +93,21 @@
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <img src="assets/nav0logo.png" alt="Nav Logo">
+            <a href="mainApp.html" class="logo-text">Discover Vancouver</a>
+        </div>
+        <ul>
+            <li><a href="event.html">Events</a></li> <!-- Event button -->
+            <li><a href="/giftcards.html">Gift Cards</a></li>
+            <li><a href="myReviews.html">My Reviews</a></li>
+            <li><a href="places.html">Places</a></li>
+        </ul>
+        <button id="logoutButton" class="login-button">Logout</button>
+    </nav>
+    
     <h1>My Reviews</h1>
     <div id="reviewsContainer"></div>
 
