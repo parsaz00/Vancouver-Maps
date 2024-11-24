@@ -449,32 +449,32 @@ async function deleteReview(userID, name, address) {
     });
 }
 
-/** 
- * 2.1.2 Update
- * Description - Updated message of a review in the Reviews table
+/**
+ * Updates the message of a review in the Reviews table.
  * 
- * @async 
+ * @async
  * @function updateReview
- * @param {number} reviewID - The ID of the review to update
  * @param {number} userID - The ID of the user who wrote the review
- * @param {string} newMessage - New Message for the review
- * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
+ * @param {string} name - The name of the reviewed entity
+ * @param {string} address - The address of the reviewed entity
+ * @param {string} newMessage - The new message for the review
+ * @returns {Promise<number>} A promise resolving to the number of rows updated
  */
-async function updateReview(reviewID, userID, newMessage) {
+async function updateReview(userID, name, address, newMessage) {
     return await withOracleDB(async (connection) => {
-        console.log("Updating review message for review ID:", reviewID, "by user:", userID);
+        console.log("Updating review message for userID:", userID, "name:", name, "address:", address);
         const result = await connection.execute(
             `UPDATE Reviews
              SET Message = :newMessage
-             WHERE ReviewID = :reviewID AND UserID = :userID`,
+             WHERE UserID = :userID AND Name = :name AND Address = :address`,
             {
-                newMessage: newMessage,
-                reviewID: reviewID,
-                userID: userID
+                userID,
+                name,
+                address,
+                newMessage
             },
             { autoCommit: true }
         );
-        console.log("Rows updated:", result.rowsAffected);
         return result.rowsAffected;
     });
 }

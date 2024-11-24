@@ -329,26 +329,38 @@ router.delete('/reviews', async (req, res) => {
 /**
  * @route PUT /reviews
  * @description Updates a review's message
- * @param {Request} req - Contains reviewID, userID, and newMessage 
+ * @param {Request} req - Contains userID, name, address, and newMessage in the body
  * @param {Response} res - Returns success or failure status
  */
 router.put('/reviews', async (req, res) => {
-    const { reviewID, userID, newMessage } = req.body;
-
-    if (!reviewID || !userID || !newMessage) {
-        return res.status(400).json({ success: false, message: "reviewID, userID, and newMessage are required" });
+    const { userID, name, address, newMessage } = req.body;
+    if (!userID || !name || !address || !newMessage) {
+        return res.status(400).json({
+            success: false,
+            message: "userID, name, address, and newMessage are required"
+        });
     }
 
     try {
-        const rowsUpdated = await appService.updateReview(reviewID, userID, newMessage);
+        const rowsUpdated = await appService.updateReview(userID, name, address, newMessage);
+
         if (rowsUpdated > 0) {
-            res.status(200).json({ success: true, message: 'Review updated successfully' });
+            return res.status(200).json({
+                success: true,
+                message: 'Review updated successfully'
+            });
         } else {
-            res.status(404).json({ success: false, message: 'Review not found or not authorized to update' });
+            return res.status(404).json({
+                success: false,
+                message: 'Review not found or not authorized to update'
+            });
         }
     } catch (error) {
         console.error('Error updating review:', error);
-        res.status(500).json({ success: false, message: 'Failed to update review' });
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to update review'
+        });
     }
 });
 
