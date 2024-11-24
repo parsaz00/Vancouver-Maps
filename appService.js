@@ -360,6 +360,7 @@ async function getAverageEventRatingPerPlace() {
             SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
             FROM Event e
             GROUP BY e.Name, e.Address
+            HAVING AVG(e.Rating) IS NOT NULL
         `;
         const result = await connection.execute(query);
         console.log("Query executed successfully:", result.rows);

@@ -545,7 +545,10 @@ async function fetchAndDisplayEventsForPlace(event) {
     const placeSelector = document.getElementById("placeSelector");
     const eventsList = document.getElementById("eventsList");
 
-    const [placeName, placeAddress] = placeSelector.value.split(",");
+    // const [placeName, placeAddress] = 
+    const parts = placeSelector.value.split(",");
+    const placeName = parts[0];
+    const placeAddress = parts.slice(1).join(',').trim();
 
     try {
         const response = await fetch(`/place-events?placeName=${encodeURIComponent(placeName)}&placeAddress=${encodeURIComponent(placeAddress)}`);
@@ -558,8 +561,11 @@ async function fetchAndDisplayEventsForPlace(event) {
                 result.data.forEach(([_, __, eventID, title, eventDate, description]) => {
                     const listItem = document.createElement("li");
                     listItem.innerHTML = `
-                        <strong>${title}</strong> - ${new Date(eventDate).toLocaleDateString()}<br>
-                        <p>${description}</p>
+                        <div class="event-item">
+                            <h3>${title}</h3>
+                            <span class="event-date">${new Date(eventDate).toLocaleDateString()}</span>
+                            <p class="event-description">${description}</p>
+                        </div>
                     `;
                     eventsList.appendChild(listItem);
                 });
@@ -769,6 +775,7 @@ async function fetchAndDisplayPlacesWithRatings() {
                 `;
                 placesList.appendChild(listItem);
             });
+            console.log("finished");
 
             // Switch to the ratings view
             togglePlacesRatingsView();
