@@ -328,21 +328,23 @@ router.delete('/reviews', async (req, res) => {
 
 /**
  * @route PUT /reviews
- * @description Updates a review's message
- * @param {Request} req - Contains userID, name, address, and newMessage in the body
+ * @description Updates a review's value and message
+ * @param {Request} req - Contains userID, name, address, newValue, and newMessage in the body
  * @param {Response} res - Returns success or failure status
  */
 router.put('/reviews', async (req, res) => {
-    const { userID, name, address, newMessage } = req.body;
-    if (!userID || !name || !address || !newMessage) {
+    const { userID, name, address, newValue, newMessage } = req.body;
+
+    // Validate input parameters
+    if (!userID || !name || !address || newValue === undefined || !newMessage) {
         return res.status(400).json({
             success: false,
-            message: "userID, name, address, and newMessage are required"
+            message: "userID, name, address, newValue, and newMessage are required"
         });
     }
 
     try {
-        const rowsUpdated = await appService.updateReview(userID, name, address, newMessage);
+        const rowsUpdated = await appService.updateReview(userID, name, address, newValue, newMessage);
 
         if (rowsUpdated > 0) {
             return res.status(200).json({

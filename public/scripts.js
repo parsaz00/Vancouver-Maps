@@ -287,18 +287,20 @@ async function fetchReviewsAndPlacesSequentially() {
             reviewsData.data.forEach(([name, address, reviewDate, rating, message]) => {
                 const reviewCard = document.createElement('div');
                 reviewCard.className = 'card';
+
                 reviewCard.innerHTML = `
                     <h3>${name} (${address})</h3>
                     <p><strong>Date:</strong> ${new Date(reviewDate).toLocaleDateString()}</p>
                     <p><strong>Rating:</strong> ${rating}/5</p>
-                    <p><strong>Review:</strong> ${message || 'No message provided.'}</p>
+                    <p><strong>Review:</strong> <span class="review-message">${message || 'No message provided.'}</span></p>
                     <button class="delete-btn" data-user-id="${userId}" data-name="${name}" data-address="${address}">Delete</button>
+                    <button class="update-btn" data-user-id="${userId}" data-name="${name}" data-address="${address}">Update</button>
                 `;
+
                 reviewsContainer.appendChild(reviewCard);
             });
 
-            const deleteButtons = document.querySelectorAll('.delete-btn');
-            deleteButtons.forEach(button => {
+            document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', async (event) => {
                     const userId = event.target.getAttribute('data-user-id');
                     const name = event.target.getAttribute('data-name');
@@ -308,14 +310,8 @@ async function fetchReviewsAndPlacesSequentially() {
                         try {
                             const deleteResponse = await fetch(`/reviews`, {
                                 method: 'DELETE',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    userID: userId,
-                                    name: name,
-                                    address: address,
-                                }),
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ userID: userId, name, address }),
                             });
 
                             if (!deleteResponse.ok) {
@@ -334,6 +330,76 @@ async function fetchReviewsAndPlacesSequentially() {
                             console.error('Error deleting review:', error);
                         }
                     }
+                });
+            });
+
+            document.querySelectorAll('.update-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const userId = event.target.getAttribute('data-user-id');
+                    const name = event.target.getAttribute('data-name');
+                    const address = event.target.getAttribute('data-address');
+                    const card = event.target.parentElement;
+
+                    const messageElement = card.querySelector('.review-message');
+                    const originalMessage = messageElement.textContent;
+                    const ratingElement = card.querySelector('p:nth-child(3)').textContent;
+                    const originalRating = parseInt(ratingElement.match(/\d+/)[0], 10);
+
+                    card.innerHTML = `
+                        <h3>${name} (${address})</h3>
+                        <p><strong>Rating (1-5):</strong></p>
+                        <input type="number" class="update-rating" value="${originalRating}" min="1" max="5" />
+                        <p><strong>Message:</strong></p>
+                        <textarea class="update-textarea">${originalMessage}</textarea>
+                        <button class="save-btn" data-user-id="${userId}" data-name="${name}" data-address="${address}">Save</button>
+                        <button class="cancel-btn">Cancel</button>
+                    `;
+
+                    const saveButton = card.querySelector('.save-btn');
+                    const cancelButton = card.querySelector('.cancel-btn');
+
+                    saveButton.addEventListener('click', async () => {
+                        const updatedMessage = card.querySelector('.update-textarea').value;
+                        const updatedRating = parseInt(card.querySelector('.update-rating').value, 10);
+
+                        if (!updatedMessage || isNaN(updatedRating) || updatedRating < 1 || updatedRating > 5) {
+                            alert('Please provide a valid message and rating (1-5).');
+                            return;
+                        }
+
+                        try {
+                            const updateResponse = await fetch(`/reviews`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    userID: userId,
+                                    name,
+                                    address,
+                                    newValue: updatedRating,
+                                    newMessage: updatedMessage,
+                                }),
+                            });
+
+                            if (!updateResponse.ok) {
+                                console.error('Failed to update review:', updateResponse.statusText);
+                                alert('Error: Unable to update the review.');
+                                return;
+                            }
+
+                            const updateData = await updateResponse.json();
+                            if (updateData.success) {
+                                fetchReviewsAndPlacesSequentially();
+                            } else {
+                                alert(`Failed to update the review: ${updateData.message}`);
+                            }
+                        } catch (error) {
+                            console.error('Error updating review:', error);
+                        }
+                    });
+
+                    cancelButton.addEventListener('click', () => {
+                        fetchReviewsAndPlacesSequentially();
+                    });
                 });
             });
         }
