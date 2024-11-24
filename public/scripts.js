@@ -509,8 +509,11 @@ async function fetchAndDisplayPlaces() {
 // Call the function when the page loads
 if (window.location.pathname.endsWith('places.html')) {
     fetchAndDisplayPlaces();
+}
+if (window.location.pathname.endsWith('event.html')) {
     populatePlaceSelector();
 }
+
 
 // Populate the place selector dropdown
 async function populatePlaceSelector() {
