@@ -292,8 +292,49 @@ async function fetchReviewsAndPlacesSequentially() {
                     <p><strong>Date:</strong> ${new Date(reviewDate).toLocaleDateString()}</p>
                     <p><strong>Rating:</strong> ${rating}/5</p>
                     <p><strong>Review:</strong> ${message || 'No message provided.'}</p>
+                    <button class="delete-btn" data-user-id="${userId}" data-name="${name}" data-address="${address}">Delete</button>
                 `;
                 reviewsContainer.appendChild(reviewCard);
+            });
+
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const userId = event.target.getAttribute('data-user-id');
+                    const name = event.target.getAttribute('data-name');
+                    const address = event.target.getAttribute('data-address');
+
+                    if (confirm('Are you sure you want to delete this review?')) {
+                        try {
+                            const deleteResponse = await fetch(`/reviews`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    userID: userId,
+                                    name: name,
+                                    address: address,
+                                }),
+                            });
+
+                            if (!deleteResponse.ok) {
+                                console.error('Failed to delete review:', deleteResponse.statusText);
+                                alert('Error: Unable to delete the review.');
+                                return;
+                            }
+
+                            const deleteData = await deleteResponse.json();
+                            if (deleteData.success) {
+                                fetchReviewsAndPlacesSequentially();
+                            } else {
+                                alert(`Failed to delete the review: ${deleteData.message}`);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting review:', error);
+                        }
+                    }
+                });
             });
         }
 
@@ -320,7 +361,9 @@ async function addReview(event) {
     event.preventDefault();
 
     const placeSelect = document.getElementById('placeSelect').value;
-    const [name, address] = placeSelect.split(',');
+    const parts = placeSelect.split(',');
+    const name = parts[0];
+    const address = parts.slice(1).join(',').trim();
     let reviewDate = document.getElementById('reviewDate').value;
     const rating = document.getElementById('rating').value;
     const message = document.getElementById('message').value;
@@ -361,7 +404,7 @@ async function addReview(event) {
         const result = await response.json();
         if (result.success) {
             alert('Review added successfully!');
-            fetchUserReviews(); // Refresh reviews
+            fetchReviewsAndPlacesSequentially(); // Refresh reviews
         } else {
             alert(result.message || 'Failed to add review.');
         }

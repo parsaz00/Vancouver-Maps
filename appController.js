@@ -302,26 +302,26 @@ router.get('/getCuisinesAboveThreshold', async (req, res) => {
 
 /**
  * @route DELETE /reviews
- * @description Deletes a review by ID and user ID.
- * @param {Request} req - Contains reviewID and userID in the body
- * @param {Response} res - Returns success or failure status
+ * @description Deletes a review by UserID, Name, and Address.
+ * @param {Request} req - Contains UserID, Name, and Address in the body.
+ * @param {Response} res - Returns success or failure status.
  */
 router.delete('/reviews', async (req, res) => {
-    const { reviewID, userID } = req.body;
-    if (!reviewID || !userID) {
-        return res.status(400).json({ success: false, message: "reviewID and userID are required" });
+    const { userID, name, address } = req.body;
+    if (!userID || !name || !address) {
+        return res.status(400).json({ success: false, message: "UserID, Name, and Address are required." });
     }
 
     try {
-        const rowsDeleted = await appService.deleteReview(reviewID, userID);
+        const rowsDeleted = await appService.deleteReview(userID, name, address);
         if (rowsDeleted > 0) {
-            res.status(200).json({ success: true, message: 'Review deleted successfully' });
+            res.status(200).json({ success: true, message: 'Review deleted successfully.' });
         } else {
-            res.status(404).json({ success: false, message: 'Review not found or not authorized to delete'});
+            res.status(404).json({ success: false, message: 'Review not found or not authorized to delete.' });
         }
     } catch (error) {
         console.error('Error deleting review:', error);
-        res.status(500).json({ success: false, message: 'Failed to delete review' });
+        res.status(500).json({ success: false, message: 'Failed to delete review.' });
     }
 });
 
