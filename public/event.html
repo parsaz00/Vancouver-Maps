@@ -98,24 +98,26 @@
             background-color: #45a049;
         }
 
-        /* Back to Main Page Button */
-        #backToMainButton {
-            display: block;
-            width: 200px;
-            margin: 30px auto;
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        .events-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
         }
 
-        #backToMainButton:hover {
-            background-color: #0056b3;
+        .events-container ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .events-container ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -139,12 +141,6 @@
         <p>View Upcoming Events in Vancouver or Plan One Yourself!</p>
     </section>
 
-    <h2>Upcoming Events</h2>
-    <ul id="upcomingEventsList"></ul>
-
-    <h2>Past Events</h2>
-    <ul id="pastEventsList"></ul>
-
     <h2>Add a New Event</h2>
     <form id="addEventForm">
         <input type="text" id="eventTitle" placeholder="Title" required>
@@ -154,6 +150,27 @@
         <input type="text" id="eventAddress" placeholder="Place Address" required>
         <button type="submit">Add Event</button>
     </form>
+
+    <!-- Form to select a place and display events -->
+    <h2>Find Events at a Place</h2>
+    <div class="events-container" id="eventFormContainer" style="margin-top: 2rem;">
+        <form id="eventsForm">
+            <label for="placeSelector">Select a Place:</label>
+            <select id="placeSelector" required>
+                <!-- Dynamically populated with places -->
+            </select>
+            <button type="submit" style="margin-top: 1rem;">View Events</button>
+            <ul id="eventsList" style="margin-top: 2rem; list-style: none; padding: 0;">
+                <!-- Events will be displayed here -->
+        </form>
+        </ul>
+    </div>
+
+    <h2>Upcoming Events</h2>
+    <ul id="upcomingEventsList"></ul>
+
+    <h2>Past Events</h2>
+    <ul id="pastEventsList"></ul>
 
     <footer>
         <p>&copy; 2024 Discover Vancouver</p>
