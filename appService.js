@@ -457,20 +457,22 @@ async function deleteReview(userID, name, address) {
  * @param {number} userID - The ID of the user who wrote the review
  * @param {string} name - The name of the reviewed entity
  * @param {string} address - The address of the reviewed entity
+ * @param {number} newValue - The new value for the review
  * @param {string} newMessage - The new message for the review
  * @returns {Promise<number>} A promise resolving to the number of rows updated
  */
-async function updateReview(userID, name, address, newMessage) {
+async function updateReview(userID, name, address, newValue, newMessage) {
     return await withOracleDB(async (connection) => {
         console.log("Updating review message for userID:", userID, "name:", name, "address:", address);
         const result = await connection.execute(
             `UPDATE Reviews
-             SET Message = :newMessage
+             SET Message = :newMessage, Value = :newValue
              WHERE UserID = :userID AND Name = :name AND Address = :address`,
             {
                 userID,
                 name,
                 address,
+                newValue,
                 newMessage
             },
             { autoCommit: true }
