@@ -660,6 +660,14 @@ window.onload = function() {
     // fetchUserReviews();
     // fetchPlaces();
     fetchReviewsAndPlacesSequentially();
+    // if (window.location.pathname.endsWith('notifications.html')) {
+    //     fetchAndDisplayNotifications();
+    //     fetchAndDisplayPromotions();
+    //     fetchAndDisplayAlerts();
+    // }
+    if (window.location.pathname.endsWith('notifications.html')) {
+        fetchAndDisplayNotifications();
+    }
 
     // Attach event listener to the events form
     const eventsForm = document.getElementById("eventsForm");
@@ -981,3 +989,156 @@ if (showRestaurantsButton) {
         fetchAndDisplayRestaurants();
     });
 }
+
+// async function fetchAndDisplayNotifications() {
+//     const notificationsList = document.getElementById('notificationsList');
+//     notificationsList.innerHTML = '<li>Loading...</li>';
+
+//     const userId = localStorage.getItem('userId');
+//     if (!userId) {
+//         notificationsList.innerHTML = '<li>Please log in to view notifications.</li>';
+//         return;
+//     }
+
+//     try {
+//         const response = await fetch(`/notifications?userId=${userId}`);
+//         const { success, data } = await response.json();
+
+//         if (success) {
+//             notificationsList.innerHTML = '';
+//             data.forEach(({ NotifID, Time, Message }) => {
+//                 const li = document.createElement('li');
+//                 li.innerHTML = `
+//                     <span><strong>${new Date(Time).toLocaleString()}</strong>: ${Message}</span>
+//                 `;
+//                 notificationsList.appendChild(li);
+//             });
+//         } else {
+//             notificationsList.innerHTML = '<li>Error fetching notifications.</li>';
+//         }
+//     } catch (error) {
+//         console.error('Error fetching notifications:', error);
+//         notificationsList.innerHTML = '<li>Failed to fetch notifications.</li>';
+//     }
+// }
+
+// // async function fetchAndDisplayPromotions() {
+// //     const promotionsList = document.getElementById('promotionsList');
+// //     promotionsList.innerHTML = '<li>Loading...</li>';
+
+// //     try {
+// //         const response = await fetch('/promotions');
+// //         const { success, data } = await response.json();
+
+// //         if (success) {
+// //             promotionsList.innerHTML = '';
+// //             data.forEach(({ Message, Company, StartDate, EndDate }) => {
+// //                 const li = document.createElement('li');
+// //                 li.innerHTML = `
+// //                     <span>${Message} (From ${Company}, ${new Date(StartDate).toLocaleDateString()} to ${new Date(EndDate).toLocaleDateString()})</span>
+// //                 `;
+// //                 promotionsList.appendChild(li);
+// //             });
+// //         } else {
+// //             promotionsList.innerHTML = '<li>Error fetching promotions.</li>';
+// //         }
+// //     } catch (error) {
+// //         console.error('Error fetching promotions:', error);
+// //         promotionsList.innerHTML = '<li>Failed to fetch promotions.</li>';
+// //     }
+// // }
+// async function fetchAndDisplayPromotions() {
+//     const promotionsList = document.getElementById('promotionsList');
+//     promotionsList.innerHTML = '<li>Loading...</li>';
+
+//     try {
+//         console.log("Fetching promotions...");
+//         const response = await fetch('/promotions');
+        
+//         if (!response.ok) {
+//             console.error(`Error: Received status ${response.status}`);
+//             promotionsList.innerHTML = '<li>Error fetching promotions (Status Code).</li>';
+//             return;
+//         }
+
+//         const jsonResponse = await response.json();
+//         console.log("Promotions Response JSON:", jsonResponse);
+
+//         const { success, data } = jsonResponse;
+
+//         if (success) {
+//             promotionsList.innerHTML = '';
+//             data.forEach(({ Message, Company, StartDate, EndDate }) => {
+//                 const li = document.createElement('li');
+//                 li.innerHTML = `
+//                     <span>${Message} (From ${Company}, ${new Date(StartDate).toLocaleDateString()} to ${new Date(EndDate).toLocaleDateString()})</span>
+//                 `;
+//                 promotionsList.appendChild(li);
+//             });
+//         } else {
+//             console.error("Promotions Fetch Error: success=false", jsonResponse);
+//             promotionsList.innerHTML = '<li>Error fetching promotions (Backend Error).</li>';
+//         }
+//     } catch (error) {
+//         console.error('Error fetching promotions (Frontend Exception):', error);
+//         promotionsList.innerHTML = '<li>Failed to fetch promotions (Exception).</li>';
+//     }
+// }
+
+
+// async function fetchAndDisplayAlerts() {
+//     const alertsList = document.getElementById('alertsList');
+//     alertsList.innerHTML = '<li>Loading...</li>';
+
+//     try {
+//         const response = await fetch('/alerts');
+//         const { success, data } = await response.json();
+
+//         if (success) {
+//             alertsList.innerHTML = '';
+//             data.forEach(({ Message, Type }) => {
+//                 const li = document.createElement('li');
+//                 li.innerHTML = `
+//                     <span>${Message} (Type: ${Type})</span>
+//                 `;
+//                 alertsList.appendChild(li);
+//             });
+//         } else {
+//             alertsList.innerHTML = '<li>Error fetching alerts.</li>';
+//         }
+//     } catch (error) {
+//         console.error('Error fetching alerts:', error);
+//         alertsList.innerHTML = '<li>Failed to fetch alerts.</li>';
+//     }
+// }
+
+
+async function fetchAndDisplayNotifications() {
+    const notificationsList = document.getElementById('notificationsList');
+    notificationsList.innerHTML = '<li>Loading...</li>';
+
+    try {
+        const response = await fetch('/all-notifications');
+        const { success, data } = await response.json();
+
+        if (success) {
+            notificationsList.innerHTML = ''; // Clear the loading text
+            data.forEach(({ NotifID, Message, Type, Source }) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>
+                        <strong>${Source}</strong>: ${Message} 
+                        ${Type ? `(Type: ${Type})` : ''}
+                    </span>
+                `;
+                notificationsList.appendChild(li);
+            });
+        } else {
+            notificationsList.innerHTML = '<li>Error fetching notifications.</li>';
+        }
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        notificationsList.innerHTML = '<li>Failed to fetch notifications.</li>';
+    }
+}
+

@@ -578,3 +578,56 @@ router.get('/reviews-and-places', async (req, res) => {
     }
 });
 
+// // Fetch Notifications for a User
+// router.get('/notifications', async (req, res) => {
+//     const { userId } = req.query;
+
+//     if (!userId) {
+//         return res.status(400).json({ success: false, message: 'UserID is required' });
+//     }
+
+//     try {
+//         const notifications = await appService.getUserNotifications(userId);
+//         res.status(200).json({ success: true, data: notifications });
+//     } catch (error) {
+//         console.error('Error fetching notifications:', error);
+//         res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+//     }
+// });
+
+// // Fetch promotions
+// router.get('/promotions', async (req, res) => {
+//     try {
+//         console.log("GET /promotions: Request received");
+//         const promotions = await appService.getPromotions();
+//         console.log("Promotions Fetched from DB:", promotions);
+//         res.status(200).json({ success: true, data: promotions });
+//     } catch (error) {
+//         console.error('Error fetching promotions:', error);
+//         res.status(500).json({ success: false, message: 'Failed to fetch promotions' });
+//     }
+// });
+
+// // Fetch alerts
+// router.get('/alerts', async (req, res) => {
+//     try {
+//         const alerts = await appService.getAlerts();
+//         res.status(200).json({ success: true, data: alerts });
+//     } catch (error) {
+//         console.error('Error fetching alerts:', error);
+//         res.status(500).json({ success: false, message: 'Failed to fetch alerts' });
+//     }
+// });
+
+router.get('/all-notifications', async (req, res) => {
+    try {
+        const notifications = await appService.getAllNotifications();
+        res.status(200).json({ success: true, data: notifications });
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+
+
