@@ -527,19 +527,25 @@ async function deleteReview(userID, name, address) {
  * @param {string} newMessage - The new message for the review
  * @returns {Promise<number>} A promise resolving to the number of rows updated
  */
-async function updateReview(userID, name, address, newValue, newMessage) {
+async function updateReview(userID, name, address, newValue, newMessage, newTitle, newDate) {
     return await withOracleDB(async (connection) => {
-        console.log("Updating review message for userID:", userID, "name:", name, "address:", address);
+        console.log("Updating review for userID:", userID, "name:", name, "address:", address);
+
         const result = await connection.execute(
             `UPDATE Reviews
-             SET Message = :newMessage, Rating = :newValue
+             SET Message = :newMessage,
+                 Rating = :newValue,
+                 Title = :newTitle,
+                 ReviewDate = TO_DATE(:newDate, 'YYYY-MM-DD')
              WHERE UserID = :userID AND Name = :name AND Address = :address`,
             {
                 userID,
                 name,
                 address,
                 newValue,
-                newMessage
+                newMessage,
+                newTitle,
+                newDate
             },
             { autoCommit: true }
         );
@@ -674,7 +680,7 @@ async function addEvent(eventData) {
 async function getReviewsByUser(userId) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT Name, Address, ReviewDate, Rating, Message
+            `SELECT Name, Address, ReviewDate, Rating, Message, Title
             FROM Reviews
             WHERE UserID = :userId
             ORDER BY ReviewDate DESC`,

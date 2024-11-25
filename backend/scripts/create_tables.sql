@@ -126,6 +126,7 @@ CREATE TABLE Reviews (
     ReviewDate DATE,
     Rating INT CHECK (Rating BETWEEN 1 AND 5),
     Message VARCHAR(255),
+    Title VARCHAR(100) UNIQUE,
     PRIMARY KEY (UserID, Name, Address),
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (Name, Address) REFERENCES Place(Name, Address)
