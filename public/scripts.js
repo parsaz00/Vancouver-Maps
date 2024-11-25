@@ -322,6 +322,7 @@ async function fetchReviewsAndPlacesSequentially() {
 
                             const deleteData = await deleteResponse.json();
                             if (deleteData.success) {
+                                alert('Successfully deleted review!');
                                 fetchReviewsAndPlacesSequentially();
                             } else {
                                 alert(`Failed to delete the review: ${deleteData.message}`);
@@ -388,6 +389,7 @@ async function fetchReviewsAndPlacesSequentially() {
 
                             const updateData = await updateResponse.json();
                             if (updateData.success) {
+                                alert('Successfully updated review!');
                                 fetchReviewsAndPlacesSequentially();
                             } else {
                                 alert(`Failed to update the review: ${updateData.message}`);
@@ -413,8 +415,8 @@ async function fetchReviewsAndPlacesSequentially() {
             placeSelect.innerHTML = '';
             placesData.data.forEach((place) => {
                 const option = document.createElement('option');
-                option.value = `${place.name},${place.address}`;
-                option.textContent = `${place.name} (${place.address})`;
+                option.value = `${place.Name},${place.Address}`;
+                option.textContent = `${place.Name} (${place.Address})`;
                 placeSelect.appendChild(option);
             });
         }
@@ -542,10 +544,10 @@ async function populatePlaceSelector() {
             placeSelector.innerHTML = ""; // Clear previous options
 
             // Populate dropdown with place options
-            result.data.forEach(({ name, address }) => {
+            result.data.forEach(({ Name, Address }) => {
                 const option = document.createElement("option");
-                option.value = `${name},${address}`;
-                option.textContent = `${name} (${address})`;
+                option.value = `${Name},${Address}`;
+                option.textContent = `${Name} (${Address})`;
                 placeSelector.appendChild(option);
             });
         } else {
@@ -670,7 +672,7 @@ window.onload = function() {
     if (addReviewForm) {
         addReviewForm.addEventListener('submit', addReview);
     } else {
-        console.error("Add Review form not found.");
+        console.log("Add Review form not found.");
     }
 
     // Attach event listeners only if the corresponding elements exist
@@ -805,6 +807,95 @@ document.getElementById('executeQueryButton').addEventListener('click', (e) => {
     fetchAndDisplayPlaces(selectedAttributes);
 });
 
+async function displayCuisinesWithThreshold(threshold) {
+    const placesList = document.getElementById("placesList");
+
+    try {
+        const response = await fetch(`/getCuisinesAboveThreshold?threshold=${encodeURIComponent(threshold)}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('result: ', result);
+
+        if (result.success) {
+            placesList.innerHTML = "";
+            /** Adding Filter Buttons */
+            const filterContainer = document.createElement("div");
+            filterContainer.classList.add("filter-buttons");
+            const resetFilterButton = document.createElement("button");
+            resetFilterButton.textContent = "Reset Restaurants";
+            resetFilterButton.classList.add("show-ratings-btn");
+            resetFilterButton.addEventListener("click", () => {
+                fetchAndDisplayRestaurants();
+            });
+            filterContainer.appendChild(resetFilterButton);
+            placesList.appendChild(filterContainer);
+
+            /** Displaying the Cuisines */
+            result.data.forEach(({ Cuisine, AverageRating }) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <span>${Cuisine}</span>
+                    <span class="rating">Average Rating: ${AverageRating.toFixed(1)}/5</span>
+                `;
+                
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = "<li>Error fetching cuisines.</li>";
+        }
+    } catch (error) {
+        console.error('Error fetching Cuisines:', error);
+        placesList.innerHTML = "<li>Failed to fetch Cuisines. Please try again later.</li>";
+    }
+}
+
+async function displayTopRatedRestaurants() {
+    const placesList = document.getElementById("placesList");
+
+    try {
+        const response = await fetch("/highest-average-rating-restaurant");
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            placesList.innerHTML = "";
+            /** adding filter buttons */
+            const filterContainer = document.createElement("div");
+            filterContainer.classList.add("filter-buttons");
+            const resetFilterButton = document.createElement("button");
+            resetFilterButton.textContent = "Reset Restaurants";
+            resetFilterButton.classList.add("show-ratings-btn");
+            resetFilterButton.addEventListener("click", () => {
+                fetchAndDisplayRestaurants();
+            });
+            filterContainer.appendChild(resetFilterButton);
+            placesList.appendChild(filterContainer);
+
+            /** Displaying the Restaurants */
+            result.data.forEach(({ Name, Address, AverageRating }) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <span>${Name} (${Address}):</span>
+                    <span class="rating">Average Rating: ${AverageRating.toFixed(1)}/5</span>
+                `;
+                
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = "<li>Error fetching restaurants.</li>";
+        }
+    } catch (error) {
+        console.error('Error fetching top-rated restaurant:', error);
+        placesList.innerHTML = "<li>Failed to fetch restaurants. Please try again later.</li>";
+    }
+}
+
 async function fetchAndDisplayRestaurants() {
     const placesList = document.getElementById("placesList");
 
@@ -815,11 +906,59 @@ async function fetchAndDisplayRestaurants() {
         }
 
         const result = await response.json();
-        console.log('Fetched Restaurants:', result);
 
         if (result.success) {
             placesList.innerHTML = "";
+            /** adding filter buttons */
+            const sliderLabel = document.createElement("label");
+            sliderLabel.textContent = "Cuisine Threshold Rating: ";
+            sliderLabel.htmlFor = "ratingSlider";
 
+            const ratingSlider = document.createElement("input");
+            ratingSlider.type = "range";
+            ratingSlider.id = "ratingSlider";
+            ratingSlider.min = "0";
+            ratingSlider.max = "5";
+            ratingSlider.step = "0.1";
+            ratingSlider.value = "3";
+
+            const sliderValue = document.createElement("span");
+            sliderValue.textContent = "3";
+            ratingSlider.addEventListener("input", () => {
+                sliderValue.textContent = ratingSlider.value;
+            });
+
+            const applyThresholdButton = document.createElement("button");
+            applyThresholdButton.textContent = "Apply Threshold";
+            applyThresholdButton.classList.add("show-ratings-btn");
+            applyThresholdButton.addEventListener("click", () => {
+                const threshold = parseFloat(ratingSlider.value);
+                displayCuisinesWithThreshold(threshold);
+            });
+            const filterContainer = document.createElement("div");
+            filterContainer.classList.add("filter-buttons");
+            const filterHighReviewsButton = document.createElement("button");
+            filterHighReviewsButton.textContent = "Show Top Rated";
+            filterHighReviewsButton.classList.add("show-ratings-btn");
+            filterHighReviewsButton.addEventListener("click", () => {
+                displayTopRatedRestaurants();
+            });
+
+            const resetFilterButton = document.createElement("button");
+            resetFilterButton.textContent = "Reset Restaurants";
+            resetFilterButton.classList.add("show-ratings-btn");
+            resetFilterButton.addEventListener("click", () => {
+                fetchAndDisplayRestaurants();
+            });
+            filterContainer.appendChild(sliderLabel);
+            filterContainer.appendChild(ratingSlider);
+            filterContainer.appendChild(sliderValue);
+            filterContainer.appendChild(applyThresholdButton);
+            filterContainer.appendChild(filterHighReviewsButton);
+            filterContainer.appendChild(resetFilterButton);
+            placesList.appendChild(filterContainer);
+
+            /** Displaying the Restaurants */
             result.data.forEach(({ Name, Address }) => {
                 const listItem = document.createElement("li");
                 listItem.innerHTML = `<span>${Name} (${Address})</span>`;

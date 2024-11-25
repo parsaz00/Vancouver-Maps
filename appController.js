@@ -192,11 +192,14 @@ router.get('/average-event-rating', async (req, res) => {
  */
 router.get('/selectingPlace', async (req, res) => {
     const { inputString } = req.query;
-    if (!sanitization(inputString)) {
-        return res.status(400).json({ success: false, message: 'Invalid input do not include special characters' });
-    }
+    console.log('input: ', inputString);
     if (!inputString) {
+        console.log('no input');
         return res.status(400).json({ success: false, message: "An input is required" });
+    }
+    if (!sanitization(inputString)) {
+        console.log('bad input');
+        return res.status(400).json({ success: false, message: 'Invalid input do not include special characters' });
     }
     const trimmed = inputString.trim();
     const tokenizedInput = trimmed.split(" ");
@@ -368,11 +371,11 @@ router.put('/reviews', async (req, res) => {
 
 /**
  * @route GET /highest-average-rating
- * @description Fetches the highest average rating for each place type
+ * @description Fetches the highest average of the restaurants
  * @param {Request} req
  * @param {Response} res - Returns highest average ratings
  */
-router.get('/highest-average-rating', async (req, res) => {
+router.get('/highest-average-rating-restaurant', async (req, res) => {
     try {
         const data = await appService.getHighestAverageRatingRestaurant();
         res.status(200).json({ success: true, data: data });
