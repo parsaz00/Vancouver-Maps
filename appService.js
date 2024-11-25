@@ -279,11 +279,102 @@ async function getUserGiftCards(userId) {
              FROM Users u
              JOIN GiftCard gc ON u.UserID = gc.UserID
              WHERE u.UserID = :userId`,
-            [userId]
+            [userId],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
         );
         console.log("Query executed successfully:", result.rows);
         return result.rows;
     })
+}
+
+/**
+ * Gets the available gift cards (userID = NULL)
+ */
+async function fetchAvailableGiftCards() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT g.GCID, g.VALUE, g.FRANCHISE, p.POINTS
+             FROM GiftCard g
+             JOIN GCPoints p ON g.VALUE = p.VALUE
+             WHERE g.USERID IS NULL`,
+            [],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+        return result.rows;
+    });
+}
+
+/**
+ * Redeems a gift card
+ * @param {number} userId 
+ * @param {number} giftCardId 
+ * @returns the number of rows affected
+ */
+async function redeemGiftCard(userId, giftCardId) {
+    return await withOracleDB(async (connection) => {
+        await connection.execute(`SAVEPOINT redeemGiftCard`);
+
+        try {
+            const cardResult = await connection.execute(
+                `SELECT g.VALUE, p.POINTS
+                 FROM GiftCard g
+                 JOIN GCPoints p ON g.VALUE = p.VALUE
+                 WHERE g.GCID = :giftCardId AND g.USERID IS NULL`,
+                [giftCardId],
+                { outFormat: oracledb.OUT_FORMAT_OBJECT }
+            );
+
+            if (!cardResult.rows.length) {
+                return { success: false, message: 'Gift card not available or already redeemed.' };
+            }
+
+            const { POINTS } = cardResult.rows[0];
+            const userResult = await connection.execute(
+                `SELECT POINTS FROM Users WHERE USERID = :userId`,
+                [userId],
+                { outFormat: oracledb.OUT_FORMAT_OBJECT }
+            );
+
+            if (!userResult.rows.length) {
+                return { success: false, message: 'User not found.' };
+            }
+
+            const userPoints = userResult.rows[0].POINTS;
+            if (userPoints < POINTS) {
+                return {
+                    success: false,
+                    message: `Insufficient points to redeem the gift card. You need ${POINTS - userPoints} more points.`,
+                };
+            }
+
+            const userUpdateResult = await connection.execute(
+                `UPDATE Users SET POINTS = POINTS - :points WHERE USERID = :userId`,
+                [POINTS, userId],
+                { autoCommit: false }
+            );
+
+            const giftCardUpdateResult = await connection.execute(
+                `UPDATE GiftCard SET USERID = :userId WHERE GCID = :giftCardId`,
+                [userId, giftCardId],
+                { autoCommit: false }
+            );
+
+            if (giftCardUpdateResult.rowsAffected === 0) {
+                throw new Error('Failed to update gift card.');
+            }
+
+            await connection.commit();
+
+            return {
+                success: true,
+                message: 'Gift card redeemed successfully.',
+                rowsUpdated: userUpdateResult.rowsAffected + giftCardUpdateResult.rowsAffected,
+            };
+        } catch (error) {
+            await connection.execute(`ROLLBACK TO SAVEPOINT redeemGiftCard`);
+            throw error;
+        }
+    });
 }
 
 /**
@@ -739,5 +830,7 @@ module.exports = {
     fetchEventsAfterDate,
     fetchEventsBeforeDate,
     addEvent,
-    getAllRestaurants
+    getAllRestaurants,
+    fetchAvailableGiftCards,
+    redeemGiftCard
 };
