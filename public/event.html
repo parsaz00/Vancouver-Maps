@@ -119,6 +119,10 @@
             border-radius: 5px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .events-container ul li:last-child {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -156,14 +160,15 @@
     <div class="events-container" id="eventFormContainer" style="margin-top: 2rem;">
         <form id="eventsForm">
             <label for="placeSelector">Select a Place:</label>
-            <select id="placeSelector" required>
+            <select style="width:100%;" id="placeSelector" required>
                 <!-- Dynamically populated with places -->
             </select>
             <button type="submit" style="margin-top: 1rem;">View Events</button>
-            <ul id="eventsList" style="margin-top: 2rem; list-style: none; padding: 0;">
+            <ul id="eventsList" style="list-style: none; padding: 0;">
                 <!-- Events will be displayed here -->
+            </ul>
         </form>
-        </ul>
+        
     </div>
 
     <h2>Upcoming Events</h2>

@@ -480,29 +480,44 @@ async function addReview(event) {
 }
 
 // Fetch places from the backend and display them
-async function fetchAndDisplayPlaces() {
+async function fetchAndDisplayPlaces(attributes = []) {
     const placesList = document.getElementById('placesList');
-    placesList.innerHTML = '<li>Loading...</li>'; // Show a loading indicator
+    placesList.innerHTML = ''; // Clear the list
 
     try {
-        const response = await fetch('/places'); // Endpoint to fetch places
-        const result = await response.json();
+        let url = '/places';
+        if (attributes.length > 0) {
+            url = `/projectFromPlace?attributes=${attributes.join(',')}`; // Custom query endpoint
+        }
 
-        if (result.success) {
-            placesList.innerHTML = ''; // Clear loading indicator
-            result.data.forEach((place) => {
+        const response = await fetch(url, { method: 'GET' });
+        const data = await response.json();
+        console.log('Fetched Data:', data);
+
+        if (data.success) {
+            data.data.forEach(place => {
                 const listItem = document.createElement('li');
-                listItem.innerHTML = `
-                    <span>${place.name} (${place.address})</span>
-                `;
-                placesList.appendChild(listItem);
-            });
+                listItem.classList.add('place-card');
+                
+                let content = '';
+                const attributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
+                attributes.forEach(attr => {
+                    if (place[attr]) {
+                        const formattedAttr = attr.replace(/([a-z])([A-Z])/g, '$1 $2');
+                        content += `<p><strong>${formattedAttr}:</strong> ${place[attr]}</p>`;
+                    }
+                });
+                if (content) {
+                    listItem.innerHTML = content;
+                    document.getElementById('placesList').appendChild(listItem);
+                }
+            });                                 
         } else {
-            placesList.innerHTML = `<li>Error: ${result.message}</li>`;
+            alert(`Failed to fetch places: ${data.message}`);
         }
     } catch (error) {
         console.error('Error fetching places:', error);
-        placesList.innerHTML = '<li>Failed to fetch places.</li>';
+        alert('An error occurred while fetching places.');
     }
 }
 
@@ -584,7 +599,6 @@ async function fetchAndDisplayEventsForPlace(event) {
     }
 }
 
-
 // Fetch average ratings for each place and update the UI
 async function fetchAndDisplayAverageRatings() {
     const placesList = document.getElementById('placesList');
@@ -623,17 +637,6 @@ async function fetchAndDisplayAverageRatings() {
         placesList.innerHTML = '<li>Failed to fetch ratings. Please try again later.</li>';
     }
 }
-
-// // Attach event listener to the "Show Average Event Ratings" button
-// const showRatingsButton = document.getElementById('showRatingsButton');
-// if (showRatingsButton) {
-//     showRatingsButton.addEventListener('click', fetchAndDisplayAverageRatings);
-// }
-
-
-
-
-
 
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
@@ -735,28 +738,6 @@ function fetchTableData() {
     }
 }
 
-
-let isRatingView = false; // To track if the user is viewing ratings
-
-// Function to toggle between places and ratings views
-function togglePlacesRatingsView() {
-    const titleElement = document.querySelector(".places-container h2");
-    const showRatingsButton = document.getElementById("showRatingsButton");
-    const backButton = document.querySelector(".back-button");
-
-    if (isRatingView) {
-        // Switch to places view
-        titleElement.textContent = "Places in Vancouver";
-        showRatingsButton.textContent = "Show Average Event Ratings for each place";
-    } else {
-        // Switch to ratings view
-        titleElement.textContent = "Average Rating of Events for Each Place";
-        showRatingsButton.textContent = "Back to Places";
-    }
-
-    isRatingView = !isRatingView; // Toggle the view state
-}
-
 // Fetch average ratings for each place and display them
 async function fetchAndDisplayPlacesWithRatings() {
     const placesList = document.getElementById("placesList");
@@ -779,9 +760,6 @@ async function fetchAndDisplayPlacesWithRatings() {
                 placesList.appendChild(listItem);
             });
             console.log("finished");
-
-            // Switch to the ratings view
-            togglePlacesRatingsView();
         } else {
             placesList.innerHTML = "<li>Error fetching ratings.</li>";
         }
@@ -791,16 +769,76 @@ async function fetchAndDisplayPlacesWithRatings() {
     }
 }
 
+const showPlacesButton = document.getElementById("showPlacesButton");
+if (showPlacesButton) {
+    showPlacesButton.addEventListener("click", () => {
+        const titleElement = document.querySelector(".places-container h2");
+        titleElement.textContent = "Places in Vancouver";
+        fetchAndDisplayPlaces();
+    });
+}
+
 // Attach event listener to the button
 const showRatingsButton = document.getElementById("showRatingsButton");
 if (showRatingsButton) {
     showRatingsButton.addEventListener("click", () => {
-        if (!isRatingView) {
-            fetchAndDisplayPlacesWithRatings();
-        } else {
-            // Switch back to places view
-            togglePlacesRatingsView();
-            fetchAndDisplayPlaces(); // Fetch the original places list
+        const titleElement = document.querySelector(".places-container h2");
+        titleElement.textContent = "Average Rating of Events for Each Place";
+        fetchAndDisplayPlacesWithRatings();
+    });
+}
+
+document.getElementById('executeQueryButton').addEventListener('click', (e) => {
+    const titleElement = document.querySelector(".places-container h2");
+    titleElement.textContent = "Places in Vancouver";
+    e.preventDefault();
+
+    const selectedAttributes = Array.from(
+        document.querySelectorAll('#attributesForm input[name="attribute"]:checked')
+    ).map(input => input.value);
+
+    if (selectedAttributes.length === 0) {
+        alert('Please select at least one attribute.');
+        return;
+    }
+
+    fetchAndDisplayPlaces(selectedAttributes);
+});
+
+async function fetchAndDisplayRestaurants() {
+    const placesList = document.getElementById("placesList");
+
+    try {
+        const response = await fetch("/restaurants");
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        const result = await response.json();
+        console.log('Fetched Restaurants:', result);
+
+        if (result.success) {
+            placesList.innerHTML = "";
+
+            result.data.forEach(({ Name, Address }) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<span>${Name} (${Address})</span>`;
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = "<li>Error fetching restaurants.</li>";
+        }
+    } catch (error) {
+        console.error("Error fetching restaurants:", error);
+        placesList.innerHTML = "<li>Failed to fetch restaurants. Please try again later.</li>";
+    }
+}
+
+const showRestaurantsButton = document.getElementById("showRestaurantsButton");
+if (showRestaurantsButton) {
+    showRestaurantsButton.addEventListener("click", () => {
+        const titleElement = document.querySelector(".places-container h2");
+        titleElement.textContent = "Restaurants";
+        fetchAndDisplayRestaurants();
     });
 }
