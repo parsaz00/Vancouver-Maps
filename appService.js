@@ -279,7 +279,7 @@ async function getUserGiftCards(userId) {
              FROM Users u
              JOIN GiftCard gc ON u.UserID = gc.UserID
              WHERE u.UserID = :userId`,
-            [userId] // binds userId to :userId in the quer
+            [userId]
         );
         console.log("Query executed successfully:", result.rows);
         return result.rows;
@@ -378,8 +378,6 @@ async function getAverageEventRatingPerPlace() {
  * @param {number} threshold - Minimum average rating threshold
  * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
  */
-
-
 async function getCuisinesAboveThreshold(threshold) {
     return await withOracleDB(async (connection) => {
         console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
@@ -389,11 +387,23 @@ async function getCuisinesAboveThreshold(threshold) {
             FROM Restaurant r
             JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
             GROUP BY r.Cuisine
-            HAVING AVG(rv.Rating) > :threshold
+            HAVING AVG(rv.Rating) >= :threshold
         `;
-        const result = await connection.execute(query, { threshold });
-        console.log("Query executed successfully:", result.rows);
-        return result.rows;
+        try {
+            const result = await connection.execute(
+                query,
+                { threshold },
+                { outFormat: oracledb.OUT_FORMAT_OBJECT }
+            );
+            console.log("Query executed successfully:", result.rows);
+            return result.rows.map(row => ({
+                Cuisine: row.CUISINE,
+                AverageRating: row.AVERAGERATING
+            }));
+        } catch (error) {
+            console.error("Error executing getCuisinesAboveThreshold:", error);
+            throw error;
+        }
     });
 }
 
@@ -468,7 +478,7 @@ async function updateReview(userID, name, address, newValue, newMessage) {
         console.log("Updating review message for userID:", userID, "name:", name, "address:", address);
         const result = await connection.execute(
             `UPDATE Reviews
-             SET Message = :newMessage, Value = :newValue
+             SET Message = :newMessage, Rating = :newValue
              WHERE UserID = :userID AND Name = :name AND Address = :address`,
             {
                 userID,
@@ -497,11 +507,10 @@ async function updateReview(userID, name, address, newValue, newMessage) {
 **/
 async function getHighestAverageRatingRestaurant() {
     return await withOracleDB(async (connection) => {
-        console.log("Fetching the restaurant with the highest rating");
-        const result = await connection.execute(
-            `SELECT *
-             FROM (
-                 SELECT p.Name, p.Address, AVG(r.Rating) AS AvgRating
+        console.log("Fetching the restaurant with the highest average rating");
+        try {
+            const result = await connection.execute(
+                `SELECT p.Name, p.Address, AVG(r.Rating) AS AvgRating
                  FROM Place p
                  JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
                  JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
@@ -511,17 +520,30 @@ async function getHighestAverageRatingRestaurant() {
                      FROM (
                          SELECT AVG(r.Rating) AS AvgRating
                          FROM Place p
-                        JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
+                         JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
                          JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
                          GROUP BY p.Name, p.Address
                      )
                  )
-                 ORDER BY p.Name
-             )
-             WHERE ROWNUM = 1;`
-        );
-        console.log("Query executed successfully");
-        return result.rows;
+                 ORDER BY p.Name`
+            );
+
+            console.log("Query executed successfully");
+            console.log('Raw Results from Database:', result);
+
+            if (result.rows.length === 0) {
+                console.log('No top-rated restaurants found.');
+                return [];
+            }
+            return result.rows.map(row => ({
+                Name: row[0],
+                Address: row[1],
+                AverageRating: row[2],
+            }));
+        } catch (error) {
+            console.error('Error executing query for top-rated restaurants:', error);
+            throw error;
+        }
     });
 }
 
@@ -629,7 +651,7 @@ async function getAllRestaurants() {
             Name: row[0],
             Address: row[1]
         }));
-        
+
         return mappedRows;
     });
 }
