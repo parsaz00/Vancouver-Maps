@@ -91,6 +91,7 @@ async function redeemGiftCard(giftCardId) {
         if (result.success) {
             alert(result.message);
             fetchAndDisplayGiftCards();
+            fetchAndDisplayMyGiftCards();
         } else {
             alert(result.message);
         }
