@@ -131,7 +131,7 @@ router.get('/user-notifications', async (req, res) => {
  * @param {Response} res - Returns the user's gift cards
  */
 router.get('/user-giftcards', async (req, res) => {
-    const { userId} = req.query;
+    const { userId } = req.query;
 
     if (!userId) {
         return res.status(400).json({ success: false, message: 'UserId is required' });
@@ -142,7 +142,55 @@ router.get('/user-giftcards', async (req, res) => {
         res.status(200).json({ success: true, data: giftCards });
     } catch (error) {
         console.error('Error fetching giftcards:', error);
-        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+        res.status(500).json({ success:false, message: 'Failed to fetch gift cards' });
+    }
+});
+
+/**
+ * @route GET /giftcards
+ * @description Fetches gift cards owned by a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
+router.get('/giftcards', async (req, res) => {
+    try {
+        const giftCards = await appService.fetchAvailableGiftCards();
+        res.json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching gift cards:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+/**
+ * @route PUT /giftcards
+ * @description Inserts record into the table
+ * @param {Request} req - Contains tableName, columns, and values 
+ * @param {Response} res - Returns success or failure status.
+ */
+router.put('/redeem', async (req, res) => {
+    const { userId, giftCardId } = req.body;
+
+    try {
+        const result = await appService.redeemGiftCard(userId, giftCardId);
+        if (!result.success) {
+            return res.status(400).json({
+                success: false,
+                message: result.message,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: result.message,
+            rowsUpdated: result.rowsUpdated,
+        });
+    } catch (error) {
+        console.error('Error redeeming gift card:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to redeem gift card.',
+        });
     }
 });
 
