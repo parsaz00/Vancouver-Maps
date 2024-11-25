@@ -145,43 +145,6 @@ async function countDemotable() {
     });
 }
 
-// async function insertWithForeignKeyCheck(tableName, columns, values) {
-//     return await withOracleDB(async (connection) => {
-//         try {
-//             const columnsList = columns.join(', ');
-//             const placeholders = columns.map((_, index) => `:${index + 1}`).join(', ');
-//             console.log('Inserting values:', { tableName, columns, values });
-//             const sql = `INSERT INTO ${tableName} (${columnsList}) VALUES (${placeholders})`;
-
-//             const result = await connection.execute(sql, values, { autoCommit: true });
-
-//             if (result.rowsAffected && result.rowsAffected > 0) {
-//                 return { success: true, message: 'Record inserted successfully.' };
-//             } else {
-//                 return { success: false, message: 'Insertion failed.' };
-//             }
-//         } catch (error) {
-//             console.error('Error in insertWithForeignKeyCheck:', error);
-//             if (error.errorNum === 2291) { // ORA-02291: foreign key constraint violation
-//                 return {
-//                     success: false,
-//                     message: `Foreign key constraint violated. Ensure referenced values exist.`,
-//                 };
-//             } else if (error.errorNum === 1) { // ORA-00001: unique constraint violation
-//                 return {
-//                     success: false,
-//                     message: `Unique constraint violated. Record with this primary key may already exist.`,
-//                 };
-//             } else {
-//                 return {
-//                     success: false,
-//                     message: `An unexpected error occurred: ${error.message}`,
-//                 };
-//             }
-//         }
-//     });
-// }
-
 /** 
  * 2.1.1 Insert
  * Description - Inserts a table and checks for foreign key constraints
@@ -712,6 +675,90 @@ async function getReviewsAndPlaces(userId) {
     });
 }
 
+async function getAllNotifications(userId) {
+    return await withOracleDB(async (connection) => {
+        const query = `
+            SELECT n.NotifID, n.Message, NULL AS Type, 'Notification' AS Source
+            FROM Notification n
+            WHERE n.NotifID NOT IN (SELECT NotifID FROM Alert UNION SELECT NotifID FROM Promotion)
+            
+            UNION ALL
+            
+            SELECT n.NotifID, n.Message, a.Type, 'Alert' AS Source
+            FROM Notification n
+            JOIN Alert a ON n.NotifID = a.NotifID
+            
+            UNION ALL
+            
+            SELECT n.NotifID, n.Message, NULL AS Type, 'Promotion' AS Source
+            FROM Notification n
+            JOIN Promotion p ON n.NotifID = p.NotifID
+        `;
+        const result = await connection.execute(query);
+        return result.rows.map(row => ({
+            NotifID: row[0],
+            Message: row[1],
+            Type: row[2],
+            Source: row[3],
+        }));
+    });
+}
+
+
+// // Fetch notifications
+// async function getUserNotifications(userId) {
+//     return await withOracleDB(async (connection) => {
+//         const query = `
+//             SELECT n.NotifID, n.Time, n.Message
+//             FROM Notification n
+//             JOIN Receives r ON n.NotifID = r.NotifID
+//             WHERE r.UserID = :userId
+//         `;
+//         const result = await connection.execute(query, [userId]);
+//         return result.rows.map(row => ({
+//             NotifID: row[0],
+//             Time: row[1],
+//             Message: row[2]
+//         }));
+//     });
+// }
+
+// // Fetch promotions
+// async function getPromotions() {
+//     return await withOracleDB(async (connection) => {
+//         const query = `
+//             SELECT n.NotifID, n.Message, p.Company, p.StartDate, p.EndDate
+//             FROM Notification n
+//             JOIN Promotion p ON n.NotifID = p.NotifID
+//         `;
+//         const result = await connection.execute(query);
+//         return result.rows.map(row => ({
+//             NotifID: row[0],
+//             Message: row[1],
+//             Company: row[2],
+//             StartDate: row[3],
+//             EndDate: row[4]
+//         }));
+//     });
+// }
+
+// // Fetch Alerts
+
+// async function getAlerts() {
+//     return await withOracleDB(async (connection) => {
+//         const query = `
+//             SELECT n.NotifID, n.Message, a.Type
+//             FROM Notification n
+//             JOIN Alert a ON n.NotifID = a.NotifID
+//         `;
+//         const result = await connection.execute(query);
+//         return result.rows.map(row => ({
+//             NotifID: row[0],
+//             Message: row[1],
+//             Type: row[2]
+//         }));
+//     });
+// }
 
 
 module.exports = {
@@ -739,5 +786,10 @@ module.exports = {
     fetchEventsAfterDate,
     fetchEventsBeforeDate,
     addEvent,
-    getAllRestaurants
+    getAllRestaurants,
+    getAllNotifications
+    // getAlerts,
+    // getPromotions,
+    // getUserNotifications
+    
 };

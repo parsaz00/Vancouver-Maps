@@ -1,0 +1,37 @@
+Insert a notification 
+
+curl -X POST http://localhost:65535/insert \
+-H "Content-Type: application/json" \
+-d '{
+    "tableName": "Notification",
+    "columns": ["NotifID", "Address", "Time", "Message"],
+    "values": [1, "123 Main St, Vancouver, BC", "25-NOV-2024 12:00:00", "Welcome to Discover Vancouver!"]
+}'
+
+Insert a Promotion
+curl -X POST http://localhost:65535/insert \
+-H "Content-Type: application/json" \
+-d '{
+    "tableName": "Promotion",
+    "columns": ["NotifID", "Company", "StartDate", "EndDate"],
+    "values": [1, "Discover Vancouver Inc.", "25-NOV-2024", "30-NOV-2024"]
+}'
+
+Insert an Alert
+curl -X POST http://localhost:65535/insert \
+-H "Content-Type: application/json" \
+-d '{
+    "tableName": "Alert",
+    "columns": ["NotifID", "Type"],
+    "values": [1, "General Notification"]
+}'
+
+
+Insert for Receives:
+curl -X POST http://localhost:65535/insert \
+-H "Content-Type: application/json" \
+-d '{
+    "tableName": "Receives",
+    "columns": ["UserID", "NotifID"],
+    "values": [10, 1]
+}'
