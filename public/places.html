@@ -72,22 +72,12 @@
             background-color: #5a3be6;
         }
 
-        .back-button {
-            display: block;
-            margin: 2rem auto;
-            padding: 0.8rem 1.5rem;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .back-button:hover {
-            background-color: #45a049;
+        .button-container {
+            display: flex; 
+            gap: 3px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .show-ratings-btn {
@@ -100,11 +90,60 @@
             border-radius: 5px;
             font-size: 1rem;
             text-align: center;
-            cursor: pointer;
         }
 
         .show-ratings-btn:hover {
             background-color: #0056b3;
+        }
+
+        #attributeSelection {
+            margin: 20px 0;
+        }
+
+        #attributeSelection h3 {
+            margin-bottom: 10px;
+        }
+
+        #attributeSelection label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        #attributeSelection form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        #attributeSelection label {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        #executeQueryButton {
+            cursor: pointer;
+            height: fit-content; 
+        }
+
+        .place-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .place-card p {
+            margin: 0.3rem 0;
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -128,15 +167,31 @@
     <section class="places-container">
         <h2>Places in Vancouver</h2>
         
-        <!-- Show Ratings Button -->
-        <button id="showRatingsButton" class="show-ratings-btn">Show Average Event Ratings for each place</button>
-        <!-- Back to Main Page Button -->
+        <!-- Option Buttons -->
+        <div class="button-container">
+            <button id="showPlacesButton" class="show-ratings-btn">Show All (Reset)</button>
+            <button id="showRatingsButton" class="show-ratings-btn">Event Ratings for Each Place</button>
+            <button id="showRestaurantsButton" class="show-ratings-btn">View Restaurants</button>
+        </div>
+
+        <!-- Projection Form -->
+        <div id="attributeSelection">
+            <h3>Select Attributes to View</h3>
+            <form id="attributesForm">
+                <label><input type="checkbox" name="attribute" value="Name"> Name</label>
+                <label><input type="checkbox" name="attribute" value="Address"> Address</label>
+                <label><input type="checkbox" name="attribute" value="Phone"> Phone</label>
+                <label><input type="checkbox" name="attribute" value="OpeningTime"> Opening Time</label>
+                <label><input type="checkbox" name="attribute" value="ClosingTime"> Closing Time</label>
+                <label><input type="checkbox" name="attribute" value="Description"> Description</label>
+                <label><input type="checkbox" name="attribute" value="StopID"> Stop ID</label>
+                <button id="executeQueryButton" class="show-ratings-btn">Search</button>
+            </form>
+        </div>        
+        
         <ul id="placesList">
             <!-- Places will be dynamically added here -->
         </ul>
-
-        
-        <a href="mainApp.html" class="back-button">Back to Main Page</a>
     </section>
     <footer>
         <p>&copy; 2024 Discover Vancouver</p>

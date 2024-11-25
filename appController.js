@@ -481,6 +481,18 @@ router.get('/places', async (req, res) => {
     }
 });
 
+// Fetch all restaurants
+router.get('/restaurants', async (req, res) => {
+    try {
+        const restaurants = await appService.getAllRestaurants();
+        console.log('Sending Response:', { success: true, data: restaurants });
+        res.status(200).json({ success: true, data: restaurants });
+    } catch (error) {
+        console.error('Error fetching restaurants:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch restaurants.' });
+    }
+});
+
 // // Reviews and places
 // router.get('/reviews-and-places', async (req, res) => {
 //     const { userId } = req.query;

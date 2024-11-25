@@ -322,23 +322,24 @@ async function getEventsAtPlace(placeName, placeAddress) {
 async function projectFromPlace(selectedAttributes) {
     return await withOracleDB(async (connection) => {
         const validAttributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
-        let column = "";
-        for (let i = 0; i < selectedAttributes.length; i++) {
-            if (!validAttributes.includes(selectedAttributes[i])) {
-                throw new Error(`Invalid attribute: ${selectedAttributes[i]}`);
+        selectedAttributes.forEach(attr => {
+            if (!validAttributes.includes(attr)) {
+                throw new Error(`Invalid attribute: ${attr}`);
             }
-            column += selectedAttributes[i];
-            if (i < selectedAttributes.length - 1) {
-                column += ", ";
-            }
-        }
+        });
+        const columns = selectedAttributes.join(', ');
 
-        const result = await connection.execute(
-            `SELECT ${column} FROM Place`
-        );
-        console.log("Successful query", result.rows);
+        const result = await connection.execute(`SELECT ${columns} FROM Place`);
+        const mappedResult = result.rows.map(row => {
+            const rowObject = {};
+            selectedAttributes.forEach((attr, index) => {
+                rowObject[attr] = row[index];
+            });
+            return rowObject;
+        });
 
-        return result.rows;
+        console.log("Successful query", mappedResult);
+        return mappedResult;
     }).catch((err) => {
         console.error('Error in projectFromPlace:', err);
         throw err;
@@ -496,7 +497,7 @@ async function updateReview(userID, name, address, newValue, newMessage) {
 **/
 async function getHighestAverageRatingRestaurant() {
     return await withOracleDB(async (connection) => {
-        console.log("Fetching highest average rating per place type");
+        console.log("Fetching the restaurant with the highest rating");
         const result = await connection.execute(
             `SELECT *
              FROM (
@@ -613,9 +614,23 @@ async function getAllPlaces() {
             `SELECT Name, Address FROM Place ORDER BY Name`
         );
         return result.rows.map((row) => ({
-            name: row[0],
-            address: row[1],
+            Name: row[0],
+            Address: row[1],
         }));
+    });
+}
+
+async function getAllRestaurants() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT Name, Address FROM Restaurant ORDER BY Name`
+        );
+        const mappedRows = result.rows.map(row => ({
+            Name: row[0],
+            Address: row[1]
+        }));
+        
+        return mappedRows;
     });
 }
 
@@ -701,5 +716,6 @@ module.exports = {
     getHighestAverageRatingRestaurant,
     fetchEventsAfterDate,
     fetchEventsBeforeDate,
-    addEvent
+    addEvent,
+    getAllRestaurants
 };
