@@ -45,8 +45,6 @@
             font-weight: bold;
         }
 
-
-
         /* Search Bar Section */
         .search-bar {
             max-width: 900px;
@@ -90,7 +88,6 @@
             transform: scale(1.05); 
         }
 
-
         /* Events Section */
         .events {
             max-width: 1500px;
@@ -117,11 +114,11 @@
 
         .events ul li {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             background-color: #fff;
             margin-bottom: 1rem;
             padding: 1rem 1.5rem;
+            border-radius: 5px;
             transition: transform 0.2s ease, box-shadow 0.2s ease; 
         }
 
@@ -130,25 +127,39 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
         }
 
-        .events ul li span {
-            font-size: 1.2rem; 
+        .event-title {
+            font-size: 1.5rem;
             font-weight: bold;
+            margin-bottom: 0.5rem;
         }
 
-        .events ul li button {
-            background-color: #333; 
-            color: #fff;
-            border: none;
-            padding: 0.8rem 1.5rem; 
+        .event-date {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-description {
             font-size: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #333;
         }
 
-        .events ul li button:hover {
-            background-color: #000; 
-            transform: scale(1.05);
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            color: #fff;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: #a7e6f2;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -170,57 +181,32 @@
         <button id="logoutButton" class="login-button">Logout</button>
     </nav>
 
-    <div class="content">
-        <!-- Hero Section -->
-        <section class="hero">
 
-            <div class="hero-overlay">
-                <h1>Discover Your Next Adventure, Night Out, or Party with Friends</h1>
-                <p>Find Exciting Places in Greater Vancouver through the Search Bar Below or Explore a Section Above</p>
-            </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay">
+            <h1>Discover Your Next Adventure, Night Out, or Party with Friends</h1>
+            <p>Find Exciting Places in Greater Vancouver through the Search Bar Below or Explore a Section Above</p>
+        </div>
+    </section>
 
-        </section>
+    <!-- Search Bar Section -->
+    <section class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search for a place...">
+        <button onclick="searchPlaces()">Search</button>
+        <div class="results" id="searchResults">
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events">
+        <h2>Upcoming Events</h2>
+        <ul id="upcomingEventsList">
+            <!-- Events will be dynamically populated here -->
+        </ul>      
+    </section>
 
 
-        <!-- Search Bar Section -->
-        <section class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search for a place...">
-            <button onclick="searchPlaces()">Search</button>
-            <div class="results" id="searchResults">
-            </div>
-        </section>
-
-        <!-- Events Section -->
-        <section class="events">
-            <h2>Upcoming Events</h2>
-            <ul>
-                <li>
-                    <span>List item</span>
-                    <button>View</button>
-                </li>
-                <li>
-                    <span>List item</span>
-                    <button>View</button>
-                </li>
-                <li>
-                    <span>List item</span>
-                    <button>View</button>
-                </li>
-                <li>
-                    <span>List item</span>
-                    <button>View</button>
-                </li>
-                <li>
-                    <span>List item</span>
-                    <button>View</button>
-                </li>
-                <li>
-                    <span>List item</span>
-                    <button>View</button>
-                </li>
-            </ul>      
-        </section>
-    </div>
     <footer>
         <p>&copy; 2024 Discover Vancouver</p>
         <p>
@@ -228,38 +214,7 @@
             <a href="https://www.vancouver.ca" target="_blank" rel="noopener">Here</a>
         </p>
     </footer>  
-<script>
-    // Used https://developer.mozilla.org/en-US/docs/Web/CSS/:root#:~:text=The%20%3Aroot%20CSS%20pseudo-class,that%20its%20specificity%20is%20higher.
-    // for these functions
-    async function searchPlaces() {
-    const inputString = document.getElementById('searchInput').value;
-    const searchResultsDiv = document.getElementById('searchResults');
-    searchResultsDiv.innerHTML = ''; // Clear previous results
 
-    if (!inputString) {
-        searchResultsDiv.innerHTML = '<p>Please enter a search query (Ex. name = stanley park)</p>';
-        return;
-    }
-
-    const response = await fetch(`/selectingPlace?inputString=${encodeURIComponent(inputString)}`);
-    const data = await response.json();
-
-    if (data.success && data.data.length > 0) {
-        const ul = document.createElement('ul');
-
-        for (let i = 0; i < data.data.length; i++) {
-            const place = data.data[i]; // access data 
-            const li = document.createElement('li'); // create new list 
-            li.textContent = `Name: ${place[0]}, Address: ${place[1]}`; 
-            ul.appendChild(li); // append 
-        }
-
-        searchResultsDiv.appendChild(ul);
-    } else {
-        searchResultsDiv.innerHTML = '<p>No places found.</p>';
-    }
-}
-
-</script>
+    <script src="mainpage.js"></script>
 </body>
 </html>
