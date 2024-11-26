@@ -128,6 +128,21 @@ VALUES (104, 75.00, 'Best Buy', 4);
 INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
 VALUES (105, 150.00, 'Target', 5);
 
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (21, 50.00, 'Amazon', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (22, 100.00, 'Starbucks', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (23, 25.00, 'Walmart', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (24, 75.00, 'Best Buy', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (25, 150.00, 'Target', 1);
+
 INSERT INTO GCPoints (Value, Points) 
 VALUES (50.00, 100);
 
@@ -207,20 +222,20 @@ INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
 VALUES ('Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', 'Seafood', 180);
 
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.', 'Great Park');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (2, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.', 'Yummyy!');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (3, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!', 'Delicious');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (4, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 4, 'Amazing seafood and great atmosphere.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 4, 'Amazing seafood and great atmosphere.', 'Good Food!');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (5, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Best brunch in Vancouver, their waffles are outstanding!');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Best brunch in Vancouver, their waffles are outstanding!', 'Best in VanCity');
 
 
 INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
@@ -293,3 +308,5 @@ INSERT INTO Receives (UserID, NotifID)
 VALUES(4, 4);
 INSERT INTO Receives (UserID, NotifID)
 VALUES(5, 5);
+
+COMMIT;

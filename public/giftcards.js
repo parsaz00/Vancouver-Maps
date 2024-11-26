@@ -8,12 +8,13 @@ async function fetchAndDisplayMyGiftCards() {
     }
 
     try {
-        const response = await fetch(`$/user-giftcards?userId=${userId}`, {
+        const response = await fetch(`/user-giftcards?userId=${userId}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
 
         const data = await response.json();
+        console.log("data: ", data);
 
         if (!data.success) {
             throw new Error(data.message || 'Failed to fetch your gift cards.');
@@ -24,7 +25,7 @@ async function fetchAndDisplayMyGiftCards() {
             const listItem = document.createElement('li');
             listItem.className = 'giftcard-item';
             listItem.innerHTML = `
-                <span>${card.VALUE} ${card.FRANCHISE}</span>
+                <span>\$${card.VALUE} ${card.FRANCHISE}</span>
             `;
             myGiftCardList.appendChild(listItem);
         });
@@ -43,6 +44,7 @@ async function fetchAndDisplayGiftCards() {
         });
 
         const data = await response.json();
+        console.log("data: ", data);
 
         if (!data.success) {
             throw new Error(data.message || 'Failed to fetch gift cards.');
@@ -53,7 +55,7 @@ async function fetchAndDisplayGiftCards() {
             const listItem = document.createElement('li');
             listItem.className = 'giftcard-item';
             listItem.innerHTML = `
-                <span>${card.VALUE} ${card.FRANCHISE}</span>
+                <span>\$${card.VALUE} ${card.FRANCHISE}</span>
                 <span class="points">${card.POINTS} Points</span>
                 <button class="redeem-button" data-gcid="${card.GCID}">Redeem</button>
             `;
@@ -79,7 +81,7 @@ async function redeemGiftCard(giftCardId) {
 
     try {
         const response = await fetch('/redeem', {
-            method: 'POST',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, giftCardId }),
         });
@@ -87,10 +89,11 @@ async function redeemGiftCard(giftCardId) {
         const result = await response.json();
 
         if (result.success) {
-            alert('Gift card redeemed successfully!');
+            alert(result.message);
             fetchAndDisplayGiftCards();
+            fetchAndDisplayMyGiftCards();
         } else {
-            alert(result.message || 'Failed to redeem the gift card.');
+            alert(result.message);
         }
     } catch (error) {
         console.error('Error redeeming gift card:', error);

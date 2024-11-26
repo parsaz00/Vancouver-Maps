@@ -131,7 +131,7 @@ router.get('/user-notifications', async (req, res) => {
  * @param {Response} res - Returns the user's gift cards
  */
 router.get('/user-giftcards', async (req, res) => {
-    const { userId} = req.query;
+    const { userId } = req.query;
 
     if (!userId) {
         return res.status(400).json({ success: false, message: 'UserId is required' });
@@ -142,7 +142,55 @@ router.get('/user-giftcards', async (req, res) => {
         res.status(200).json({ success: true, data: giftCards });
     } catch (error) {
         console.error('Error fetching giftcards:', error);
-        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+        res.status(500).json({ success:false, message: 'Failed to fetch gift cards' });
+    }
+});
+
+/**
+ * @route GET /giftcards
+ * @description Fetches gift cards owned by a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
+router.get('/giftcards', async (req, res) => {
+    try {
+        const giftCards = await appService.fetchAvailableGiftCards();
+        res.json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching gift cards:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+/**
+ * @route PUT /giftcards
+ * @description Inserts record into the table
+ * @param {Request} req - Contains tableName, columns, and values 
+ * @param {Response} res - Returns success or failure status.
+ */
+router.put('/redeem', async (req, res) => {
+    const { userId, giftCardId } = req.body;
+
+    try {
+        const result = await appService.redeemGiftCard(userId, giftCardId);
+        if (!result.success) {
+            return res.status(400).json({
+                success: false,
+                message: result.message,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: result.message,
+            rowsUpdated: result.rowsUpdated,
+        });
+    } catch (error) {
+        console.error('Error redeeming gift card:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to redeem gift card.',
+        });
     }
 });
 
@@ -332,22 +380,21 @@ router.delete('/reviews', async (req, res) => {
 /**
  * @route PUT /reviews
  * @description Updates a review's value and message
- * @param {Request} req - Contains userID, name, address, newValue, and newMessage in the body
+ * @param {Request} req - Contains userID, name, address, newValue, newMessage, newTitle, and newDate in the body
  * @param {Response} res - Returns success or failure status
  */
 router.put('/reviews', async (req, res) => {
-    const { userID, name, address, newValue, newMessage } = req.body;
-
-    // Validate input parameters
-    if (!userID || !name || !address || newValue === undefined || !newMessage) {
+    const { userID, name, address, newValue, newMessage, newTitle, newDate } = req.body;
+    
+    if (!userID || !name || !address || newValue === undefined || !newMessage || !newTitle || !newDate) {
         return res.status(400).json({
             success: false,
-            message: "userID, name, address, newValue, and newMessage are required"
+            message: "userID, name, address, newValue, newMessage, newTitle, and newDate are required"
         });
     }
 
     try {
-        const rowsUpdated = await appService.updateReview(userID, name, address, newValue, newMessage);
+        const rowsUpdated = await appService.updateReview(userID, name, address, newValue, newMessage, newTitle, newDate);
 
         if (rowsUpdated > 0) {
             return res.status(200).json({

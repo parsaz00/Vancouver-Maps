@@ -284,12 +284,13 @@ async function fetchReviewsAndPlacesSequentially() {
         if (reviewsData.success) {
             const reviewsContainer = document.getElementById('reviewsContainer');
             reviewsContainer.innerHTML = '';
-            reviewsData.data.forEach(([name, address, reviewDate, rating, message]) => {
+            reviewsData.data.forEach(([name, address, reviewDate, rating, message, title]) => {
                 const reviewCard = document.createElement('div');
                 reviewCard.className = 'card';
 
                 reviewCard.innerHTML = `
                     <h3>${name} (${address})</h3>
+                    <p><strong>Title:</strong> ${title}</p>
                     <p><strong>Date:</strong> ${new Date(reviewDate).toLocaleDateString()}</p>
                     <p><strong>Rating:</strong> ${rating}/5</p>
                     <p><strong>Review:</strong> <span class="review-message">${message || 'No message provided.'}</span></p>
@@ -343,11 +344,19 @@ async function fetchReviewsAndPlacesSequentially() {
 
                     const messageElement = card.querySelector('.review-message');
                     const originalMessage = messageElement.textContent;
-                    const ratingElement = card.querySelector('p:nth-child(3)').textContent;
+                    const ratingElement = card.querySelector('p:nth-child(4)').textContent;
                     const originalRating = parseInt(ratingElement.match(/\d+/)[0], 10);
+                    const reviewDateElement = card.querySelector('p:nth-child(3)').textContent;
+                    const originalReviewDate = new Date(reviewDateElement.match(/Date:\s(.+)/)[1]).toISOString().split('T')[0];
+                    const titleElement = card.querySelector('p:nth-child(2)').textContent;
+                    const originalTitle = titleElement.match(/Title:\s(.+)/)[1];;
 
                     card.innerHTML = `
                         <h3>${name} (${address})</h3>
+                        <label for="title">Title:</label>
+                        <textarea id="title" name="title" rows="1">${originalTitle}</textarea>
+                        <label for="reviewDate">Date:</label>
+                        <input type="date" id="reviewDate" name="reviewDate" value="${originalReviewDate}">
                         <p><strong>Rating (1-5):</strong></p>
                         <input type="number" class="update-rating" value="${originalRating}" min="1" max="5" />
                         <p><strong>Message:</strong></p>
@@ -362,12 +371,14 @@ async function fetchReviewsAndPlacesSequentially() {
                     saveButton.addEventListener('click', async () => {
                         const updatedMessage = card.querySelector('.update-textarea').value;
                         const updatedRating = parseInt(card.querySelector('.update-rating').value, 10);
-
-                        if (!updatedMessage || isNaN(updatedRating) || updatedRating < 1 || updatedRating > 5) {
-                            alert('Please provide a valid message and rating (1-5).');
+                        const updatedTitle = card.querySelector('#title').value;
+                        const updatedDate = card.querySelector('#reviewDate').value;
+            
+                        if (!updatedMessage || !updatedTitle || !updatedDate || isNaN(updatedRating) || updatedRating < 1 || updatedRating > 5) {
+                            alert('Please provide valid inputs for all fields.');
                             return;
                         }
-
+            
                         try {
                             const updateResponse = await fetch(`/reviews`, {
                                 method: 'PUT',
@@ -378,6 +389,8 @@ async function fetchReviewsAndPlacesSequentially() {
                                     address,
                                     newValue: updatedRating,
                                     newMessage: updatedMessage,
+                                    newTitle: updatedTitle,
+                                    newDate: updatedDate,
                                 }),
                             });
 
@@ -433,12 +446,13 @@ async function addReview(event) {
     const name = parts[0];
     const address = parts.slice(1).join(',').trim();
     let reviewDate = document.getElementById('reviewDate').value;
+    const title = document.getElementById('title').value;
     const rating = document.getElementById('rating').value;
     const message = document.getElementById('message').value;
     const userId = localStorage.getItem('userId');
 
     // Ensure inputs are valid
-    if (!name || !address || !userId || !reviewDate || !rating) {
+    if (!name || !address || !userId || !reviewDate || !rating || !title) {
         alert('Invalid input. Please ensure all fields are filled out correctly.');
         return;
     }
@@ -455,6 +469,7 @@ async function addReview(event) {
         reviewDate,
         rating,
         message,
+        title,
     });
 
     try {
@@ -464,8 +479,8 @@ async function addReview(event) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 tableName: 'Reviews',
-                columns: ['UserID', 'Name', 'Address', 'ReviewDate', 'Rating', 'Message'],
-                values: [userId, name, address, reviewDate, rating, message],
+                columns: ['UserID', 'Name', 'Address', 'ReviewDate', 'Rating', 'Message', 'Title'],
+                values: [userId, name, address, reviewDate, rating, message, title],
             }),
         });
 
