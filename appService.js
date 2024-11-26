@@ -716,30 +716,6 @@ async function getAllRestaurants() {
     });
 }
 
-// async function getReviewsAndPlaces(userId) {
-//     return await withOracleDB(async (connection) => {
-//         const reviewsQuery = `
-//             SELECT Name, Address, ReviewDate, Rating, Message
-//             FROM Reviews
-//             WHERE UserID = :userId
-//             ORDER BY ReviewDate DESC
-//         `;
-//         const placesQuery = `SELECT Name, Address FROM Place ORDER BY Name`;
-
-//         const [reviewsResult, placesResult] = await Promise.all([
-//             connection.execute(reviewsQuery, [userId]),
-//             connection.execute(placesQuery)
-//         ]);
-
-//         return {
-//             reviews: reviewsResult.rows,
-//             places: placesResult.rows.map((row) => ({
-//                 name: row[0],
-//                 address: row[1],
-//             })),
-//         };
-//     });
-// }
 async function getReviewsAndPlaces(userId) {
     return await withOracleDB(async (connection) => {
         try {
@@ -802,62 +778,6 @@ async function getAllNotifications(userId) {
 }
 
 
-// // Fetch notifications
-// async function getUserNotifications(userId) {
-//     return await withOracleDB(async (connection) => {
-//         const query = `
-//             SELECT n.NotifID, n.Time, n.Message
-//             FROM Notification n
-//             JOIN Receives r ON n.NotifID = r.NotifID
-//             WHERE r.UserID = :userId
-//         `;
-//         const result = await connection.execute(query, [userId]);
-//         return result.rows.map(row => ({
-//             NotifID: row[0],
-//             Time: row[1],
-//             Message: row[2]
-//         }));
-//     });
-// }
-
-// // Fetch promotions
-// async function getPromotions() {
-//     return await withOracleDB(async (connection) => {
-//         const query = `
-//             SELECT n.NotifID, n.Message, p.Company, p.StartDate, p.EndDate
-//             FROM Notification n
-//             JOIN Promotion p ON n.NotifID = p.NotifID
-//         `;
-//         const result = await connection.execute(query);
-//         return result.rows.map(row => ({
-//             NotifID: row[0],
-//             Message: row[1],
-//             Company: row[2],
-//             StartDate: row[3],
-//             EndDate: row[4]
-//         }));
-//     });
-// }
-
-// // Fetch Alerts
-
-// async function getAlerts() {
-//     return await withOracleDB(async (connection) => {
-//         const query = `
-//             SELECT n.NotifID, n.Message, a.Type
-//             FROM Notification n
-//             JOIN Alert a ON n.NotifID = a.NotifID
-//         `;
-//         const result = await connection.execute(query);
-//         return result.rows.map(row => ({
-//             NotifID: row[0],
-//             Message: row[1],
-//             Type: row[2]
-//         }));
-//     });
-// }
-
-
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
@@ -887,7 +807,4 @@ module.exports = {
     fetchAvailableGiftCards,
     redeemGiftCard,
     getAllNotifications
-    // getAlerts,
-    // getPromotions,
-    // getUserNotifications
 };

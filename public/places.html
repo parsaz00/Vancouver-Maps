@@ -173,36 +173,38 @@
         <button id="logoutButton" class="login-button">Logout</button>
     </nav>
 
-    <!-- Places Section -->
-    <section class="places-container">
-        <h2>Places in Vancouver</h2>
-        
-        <!-- Option Buttons -->
-        <div class="button-container">
-            <button id="showPlacesButton" class="show-ratings-btn">Show All (Reset)</button>
-            <button id="showRatingsButton" class="show-ratings-btn">Event Ratings for Each Place</button>
-            <button id="showRestaurantsButton" class="show-ratings-btn">View Restaurants</button>
-        </div>
+    <div class="content">
+        <!-- Places Section -->
+        <section class="places-container">
+            <h2>Places in Vancouver</h2>
+            
+            <!-- Option Buttons -->
+            <div class="button-container">
+                <button id="showPlacesButton" class="show-ratings-btn">Show All (Reset)</button>
+                <button id="showRatingsButton" class="show-ratings-btn">Event Ratings for Each Place</button>
+                <button id="showRestaurantsButton" class="show-ratings-btn">View Restaurants</button>
+            </div>
 
-        <!-- Projection Form -->
-        <div id="attributeSelection">
-            <h3>Select Attributes to View</h3>
-            <form id="attributesForm">
-                <label><input type="checkbox" name="attribute" value="Name"> Name</label>
-                <label><input type="checkbox" name="attribute" value="Address"> Address</label>
-                <label><input type="checkbox" name="attribute" value="Phone"> Phone</label>
-                <label><input type="checkbox" name="attribute" value="OpeningTime"> Opening Time</label>
-                <label><input type="checkbox" name="attribute" value="ClosingTime"> Closing Time</label>
-                <label><input type="checkbox" name="attribute" value="Description"> Description</label>
-                <label><input type="checkbox" name="attribute" value="StopID"> Stop ID</label>
-                <button id="executeQueryButton" class="show-ratings-btn">Search</button>
-            </form>
-        </div>        
-        
-        <ul id="placesList">
-            <!-- Places will be dynamically added here -->
-        </ul>
-    </section>
+            <!-- Projection Form -->
+            <div id="attributeSelection">
+                <h3>Select Attributes to View</h3>
+                <form id="attributesForm">
+                    <label><input type="checkbox" name="attribute" value="Name"> Name</label>
+                    <label><input type="checkbox" name="attribute" value="Address"> Address</label>
+                    <label><input type="checkbox" name="attribute" value="Phone"> Phone</label>
+                    <label><input type="checkbox" name="attribute" value="OpeningTime"> Opening Time</label>
+                    <label><input type="checkbox" name="attribute" value="ClosingTime"> Closing Time</label>
+                    <label><input type="checkbox" name="attribute" value="Description"> Description</label>
+                    <label><input type="checkbox" name="attribute" value="StopID"> Stop ID</label>
+                    <button id="executeQueryButton" class="show-ratings-btn">Search</button>
+                </form>
+            </div>        
+            
+            <ul id="placesList">
+                <!-- Places will be dynamically added here -->
+            </ul>
+        </section>
+    </div>
     <footer>
         <p>&copy; 2024 Discover Vancouver</p>
         <p>
