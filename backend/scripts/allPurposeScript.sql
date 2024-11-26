@@ -12,7 +12,6 @@ BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE RetailBusiness CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE 'DROP TABLE Includes CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE 'DROP TABLE TravelPass CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE FriendsWith CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE 'DROP TABLE GCPoints CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE 'DROP TABLE GiftCard CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE 'DROP TABLE EmailName CASCADE CONSTRAINTS';
@@ -72,15 +71,6 @@ CREATE TABLE GCPoints (
     Points INT
 );
 
-CREATE TABLE FriendsWith (
-    UserID1 INT,
-    UserID2 INT,
-    PRIMARY KEY (UserID1, UserID2),
-    FOREIGN KEY (UserID1) REFERENCES Users(UserID) ON DELETE CASCADE, 
-    FOREIGN KEY (UserID2) REFERENCES Users(UserID) ON DELETE CASCADE,
-    CHECK (UserID1 <> UserID2)
-);
-
 CREATE TABLE TravelPass (
     PassID INT PRIMARY KEY,
     Name VARCHAR(100),
@@ -126,9 +116,10 @@ CREATE TABLE Reviews (
     ReviewDate DATE,
     Rating INT CHECK (Rating BETWEEN 1 AND 5),
     Message VARCHAR(255),
+    Title VARCHAR(100) UNIQUE,
     PRIMARY KEY (UserID, Name, Address),
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (Name, Address) REFERENCES Place(Name, Address) 
+    FOREIGN KEY (Name, Address) REFERENCES Place(Name, Address)
 );
 
 CREATE TABLE Event (
@@ -189,6 +180,22 @@ VALUES (4, '4445556666', 'dave@example.com', 250);
 
 INSERT INTO USERS (UserID, Phone, Email, Points) 
 VALUES (5, '7778889999', 'eve@example.com', 300);
+
+--Users' Names
+INSERT INTO EmailName (Email, Name) 
+VALUES ('parsaz@shaw.ca', 'Parsa');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('bob@example.com', 'Bob Smith');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('charlie@example.com', 'Charlie Adams');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('dave@example.com', 'Dave Williams');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('eve@example.com', 'Eve Thompson');
 
 
 -- Insert for TransitStop
@@ -309,29 +316,29 @@ INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description
 VALUES(5, 'Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R 4J1', 'Bridge Illumination', TO_DATE('2024-12-20', 'YYYY-MM-DD'), 5, 'The bridge is lit with thousands of lights.');
 
 --Reviews
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'It was an average experience.', 'It''s a Park');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (2, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'It was an average experience.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 4, 'I had a lot of fun, but it is quite big.', 'Legs were Hurting');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (3, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 4, 'I had a lot of fun, but it is quite big.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'Meh it is ight i guess',  'Meh');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (4, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'Meh it is ight i guess');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.', 'Great Park');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (1, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.', 'Yummyy!');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (1, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!', 'Delicious');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (1, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 4, 'Amazing seafood and great atmosphere.');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 4, 'Amazing seafood and great atmosphere.', 'Good Food!');
 
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message)
-VALUES (2, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Best brunch in Vancouver, their waffles are outstanding!');
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Best brunch in Vancouver, their waffles are outstanding!', 'Best in VanCity');
 
 
 -- Notification
@@ -399,6 +406,84 @@ VALUES(4, 4);
 INSERT INTO Receives (UserID, NotifID)
 VALUES(5, 5);
 
+--Gift Cards
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (101, 50.00, 'Amazon', 1);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (102, 100.00, 'Starbucks', 2);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (103, 25.00, 'Walmart', 3);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (104, 75.00, 'Best Buy', 4);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (105, 150.00, 'Target', 5);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (21, 50.00, 'Amazon', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (22, 100.00, 'Starbucks', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (23, 25.00, 'Walmart', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (24, 75.00, 'Best Buy', NULL);
+
+INSERT INTO GiftCard (GCID, Value, Franchise, UserID) 
+VALUES (25, 150.00, 'Target', 1);
+
+--Gift Card Points Values
+INSERT INTO GCPoints (Value, Points) 
+VALUES (50.00, 100);
+
+INSERT INTO GCPoints (Value, Points) 
+VALUES (100.00, 200);
+
+INSERT INTO GCPoints (Value, Points) 
+VALUES (25.00, 50);
+
+INSERT INTO GCPoints (Value, Points) 
+VALUES (75.00, 150);
+
+INSERT INTO GCPoints (Value, Points) 
+VALUES (150.00, 300);
+
+--Travel Pass
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (1, 'City Explorer', 120.00, TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2024-10-07', 'YYYY-MM-DD'), 1);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (2, 'Outdoor Fun', 250.00, TO_DATE('2024-11-05', 'YYYY-MM-DD'), TO_DATE('2024-11-12', 'YYYY-MM-DD'), 2);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (3, 'Mountain Adventure', 300.00, TO_DATE('2024-12-01', 'YYYY-MM-DD'), TO_DATE('2024-12-10', 'YYYY-MM-DD'), 3);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (4, 'History Enthusiast', 180.00, TO_DATE('2024-09-20', 'YYYY-MM-DD'), TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (5, 'Cultural Experience', 150.00, TO_DATE('2024-10-15', 'YYYY-MM-DD'), TO_DATE('2024-10-22', 'YYYY-MM-DD'), 5);
+
+--Travel Pass Inclusions
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (4, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (3, 'Grouse Mountain', '6400 Nancy Greene Way, North Vancouver, BC V7R 4K9');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (1, 'Science World', '1455 Quebec St, Vancouver, BC V6A 3Z7');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (2, 'Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R 4J1');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (5, 'Museum of Vancouver', '1100 Chestnut St, Vancouver, BC V6J 3J9');
 
 -- Commit all changes to make them visible
 COMMIT;
