@@ -14,9 +14,15 @@
             padding: 0;
             background-color: #f9f9f9;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Page Content */
+        .content {
+            flex: 1;
+        }
+
         .container {
             max-width: 800px;
             margin: 2rem auto;
@@ -93,20 +99,22 @@
         <button id="logoutButton" class="login-button">Logout</button>
     </nav>
 
-    <div class="container">
-        <h1>Redeem Gift Cards</h1>
-
-        <!-- My Gift Cards Section -->
-        <section>
-            <h2>My Gift Cards</h2>
-            <ul id="myGiftCardList"></ul>
-        </section>
-
-        <!-- Available Gift Cards Section -->
-        <section>
-            <h2>Available Gift Cards</h2>
-            <ul id="giftCardList"></ul>
-        </section>
+    <div class="content">
+        <div class="container">
+            <h1>Redeem Gift Cards</h1>
+    
+            <!-- My Gift Cards Section -->
+            <section>
+                <h2>My Gift Cards</h2>
+                <ul id="myGiftCardList"></ul>
+            </section>
+    
+            <!-- Available Gift Cards Section -->
+            <section>
+                <h2>Available Gift Cards</h2>
+                <ul id="giftCardList"></ul>
+            </section>
+        </div>
     </div>
     <footer>
         <p>&copy; 2024 Discover Vancouver</p>
