@@ -1029,3 +1029,28 @@ async function fetchAndDisplayNotifications() {
     }
 }
 
+document.getElementById('findReviewedPlacesButton').addEventListener('click', async () => {
+    const placesList = document.getElementById('placesList');
+    placesList.innerHTML = '<li>Loading...</li>';
+
+    try {
+        const response = await fetch('/places-reviewed-by-all');
+        const result = await response.json();
+
+        if (result.success) {
+            placesList.innerHTML = '';
+            result.data.forEach(({ Name, Address }) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `${Name} (${Address})`;
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = '<li>Error fetching reviewed places.</li>';
+        }
+    } catch (error) {
+        console.error('Error fetching reviewed places:', error);
+        placesList.innerHTML = '<li>Failed to fetch reviewed places.</li>';
+    }
+});
+
+

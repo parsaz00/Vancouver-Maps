@@ -303,6 +303,14 @@ VALUES ('Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', 'Seafood',
 INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
 VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', 'Light Show', TO_DATE('2024-12-01', 'YYYY-MM-DD'), 5, 'A magical light show at the park.');
 
+-- Event
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (6, 'Stanley Park', 'Vancouver, BC V6G 1Z4', 'Rave Concert', TO_DATE('2024-12-02', 'YYYY-MM-DD'), 2, 'Come see your favourite DJs perform');
+
+-- Event
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (7, 'Stanley Park', 'Vancouver, BC V6G 1Z4', 'Bird Watching', TO_DATE('2024-12-05', 'YYYY-MM-DD'), 1, 'Come join us to find birds');
+
 INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
 VALUES(2, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', 'Christmas Market', TO_DATE('2024-12-15', 'YYYY-MM-DD'), 4, 'Holiday-themed market.');
 
@@ -326,10 +334,25 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (4, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'Meh it is ight i guess',  'Meh');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 1, 'Did not have fun, a bear chased me and ate my dog',  'Danger, do not go');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.', 'Great Park');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (2, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.', 'Yummyy!');
+VALUES (1, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.', 'Yummyy!');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 2, 'Sushi was not good at all, frozen', 'I did not like it');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 1, 'It gave us food poisoning', 'DO NOT GO under any circumstances');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 5, 'Sushi was bomb man, recommend this to anyone', 'This is fire yo');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Great sushi', 'Good place to go');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (3, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!', 'Delicious');

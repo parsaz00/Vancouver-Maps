@@ -607,6 +607,38 @@ async function getHighestAverageRatingRestaurant() {
     });
 }
 
+/**
+ * 2.1.10 Divison 
+ * Description - Retrieves the places that have been reviewed by all users in the database
+ * @function getPlacesReviewedByAll
+ * @returns {Promise<Array<Object>>} A promise to an array of objects, where each object contains the name and address of a place reviewed by all users.
+ */
+async function getPlacesReviewedByAll() {
+    return await withOracleDB(async (connection) => {
+        const query = `
+            SELECT P.Name, P.Address
+            FROM Place P
+            WHERE NOT EXISTS (
+                SELECT U.UserID
+                FROM Users U
+                WHERE NOT EXISTS (
+                    SELECT R.Name, R.Address
+                    FROM Reviews R
+                    WHERE R.Name = P.Name
+                    AND R.Address = P.Address
+                    AND R.UserID = U.UserID
+                )
+            )
+        `;
+        const result = await connection.execute(query);
+        return result.rows.map(row => ({
+            Name: row[0],
+            Address: row[1]
+        }));
+    });
+}
+
+
 // Fetch events happening after a certain date
 async function fetchEventsAfterDate(date) {
     return await withOracleDB(async (connection) => {
@@ -806,5 +838,6 @@ module.exports = {
     getAllRestaurants,
     fetchAvailableGiftCards,
     redeemGiftCard,
-    getAllNotifications
+    getAllNotifications,
+    getPlacesReviewedByAll
 };
