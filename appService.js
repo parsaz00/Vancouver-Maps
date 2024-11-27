@@ -422,8 +422,7 @@ async function getCuisinesAboveThreshold(threshold) {
 
 /** 
  * 2.1.9 Nested Group by
- * Description - Retrieves the highest average rating for each place type using a nested group 
- * by query
+ * Retrieves the highest average rating for each place type using a nested group by query
  * 
  * @async 
  * @function getHighestAverageRatingRestaurant
@@ -473,7 +472,7 @@ async function getHighestAverageRatingRestaurant() {
 
 /**
  * 2.1.10 Divison 
- * Description - Retrieves the places that have been reviewed by all users in the database
+ * Retrieves the places that have been reviewed by all users in the database
  * @async
  * @function getPlacesReviewedByAll
  * @returns {Promise<Array<Object>>} A promise to an array of objects, where each object contains the name and address of a place reviewed by all users.
