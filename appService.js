@@ -1,9 +1,6 @@
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const { connect } = require('./appController');
-
-
-
 const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
@@ -145,9 +142,13 @@ async function countDemotable() {
     });
 }
 
+// ----------------------------------------------------------
+// Functions for our 10 query implementations
+
 /** 
  * 2.1.1 Insert
- * Description - Inserts a table and checks for foreign key constraints
+ * Inserts data into a table while ensuring foreign key constraints hold.
+ * If a violation occurs, the operation will fail
  * 
  * @async 
  * @function insertWithForeignKeyCheck
@@ -201,6 +202,138 @@ async function insertWithForeignKeyCheck(tableName, columns, values) {
 }
 
 /**
+ * 2.1.2 Update
+ * Updates the message of a review in the Reviews table.
+ * 
+ * @async
+ * @function updateReview
+ * @param {number} userID - The ID of the user who wrote the review
+ * @param {string} name - The name of the reviewed entity
+ * @param {string} address - The address of the reviewed entity
+ * @param {number} newValue - The new value for the review
+ * @param {string} newMessage - The new message for the review
+ * @returns {Promise<number>} A promise resolving to the number of rows updated
+ */
+async function updateReview(userID, name, address, newValue, newMessage, newTitle, newDate) {
+    return await withOracleDB(async (connection) => {
+        console.log("Updating review for userID:", userID, "name:", name, "address:", address);
+
+        const result = await connection.execute(
+            `UPDATE Reviews
+             SET Message = :newMessage,
+                 Rating = :newValue,
+                 Title = :newTitle,
+                 ReviewDate = TO_DATE(:newDate, 'YYYY-MM-DD')
+             WHERE UserID = :userID AND Name = :name AND Address = :address`,
+            {
+                userID,
+                name,
+                address,
+                newValue,
+                newMessage,
+                newTitle,
+                newDate
+            },
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    });
+}
+
+/**
+ * 2.1.3 Delete
+ * Deletes a review from the Reviews table using UserID, Name, and Address.
+ * 
+ * @async
+ * @function deleteReview
+ * @param {number} userID - The ID of the user who wrote the review.
+ * @param {string} name - The name of the place associated with the review.
+ * @param {string} address - The address of the place associated with the review.
+ * @returns {Promise<number>} A promise to the number of rows deleted.
+ */
+async function deleteReview(userID, name, address) {
+    return await withOracleDB(async (connection) => {
+        console.log("Deleting review for UserID:", userID, "Name:", name, "Address:", address);
+        const result = await connection.execute(
+            `DELETE FROM Reviews
+             WHERE UserID = :userID AND Name = :name AND Address = :address`,
+            {
+                userID: userID,
+                name: name,
+                address: address
+            },
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    });
+}
+
+/** 
+ * 2.1.4 Selection
+ * Select records from the Place table based on user input.
+ * The format of user input is “cats = true AND colour = brindled OR colour = snowshoe”
+ * as mentioned in the additional notes in 2.1.4
+ * 
+ * Parsing Logic for no direct implementation of user input into the WHERE query is in the appController
+ * 
+ * @async 
+ * @function selectingPlace 
+ * @param {string} condition - The WHERE clause condition that was created via the router in appController.js
+ * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
+ */
+
+async function selectingPlace(condition) {
+    return await withOracleDB(async (connection) => {
+        const query = `SELECT * FROM Place WHERE ${condition}`;
+        console.log('Executing query to select a place:', query);
+
+        const result = await connection.execute(query);
+        console.log("Successful query", result.rows);
+
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error in selectingPlace:', err);
+        throw err;
+    });
+}
+
+/** 
+ * 2.1.5 Projection 
+ * Description - Projects attributes from all the places
+ * @async 
+ * @function projectFromPlace
+ * @param {Array<string>} selectedAttributes - Attributes of the table to select 
+ * @returns {Promise<Array<Object>>} A promise to resolve an array of place 
+ * @throws {Error} Throw an invalid attribute that is included in our selectedAttributes
+*/
+async function projectFromPlace(selectedAttributes) {
+    return await withOracleDB(async (connection) => {
+        const validAttributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
+        selectedAttributes.forEach(attr => {
+            if (!validAttributes.includes(attr)) {
+                throw new Error(`Invalid attribute: ${attr}`);
+            }
+        });
+        const columns = selectedAttributes.join(', ');
+
+        const result = await connection.execute(`SELECT ${columns} FROM Place`);
+        const mappedResult = result.rows.map(row => {
+            const rowObject = {};
+            selectedAttributes.forEach((attr, index) => {
+                rowObject[attr] = row[index];
+            });
+            return rowObject;
+        });
+
+        console.log("Successful query", mappedResult);
+        return mappedResult;
+    }).catch((err) => {
+        console.error('Error in projectFromPlace:', err);
+        throw err;
+    });
+}
+
+/**
  * 2.1.6 Join
  * Retrieves notifications for a specific user by performing a join query
  *
@@ -225,8 +358,175 @@ async function getUserNotifications(userId) {
     });
 }
 
+
 /**
- * Description - Function to retrieve the giftcards owned by a user 
+ * 2.1.7 Aggregation with Group By
+ * Get the average rating of each event
+ * 
+ * @async 
+ * @function getAverageEventRatingPerPlace
+ * @returns {Promise<Array<Object>>} A promise to resolve an array of the object
+ */
+async function getAverageEventRatingPerPlace() {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing aggregation query for average event rating per place");
+        const query = `
+            SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
+            FROM Event e
+            GROUP BY e.Name, e.Address
+            HAVING AVG(e.Rating) IS NOT NULL
+        `;
+        const result = await connection.execute(query);
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    });
+}
+
+/** 
+ * 2.1.8 Aggregation with Having 
+ * Retrieves cuisines with an average rating above a specified threshold 
+ * 
+ * @async 
+ * @function getCuisinesAboveThreshold
+ * @param {number} threshold - Minimum average rating threshold
+ * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
+ */
+async function getCuisinesAboveThreshold(threshold) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
+
+        const query = `
+            SELECT r.Cuisine, AVG(rv.Rating) AS AverageRating
+            FROM Restaurant r
+            JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
+            GROUP BY r.Cuisine
+            HAVING AVG(rv.Rating) >= :threshold
+        `;
+        try {
+            const result = await connection.execute(
+                query,
+                { threshold },
+                { outFormat: oracledb.OUT_FORMAT_OBJECT }
+            );
+            console.log("Query executed successfully:", result.rows);
+            return result.rows.map(row => ({
+                Cuisine: row.CUISINE,
+                AverageRating: row.AVERAGERATING
+            }));
+        } catch (error) {
+            console.error("Error executing getCuisinesAboveThreshold:", error);
+            throw error;
+        }
+    });
+}
+
+/** 
+ * 2.1.9 Nested Group by
+ * Retrieves the highest average rating for each place type using a nested group by query
+ * 
+ * @async 
+ * @function getHighestAverageRatingRestaurant
+ * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
+ */
+async function getHighestAverageRatingRestaurant() {
+    return await withOracleDB(async (connection) => {
+        console.log("Fetching the restaurant with the highest average rating");
+        try {
+            const result = await connection.execute(
+                `SELECT p.Name, p.Address, AVG(r.Rating) AS AvgRating
+                 FROM Place p
+                 JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
+                 JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
+                 GROUP BY p.Name, p.Address
+                 HAVING AVG(r.Rating) = (
+                     SELECT MAX(AvgRating)
+                     FROM (
+                         SELECT AVG(r.Rating) AS AvgRating
+                         FROM Place p
+                         JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
+                         JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
+                         GROUP BY p.Name, p.Address
+                     )
+                 )
+                 ORDER BY p.Name`
+            );
+
+            console.log("Query executed successfully");
+            console.log('Raw Results from Database:', result);
+
+            if (result.rows.length === 0) {
+                console.log('No top-rated restaurants found.');
+                return [];
+            }
+            return result.rows.map(row => ({
+                Name: row[0],
+                Address: row[1],
+                AverageRating: row[2],
+            }));
+        } catch (error) {
+            console.error('Error executing query for top-rated restaurants:', error);
+            throw error;
+        }
+    });
+}
+
+/**
+ * 2.1.10 Divison 
+ * Retrieves the places that have been reviewed by all users in the database
+ * @async
+ * @function getPlacesReviewedByAll
+ * @returns {Promise<Array<Object>>} A promise to an array of objects, where each object contains the name and address of a place reviewed by all users.
+ */
+async function getPlacesReviewedByAll() {
+    return await withOracleDB(async (connection) => {
+        const query = `
+            SELECT P.Name, P.Address
+            FROM Place P
+            WHERE NOT EXISTS (
+                SELECT U.UserID
+                FROM Users U
+                WHERE NOT EXISTS (
+                    SELECT R.Name, R.Address
+                    FROM Reviews R
+                    WHERE R.Name = P.Name
+                    AND R.Address = P.Address
+                    AND R.UserID = U.UserID
+                )
+            )
+        `;
+        const result = await connection.execute(query);
+        return result.rows.map(row => ({
+            Name: row[0],
+            Address: row[1]
+        }));
+    });
+}
+
+// ----------------------------------------------------------
+// Utility functions for our webapp 
+
+/**
+ * Fetch events happening after a certain date
+ * @async
+ * @function fetchEventsAfterDate
+ * @param {string} date A date to fetch events after 
+ * @returns {Promise<Array<Object>>} A promise to an array of objects
+ */
+async function fetchEventsAfterDate(date) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT EventID, Title, EventDate, Description, Name, Address 
+             FROM Event 
+             WHERE EventDate >= :currentDate 
+             ORDER BY EventDate ASC`,
+            [date] // Bind the current date to the query
+        );
+        return result.rows;
+    });
+}
+
+/**
+ * Function to retrieve the giftcards owned by a user 
  * Gets them based on UserId
  * 
  * @async 
@@ -251,7 +551,10 @@ async function getUserGiftCards(userId) {
 }
 
 /**
- * Gets the available gift cards (userID = NULL)
+ * Fetches available gift cards
+ * @async
+ * @function fetchAvailableGiftCards
+ * @returns {Promise<Array<Object>>} A promise to an array of objects
  */
 async function fetchAvailableGiftCards() {
     return await withOracleDB(async (connection) => {
@@ -341,13 +644,13 @@ async function redeemGiftCard(userId, giftCardId) {
 }
 
 /**
- * Description - Function to retrieve the travelpass owned by a user 
+ * Function to retrieve the travel passes owned by a user 
  * Gets them based on UserId
  * 
  * @async 
  * @function getUserTravelPass
  * @param {number} userId - fetch userId
- * @returns {Promise<Array<Object>} A promise for each array of gift cards
+ * @returns {Promise<Array<Object>} A promise for each array of tavel passes
  */
 async function getUserTravelPass(userId) {
     return await withOracleDB(async (connection) => {
@@ -366,7 +669,7 @@ async function getUserTravelPass(userId) {
 }
 
 /**
- * Fetches all available transit passes (unassigned to any user)
+ * Fetches all available travel passes (unassigned to any user)
  * @async
  * @function fetchAvailableTravelPasses
  * @returns {Promise<Array<Object>>} A promise that resolves to the list of available transit passes
@@ -385,81 +688,6 @@ async function fetchAvailableTravelPasses() {
         return result.rows;
     });
 }
-
-/**
- * Redeems a gift card
- * @param {number} userId 
- * @param {number} giftCardId 
- * @returns the number of rows affected
- */
-async function redeemGiftCard(userId, giftCardId) {
-    return await withOracleDB(async (connection) => {
-        await connection.execute(`SAVEPOINT redeemGiftCard`);
-
-        try {
-            const cardResult = await connection.execute(
-                `SELECT g.VALUE, p.POINTS
-                 FROM GiftCard g
-                 JOIN GCPoints p ON g.VALUE = p.VALUE
-                 WHERE g.GCID = :giftCardId AND g.USERID IS NULL`,
-                [giftCardId],
-                { outFormat: oracledb.OUT_FORMAT_OBJECT }
-            );
-
-            if (!cardResult.rows.length) {
-                return { success: false, message: 'Gift card not available or already redeemed.' };
-            }
-
-            const { POINTS } = cardResult.rows[0];
-            const userResult = await connection.execute(
-                `SELECT POINTS FROM Users WHERE USERID = :userId`,
-                [userId],
-                { outFormat: oracledb.OUT_FORMAT_OBJECT }
-            );
-
-            if (!userResult.rows.length) {
-                return { success: false, message: 'User not found.' };
-            }
-
-            const userPoints = userResult.rows[0].POINTS;
-            if (userPoints < POINTS) {
-                return {
-                    success: false,
-                    message: `Insufficient points to redeem the gift card. You need ${POINTS - userPoints} more points.`,
-                };
-            }
-
-            const userUpdateResult = await connection.execute(
-                `UPDATE Users SET POINTS = POINTS - :points WHERE USERID = :userId`,
-                [POINTS, userId],
-                { autoCommit: false }
-            );
-
-            const giftCardUpdateResult = await connection.execute(
-                `UPDATE GiftCard SET USERID = :userId WHERE GCID = :giftCardId`,
-                [userId, giftCardId],
-                { autoCommit: false }
-            );
-
-            if (giftCardUpdateResult.rowsAffected === 0) {
-                throw new Error('Failed to update gift card.');
-            }
-
-            await connection.commit();
-
-            return {
-                success: true,
-                message: 'Gift card redeemed successfully.',
-                rowsUpdated: userUpdateResult.rowsAffected + giftCardUpdateResult.rowsAffected,
-            };
-        } catch (error) {
-            await connection.execute(`ROLLBACK TO SAVEPOINT redeemGiftCard`);
-            throw error;
-        }
-    });
-}
-
-
 
 /**
  * Find all events occuring at a Place, example of join --> WILL USE THIS FOR MY DYNAMIC JOIN FOR NOW, IF I HAVE TIME I WILL SUPPOPRT OTHER ONES
@@ -485,296 +713,14 @@ async function getEventsAtPlace(placeName, placeAddress) {
     })
 }
 
-/** 
- * 2.1.5 Projection 
- * Description - Projects attributes from all the places
- * @async 
- * @function projectFromPlace
- * @param {Array<string>} selectedAttributes - Attributes of the table to select 
- * @returns {Promise<Array<Object>>} A promise to resolve an array of place 
- * @throws {Error} Throw an invalid attribute that is included in our selectedAttributes
-*/
-async function projectFromPlace(selectedAttributes) {
-    return await withOracleDB(async (connection) => {
-        const validAttributes = ['Name', 'Address', 'Phone', 'OpeningTime', 'ClosingTime', 'Description', 'StopID'];
-        selectedAttributes.forEach(attr => {
-            if (!validAttributes.includes(attr)) {
-                throw new Error(`Invalid attribute: ${attr}`);
-            }
-        });
-        const columns = selectedAttributes.join(', ');
-
-        const result = await connection.execute(`SELECT ${columns} FROM Place`);
-        const mappedResult = result.rows.map(row => {
-            const rowObject = {};
-            selectedAttributes.forEach((attr, index) => {
-                rowObject[attr] = row[index];
-            });
-            return rowObject;
-        });
-
-        console.log("Successful query", mappedResult);
-        return mappedResult;
-    }).catch((err) => {
-        console.error('Error in projectFromPlace:', err);
-        throw err;
-    });
-}
-
 /**
- * 2.1.7 Aggregation with Group By
- * Get the average rating of each event
+ * Find events before a specific date
  * 
- * @async 
- * @function getAverageEventRatingPerPlace
- * @returns {Promise<Array<Object>>} A promise to resolve an array of the object
+ * @aync 
+ * @function fetchEventsBeforeDate
+ * @param {string} Date - Fetch events before this date
+ * @returns {Promise<Array<Object>>} - A promise to resolve an array of the event
  */
-async function getAverageEventRatingPerPlace() {
-    return await withOracleDB(async (connection) => {
-        console.log("Executing aggregation query for average event rating per place");
-        const query = `
-            SELECT e.Name, e.Address, AVG(e.Rating) AS average_rating
-            FROM Event e
-            GROUP BY e.Name, e.Address
-            HAVING AVG(e.Rating) IS NOT NULL
-        `;
-        const result = await connection.execute(query);
-        console.log("Query executed successfully:", result.rows);
-        return result.rows;
-    });
-}
-
-/** 
- * 2.1.8 Aggregation with Having 
- * Description - Retrieves cuisines with an average rating above a specified threshold 
- * 
- * @async 
- * @function getCuisinesAboveThreshold
- * @param {number} threshold - Minimum average rating threshold
- * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
- */
-async function getCuisinesAboveThreshold(threshold) {
-    return await withOracleDB(async (connection) => {
-        console.log("Executing query to obtain cuisines with average rating above threshold:", threshold);
-
-        const query = `
-            SELECT r.Cuisine, AVG(rv.Rating) AS AverageRating
-            FROM Restaurant r
-            JOIN Reviews rv ON r.Name = rv.Name AND r.Address = rv.Address
-            GROUP BY r.Cuisine
-            HAVING AVG(rv.Rating) >= :threshold
-        `;
-        try {
-            const result = await connection.execute(
-                query,
-                { threshold },
-                { outFormat: oracledb.OUT_FORMAT_OBJECT }
-            );
-            console.log("Query executed successfully:", result.rows);
-            return result.rows.map(row => ({
-                Cuisine: row.CUISINE,
-                AverageRating: row.AVERAGERATING
-            }));
-        } catch (error) {
-            console.error("Error executing getCuisinesAboveThreshold:", error);
-            throw error;
-        }
-    });
-}
-
-/** 
- * 2.1.6 Selection
- * Description - Select records from the Place table based on a condition
- * Parsing Logic and Where clause created via the app controller
- * 
- * @async 
- * @function selectingPlace 
- * @param {string} condition - The WHERE clause condition that was created via appController
- * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
- */
-
-async function selectingPlace(condition) {
-    return await withOracleDB(async (connection) => {
-        const query = `SELECT * FROM Place WHERE ${condition}`;
-        console.log('Executing query to select a place:', query);
-
-        const result = await connection.execute(query);
-        console.log("Successful query", result.rows);
-
-        return result.rows;
-    }).catch((err) => {
-        console.error('Error in selectingPlace:', err);
-        throw err;
-    });
-}
-
-/**
- * 2.1.3 Delete
- * Description - Delete a review from the Reviews table using UserID, Name, and Address.
- * 
- * @async
- * @function deleteReview
- * @param {number} userID - The ID of the user who wrote the review.
- * @param {string} name - The name of the place associated with the review.
- * @param {string} address - The address of the place associated with the review.
- * @returns {Promise<number>} A promise to the number of rows deleted.
- */
-async function deleteReview(userID, name, address) {
-    return await withOracleDB(async (connection) => {
-        console.log("Deleting review for UserID:", userID, "Name:", name, "Address:", address);
-        const result = await connection.execute(
-            `DELETE FROM Reviews
-             WHERE UserID = :userID AND Name = :name AND Address = :address`,
-            {
-                userID: userID,
-                name: name,
-                address: address
-            },
-            { autoCommit: true }
-        );
-        return result.rowsAffected;
-    });
-}
-
-/**
- * Updates the message of a review in the Reviews table.
- * 
- * @async
- * @function updateReview
- * @param {number} userID - The ID of the user who wrote the review
- * @param {string} name - The name of the reviewed entity
- * @param {string} address - The address of the reviewed entity
- * @param {number} newValue - The new value for the review
- * @param {string} newMessage - The new message for the review
- * @returns {Promise<number>} A promise resolving to the number of rows updated
- */
-async function updateReview(userID, name, address, newValue, newMessage, newTitle, newDate) {
-    return await withOracleDB(async (connection) => {
-        console.log("Updating review for userID:", userID, "name:", name, "address:", address);
-
-        const result = await connection.execute(
-            `UPDATE Reviews
-             SET Message = :newMessage,
-                 Rating = :newValue,
-                 Title = :newTitle,
-                 ReviewDate = TO_DATE(:newDate, 'YYYY-MM-DD')
-             WHERE UserID = :userID AND Name = :name AND Address = :address`,
-            {
-                userID,
-                name,
-                address,
-                newValue,
-                newMessage,
-                newTitle,
-                newDate
-            },
-            { autoCommit: true }
-        );
-        return result.rowsAffected;
-    });
-}
-
-/** 
- * 2.1.9 Nested Group by
- * Description - Retrieves the highest average rating for each place type using a nested group 
- * by query
- * 
- * @async 
- * @function getHighestAverageRatingRestaurant
- * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
- */
-/*
-2.1.9 Nested Group By
-**/
-async function getHighestAverageRatingRestaurant() {
-    return await withOracleDB(async (connection) => {
-        console.log("Fetching the restaurant with the highest average rating");
-        try {
-            const result = await connection.execute(
-                `SELECT p.Name, p.Address, AVG(r.Rating) AS AvgRating
-                 FROM Place p
-                 JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
-                 JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
-                 GROUP BY p.Name, p.Address
-                 HAVING AVG(r.Rating) = (
-                     SELECT MAX(AvgRating)
-                     FROM (
-                         SELECT AVG(r.Rating) AS AvgRating
-                         FROM Place p
-                         JOIN Restaurant res ON p.Name = res.Name AND p.Address = res.Address
-                         JOIN Reviews r ON p.Name = r.Name AND p.Address = r.Address
-                         GROUP BY p.Name, p.Address
-                     )
-                 )
-                 ORDER BY p.Name`
-            );
-
-            console.log("Query executed successfully");
-            console.log('Raw Results from Database:', result);
-
-            if (result.rows.length === 0) {
-                console.log('No top-rated restaurants found.');
-                return [];
-            }
-            return result.rows.map(row => ({
-                Name: row[0],
-                Address: row[1],
-                AverageRating: row[2],
-            }));
-        } catch (error) {
-            console.error('Error executing query for top-rated restaurants:', error);
-            throw error;
-        }
-    });
-}
-
-/**
- * 2.1.10 Divison 
- * Description - Retrieves the places that have been reviewed by all users in the database
- * @function getPlacesReviewedByAll
- * @returns {Promise<Array<Object>>} A promise to an array of objects, where each object contains the name and address of a place reviewed by all users.
- */
-async function getPlacesReviewedByAll() {
-    return await withOracleDB(async (connection) => {
-        const query = `
-            SELECT P.Name, P.Address
-            FROM Place P
-            WHERE NOT EXISTS (
-                SELECT U.UserID
-                FROM Users U
-                WHERE NOT EXISTS (
-                    SELECT R.Name, R.Address
-                    FROM Reviews R
-                    WHERE R.Name = P.Name
-                    AND R.Address = P.Address
-                    AND R.UserID = U.UserID
-                )
-            )
-        `;
-        const result = await connection.execute(query);
-        return result.rows.map(row => ({
-            Name: row[0],
-            Address: row[1]
-        }));
-    });
-}
-
-
-// Fetch events happening after a certain date
-async function fetchEventsAfterDate(date) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT EventID, Title, EventDate, Description, Name, Address 
-             FROM Event 
-             WHERE EventDate >= :currentDate 
-             ORDER BY EventDate ASC`,
-            [date] // Bind the current date to the query
-        );
-        return result.rows;
-    });
-}
-
-// Fetch events happening before a certain date
 async function fetchEventsBeforeDate(date) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -788,6 +734,14 @@ async function fetchEventsBeforeDate(date) {
     });
 }
 
+/**
+ * Add an event into our event table
+ * 
+ * @aync 
+ * @function addEvent
+ * @param {string} eventData - Add an event to our webapp
+ * @returns {Promise<Array<Object>>} - A promise to resolve an array of the event
+ */
 async function addEvent(eventData) {
     const { title, date, description, name, address } = eventData;
 
@@ -829,7 +783,14 @@ async function addEvent(eventData) {
     });
 }
 
-// Fetch user reviews for userId
+/**
+ * Fetches user reviews by user ID.
+ * 
+ * @async
+ * @function getReviewsByUser
+ * @param {string} userId - The ID of the user whose reviews are being fetched
+ * @returns {Promise<Array<Object>>} Resolves an array of review containing name, address, review date, rating, message, and title.
+ */
 async function getReviewsByUser(userId) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -843,6 +804,13 @@ async function getReviewsByUser(userId) {
     });
 }
 
+/**
+ * Fetches all places.
+ * 
+ * @async
+ * @function getAllPlaces
+ * @returns {Promise<Array<Object>>} Resolves to an place objects of names and places
+ */
 async function getAllPlaces() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -855,6 +823,13 @@ async function getAllPlaces() {
     });
 }
 
+/**
+ * Fetches all restaurants
+ * 
+ * @async
+ * @function getAllRestaurants
+ * @returns {Promise<Array<Object>>} Resolves restaurant objects containing name and address
+ */
 async function getAllRestaurants() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -869,6 +844,14 @@ async function getAllRestaurants() {
     });
 }
 
+/**
+ * Fetches user reviews and all places
+ * 
+ * @async
+ * @function getReviewsAndPlaces
+ * @param {number} userId - ID of the user whose reviews are being fetched
+ * @returns {Promise<Object>} Resolves to an object containing two arrays
+ */
 async function getReviewsAndPlaces(userId) {
     return await withOracleDB(async (connection) => {
         try {
@@ -901,6 +884,14 @@ async function getReviewsAndPlaces(userId) {
     });
 }
 
+/**
+ * Fetches all notifications a user ID
+ * 
+ * @async
+ * @function getAllNotifications
+ * @param {string} userId - The ID of the user notifications
+ * @returns {Promise<Array<Object>>} Resolves to an array of notifications
+ */
 async function getAllNotifications(userId) {
     return await withOracleDB(async (connection) => {
         const query = `

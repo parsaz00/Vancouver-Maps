@@ -7,16 +7,7 @@
     <title>My Reviews - Discover Vancouver</title>
     <link rel="stylesheet" href="navbar.css">
     <style>
-
         /* General Styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
         h1 {
             font-size: 2rem;
             margin-top: 20px;
@@ -25,7 +16,7 @@
 
         h2 {
             font-size: 1.5rem;
-            margin-top: 40px;
+            margin-top: 20px;
             color: #555;
             text-align: center;
         }
@@ -63,45 +54,16 @@
             padding: 20px;
         }
 
-        .card {
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            max-width: 600px;
-            width: 70%;
-            margin: 20px auto;
-            text-align: left;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        a {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 1rem;
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        a:hover {
-            color: #0056b3;
-        }
-
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: bold;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
+            padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 1rem;
@@ -111,7 +73,7 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 20px;
             font-size: 1rem;
             border-radius: 8px;
             cursor: pointer;
@@ -122,119 +84,7 @@
             background-color: #0056b3;
         }
 
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f9f9f9;
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
 
-    .content {
-        flex: 1;
-    }
-
-    /* Navigation Bar */
-    nav {
-        position: sticky;
-        top: 0;
-        background-color: #a7e6f2;
-        z-index: 10000; 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem 2rem; 
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    nav .logo {
-        display: flex;
-        align-items: center; 
-        gap: 1.5rem; 
-    }
-
-    nav .logo-text {
-        font-size: 2rem; 
-        font-weight: bold;
-        color: #333;
-        text-decoration: none; 
-        transition: color 0.2s ease; 
-    }
-
-    nav .logo-text:hover {
-        color: #6a5acd;
-    }
-
-    nav .logo img {
-        height: 40px; 
-        width: auto; 
-    }
-
-    nav ul {
-        list-style: none;
-        display: flex;
-        gap: 2rem;
-        margin: 0;
-        padding: 0;
-        justify-content: center;
-        flex-grow: 1;
-    }
-
-    nav ul li a {
-        text-decoration: none;
-        color: #333;
-        font-weight: bold;
-        font-size: 1.2rem; 
-        padding: 0.7rem 1.2rem; 
-        transition: all 0.3s ease;
-    }
-
-    nav ul li a:hover {
-        background-color: rgba(0, 0, 0, 0.8); 
-        color: #fff;
-        border-radius: 15px; 
-    }
-
-    nav .login-button {
-        background-color: #333; 
-        color: #fff;
-        font-size: 1.2rem; 
-        border: none;
-        padding: 1rem 2rem; 
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    nav .login-button:hover {
-        background-color: #000;
-        transform: scale(1.1); 
-    }
-
-    footer {
-        background-color: #333; 
-        color: #fff; 
-        text-align: center;
-        padding: 1.5rem 0; 
-        font-size: 1.3rem; 
-        margin-top: 2rem; 
-        font-weight: bold;
-    }
-
-    footer a {
-        color: #a7e6f2;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.3s ease;
-    }
-
-    footer a:hover {
-        color: #6a5acd; 
-    }
     </style>
 </head>
 <body>
@@ -245,12 +95,12 @@
             <a href="mainApp.html" class="logo-text">Discover Vancouver</a>
         </div>
         <ul>
-            <li><a href="event.html">Events</a></li> <!-- Event button -->
+            <li><a href="event.html">Events</a></li>
             <li><a href="/giftcards.html">Gift Cards</a></li>
             <li><a href="myReviews.html">My Reviews</a></li>
             <li><a href="places.html">Places</a></li>
             <li><a href="travelpass.html">Travel Passes</a></li>
-            <li><a href="notifications.html">Notifications</a></li> <!-- Notifications Tab -->
+            <li><a href="notifications.html">Notifications</a></li>
         </ul>
         <button id="logoutButton" class="login-button">Logout</button>
     </nav>
@@ -273,7 +123,7 @@
                 <label for="title">Title:</label>
                 <textarea id="title" name="title" rows="1" required></textarea>
 
-                <label for="rating">Rating(between 1 - 5):</label>
+                <label for="rating">Rating (between 1 - 5):</label>
                 <input type="number" id="rating" name="rating" min="1" max="5" required>
 
                 <label for="message">Review:</label>

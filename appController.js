@@ -66,7 +66,11 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+// ----------------------------------------------------------
+// Routes for our 10 queries 
+
 /**
+ * 2.1.1 Insert
  * Accept a request from client that specifies table name, cols, and values 
  * Validate input to ensure correct format
  * Call insertWithForeignKeyCheck fun in appService.js to perform actual insert operation
@@ -103,136 +107,79 @@ router.post('/insert', async (req, res) => {
 });
 
 /**
- * @route GET /user-notifications
- * @description Fetches notifications for a user
- * @param {Request} req - Contains userId in the query
- * @param {Response} res - Returns the user's notifications
+ * 2.1.2 Update 
+ * Updates user reivew values and message from the webapp
+ * 
+ * @route PUT /reviews
+ * @description Updates a review's value and message
+ * @param {Request} req - Contains userID, name, address, newValue, newMessage, newTitle, and newDate in the body
+ * @param {Response} res - Returns success or failure status
  */
-router.get('/user-notifications', async (req, res) => {
-    const { userId } = req.query;
-
-    if (!userId) {
-        return res.status(400).json({ success: false, message: 'UserID is required' });
+router.put('/reviews', async (req, res) => {
+    const { userID, name, address, newValue, newMessage, newTitle, newDate } = req.body;
+    
+    if (!userID || !name || !address || newValue === undefined || !newMessage || !newTitle || !newDate) {
+        return res.status(400).json({
+            success: false,
+            message: "userID, name, address, newValue, newMessage, newTitle, and newDate are required"
+        });
     }
 
     try {
-        const notifications = await appService.getUserNotifications(userId);
-        res.status(200).json({ sucess: true, data: notifications });
-    } catch (error) {
-        console.error('Error fetching notifications:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
-    }
-});
+        const rowsUpdated = await appService.updateReview(userID, name, address, newValue, newMessage, newTitle, newDate);
 
-/**
- * @route GET /user-giftcards
- * @description Fetches gift cards owned by a user
- * @param {Request} req - Contains userId in the query
- * @param {Response} res - Returns the user's gift cards
- */
-router.get('/user-giftcards', async (req, res) => {
-    const { userId } = req.query;
-
-    if (!userId) {
-        return res.status(400).json({ success: false, message: 'UserId is required' });
-    }
-
-    try {
-        const giftCards = await appService.getUserGiftCards(userId);
-        res.status(200).json({ success: true, data: giftCards });
-    } catch (error) {
-        console.error('Error fetching giftcards:', error);
-        res.status(500).json({ success:false, message: 'Failed to fetch gift cards' });
-    }
-});
-
-/**
- * @route GET /giftcards
- * @description Fetches gift cards owned by a user
- * @param {Request} req - Contains userId in the query
- * @param {Response} res - Returns the user's gift cards
- */
-router.get('/giftcards', async (req, res) => {
-    try {
-        const giftCards = await appService.fetchAvailableGiftCards();
-        res.json({ success: true, data: giftCards });
-    } catch (error) {
-        console.error('Error fetching gift cards:', error);
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
-/**
- * @route PUT /giftcards
- * @description Inserts record into the table
- * @param {Request} req - Contains tableName, columns, and values 
- * @param {Response} res - Returns success or failure status.
- */
-router.put('/redeem', async (req, res) => {
-    const { userId, giftCardId } = req.body;
-
-    try {
-        const result = await appService.redeemGiftCard(userId, giftCardId);
-        if (!result.success) {
-            return res.status(400).json({
+        if (rowsUpdated > 0) {
+            return res.status(200).json({
+                success: true,
+                message: 'Review updated successfully'
+            });
+        } else {
+            return res.status(404).json({
                 success: false,
-                message: result.message,
+                message: 'Review not found or not authorized to update'
             });
         }
-
-        return res.status(200).json({
-            success: true,
-            message: result.message,
-            rowsUpdated: result.rowsUpdated,
-        });
     } catch (error) {
-        console.error('Error redeeming gift card:', error);
+        console.error('Error updating review:', error);
         return res.status(500).json({
             success: false,
-            message: 'Failed to redeem gift card.',
+            message: 'Failed to update review'
         });
     }
 });
 
 /**
- * @route GET /place-events
- * @description Retrieves events at a specific place
- * @param {Request} req - Contains placeName and placeAddress in the query
- * @param {Response} res - Returns events for the place
+ * 2.1.3 Delete
+ * Deletes reviews from the reviews table
+ * 
+ * @route DELETE /reviews
+ * @description Deletes a review by UserID, Name, and Address.
+ * @param {Request} req - Contains UserID, Name, and Address in the body.
+ * @param {Response} res - Returns success or failure status.
  */
-router.get('/place-events', async (req, res) => {
-    const { placeName, placeAddress} = req.query;
-
-    if (!placeName || !placeAddress) {
-        return res.status(400).json({ success: false, message: "placeAddress and placeName is required" });
+router.delete('/reviews', async (req, res) => {
+    const { userID, name, address } = req.body;
+    if (!userID || !name || !address) {
+        return res.status(400).json({ success: false, message: "UserID, Name, and Address are required." });
     }
 
     try {
-        const events = await appService.getEventsAtPlace(placeName, placeAddress);
-        res.status(200).json({ success: true, data: events });
+        const rowsDeleted = await appService.deleteReview(userID, name, address);
+        if (rowsDeleted > 0) {
+            res.status(200).json({ success: true, message: 'Review deleted successfully.' });
+        } else {
+            res.status(404).json({ success: false, message: 'Review not found or not authorized to delete.' });
+        }
     } catch (error) {
-        console.error('Error fetching events: ', error);
-        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+        console.error('Error deleting review:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete review.' });
     }
 });
 
 /**
- * @route GET /average-event-rating
- * @description Fetches average event ratings for each place
- * @param {Request} req
- * @param {Response} res - Returns average ratings
- */
-router.get('/average-event-rating', async (req, res) => {
-    try {
-        const ratings = await appService.getAverageEventRatingPerPlace();
-        res.status(200).json({ success: true, data: ratings });
-    } catch (error) {
-        console.error('Error fetching average event rating:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
-    }
-});
-
-/**
+ * 2.1.4 Selection
+ * Selects a particular place given a user input
+ * 
  * @route GET /selectingPlace
  * @description Fetches places based on a dynamic condition
  * @param {Request} req - Contains inputString in the query
@@ -307,8 +254,10 @@ router.get('/selectingPlace', async (req, res) => {
     }
 });
 
-
 /**
+ * 2.1.5 Projection
+ * Projects attributes from a particular place
+ * 
  * @route GET /projectFromPlace
  * @description Projects attributes from the Place table
  * @param {Request} req - Contains attributes in the query
@@ -331,6 +280,60 @@ router.get('/projectFromPlace', async (req, res) => {
 });
 
 /**
+ * 2.1.6 Join 
+ * Retrieves notifications for a specific user by performing a join query
+ * 
+ * @route GET /user-notifications
+ * @description Fetches notifications for a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's notifications
+ */
+router.get('/user-notifications', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    try {
+        const notifications = await appService.getUserNotifications(userId);
+        res.status(200).json({ sucess: true, data: notifications });
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+/**
+ * 2.1.7 Aggregation with Group By
+ * Get the average rating of each event
+ * 
+ * @route GET /place-events
+ * @description Retrieves events at a specific place
+ * @param {Request} req - Contains placeName and placeAddress in the query
+ * @param {Response} res - Returns events for the place
+ */
+router.get('/place-events', async (req, res) => {
+    const { placeName, placeAddress} = req.query;
+
+    if (!placeName || !placeAddress) {
+        return res.status(400).json({ success: false, message: "placeAddress and placeName is required" });
+    }
+
+    try {
+        const events = await appService.getEventsAtPlace(placeName, placeAddress);
+        res.status(200).json({ success: true, data: events });
+    } catch (error) {
+        console.error('Error fetching events: ', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+    }
+});
+
+
+/**
+ * 2.1.8 Aggregation with Having 
+ * Retrieves cuisines with an average rating above a specified threshold 
+ * 
  * @route GET /getCuisinesAboveThreshold
  * @description Retrieves cuisines with ratings above a threshold
  * @param {Request} req - Contains threshold in the query
@@ -352,71 +355,9 @@ router.get('/getCuisinesAboveThreshold', async (req, res) => {
 });
 
 /**
- * @route DELETE /reviews
- * @description Deletes a review by UserID, Name, and Address.
- * @param {Request} req - Contains UserID, Name, and Address in the body.
- * @param {Response} res - Returns success or failure status.
- */
-router.delete('/reviews', async (req, res) => {
-    const { userID, name, address } = req.body;
-    if (!userID || !name || !address) {
-        return res.status(400).json({ success: false, message: "UserID, Name, and Address are required." });
-    }
-
-    try {
-        const rowsDeleted = await appService.deleteReview(userID, name, address);
-        if (rowsDeleted > 0) {
-            res.status(200).json({ success: true, message: 'Review deleted successfully.' });
-        } else {
-            res.status(404).json({ success: false, message: 'Review not found or not authorized to delete.' });
-        }
-    } catch (error) {
-        console.error('Error deleting review:', error);
-        res.status(500).json({ success: false, message: 'Failed to delete review.' });
-    }
-});
-
-
-/**
- * @route PUT /reviews
- * @description Updates a review's value and message
- * @param {Request} req - Contains userID, name, address, newValue, newMessage, newTitle, and newDate in the body
- * @param {Response} res - Returns success or failure status
- */
-router.put('/reviews', async (req, res) => {
-    const { userID, name, address, newValue, newMessage, newTitle, newDate } = req.body;
-    
-    if (!userID || !name || !address || newValue === undefined || !newMessage || !newTitle || !newDate) {
-        return res.status(400).json({
-            success: false,
-            message: "userID, name, address, newValue, newMessage, newTitle, and newDate are required"
-        });
-    }
-
-    try {
-        const rowsUpdated = await appService.updateReview(userID, name, address, newValue, newMessage, newTitle, newDate);
-
-        if (rowsUpdated > 0) {
-            return res.status(200).json({
-                success: true,
-                message: 'Review updated successfully'
-            });
-        } else {
-            return res.status(404).json({
-                success: false,
-                message: 'Review not found or not authorized to update'
-            });
-        }
-    } catch (error) {
-        console.error('Error updating review:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Failed to update review'
-        });
-    }
-});
-
-/**
+ * 2.1.9 Nested aggregation with Group By
+ * Retrieves the highest average rating for each place type using a nested group by query
+ * 
  * @route GET /highest-average-rating
  * @description Fetches the highest average of the restaurants
  * @param {Request} req
@@ -433,6 +374,9 @@ router.get('/highest-average-rating-restaurant', async (req, res) => {
 });
 
 /**
+ * 2.1.10 Division 
+ * Retrieves the places that have been reviewed by all users in the database
+ * 
  * @route GET /places-reviewed-by-all
  * @description Fetches places that have been reviewed by EVERY user
  * @param {Request} req
@@ -448,11 +392,104 @@ router.get('/places-reviewed-by-all', async (req, res) => {
     }
 });
 
+// ----------------------------------------------------------
+// Routes for our utility functions
+
+/**
+ * @route GET /user-giftcards
+ * @description Fetches gift cards owned by a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
+router.get('/user-giftcards', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserId is required' });
+    }
+
+    try {
+        const giftCards = await appService.getUserGiftCards(userId);
+        res.status(200).json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching giftcards:', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch gift cards' });
+    }
+});
+
+/**
+ * @route GET /giftcards
+ * @description Fetches giftcards 
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
+router.get('/giftcards', async (req, res) => {
+    try {
+        const giftCards = await appService.fetchAvailableGiftCards();
+        res.json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching gift cards:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+/**
+ * @route PUT /giftcards
+ * @description Inserts giftcards into the table
+ * @param {Request} req - Contains tableName, columns, and values 
+ * @param {Response} res - Returns success or failure status.
+ */
+router.put('/redeem', async (req, res) => {
+    const { userId, giftCardId } = req.body;
+
+    try {
+        const result = await appService.redeemGiftCard(userId, giftCardId);
+        if (!result.success) {
+            return res.status(400).json({
+                success: false,
+                message: result.message,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: result.message,
+            rowsUpdated: result.rowsUpdated,
+        });
+    } catch (error) {
+        console.error('Error redeeming gift card:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to redeem gift card.',
+        });
+    }
+});
+
+
+/**
+ * @route GET /average-event-rating
+ * @description Fetches average event ratings for each place
+ * @param {Request} req
+ * @param {Response} res - Returns average ratings
+ */
+router.get('/average-event-rating', async (req, res) => {
+    try {
+        const ratings = await appService.getAverageEventRatingPerPlace();
+        res.status(200).json({ success: true, data: ratings });
+    } catch (error) {
+        console.error('Error fetching average event rating:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
+    }
+});
 
 module.exports = router;
 
-
-// Login endpoint 
+/**
+ * @route GET /login
+ * @description Fetches login
+ * @param {Request} req
+ * @param {Response} res - Returns login
+ */
 router.get('/login', async (req, res) => {
     const { email, phone } = req.query;
 
@@ -482,8 +519,13 @@ router.get('/login', async (req, res) => {
     }
 });
 
-
-// Fetch all events (upcoming and past)
+/**
+ * Fetch all events (upcoming and past)
+ * @route GET /events
+ * @description Fetches all events
+ * @param {Request} req
+ * @param {Response} res - Returns events
+ */
 router.get('/events', async (req, res) => {
     const currentDate = new Date();
 
@@ -498,7 +540,13 @@ router.get('/events', async (req, res) => {
     }
 });
 
-// Add a new event
+/**
+ * Add a new event
+ * @route POST /add-event
+ * @description Add a new event
+ * @param {Request} req
+ * @param {Response} res - Returns events
+ */
 router.post('/add-event', async (req, res) => {
     const { title, date, description, name, address } = req.body;
 
@@ -520,7 +568,12 @@ router.post('/add-event', async (req, res) => {
     }
 });
 
-// Fetch the reviews made by User with userId
+/**
+ * @route GET /user-reviews
+ * @description Fetch the reviews made by User with userId
+ * @param {Request} req
+ * @param {Response} res - Returns reviews
+ */
 router.get('/user-reviews', async (req,res) => {
     const { userId } = req.query;
     
@@ -537,7 +590,12 @@ router.get('/user-reviews', async (req,res) => {
     }
 });
 
-// Fetch all places
+/**
+ * @route GET /places
+ * @description Fetch places
+ * @param {Request} req
+ * @param {Response} res - Returns place
+ */
 router.get('/places', async (req, res) => {
     try {
         const places = await appService.getAllPlaces();
@@ -548,7 +606,12 @@ router.get('/places', async (req, res) => {
     }
 });
 
-// Fetch all restaurants
+/**
+ * @route GET /restaurants
+ * @description Fetch restaurants
+ * @param {Request} req
+ * @param {Response} res - Returns restaurant
+ */
 router.get('/restaurants', async (req, res) => {
     try {
         const restaurants = await appService.getAllRestaurants();
@@ -560,7 +623,12 @@ router.get('/restaurants', async (req, res) => {
     }
 });
 
-// Reviews and places
+/**
+ * @route GET /reviews-and-places
+ * @description Fetch places and reviews
+ * @param {Request} req
+ * @param {Response} res - Returns place and reviews
+ */
 router.get('/reviews-and-places', async (req, res) => {
     const { userId } = req.query;
 
@@ -577,6 +645,12 @@ router.get('/reviews-and-places', async (req, res) => {
     }
 });
 
+/**
+ * @route GET /all-notifications
+ * @description Fetches all notifications
+ * @param {Request} req
+ * @param {Response} res - Returns notifications
+ */
 router.get('/all-notifications', async (req, res) => {
     try {
         const notifications = await appService.getAllNotifications();
@@ -590,9 +664,9 @@ router.get('/all-notifications', async (req, res) => {
 
 /**
  * @route GET /user-travelpasses
- * @description Fetches gift cards owned by a user
+ * @description Fetches travel passes owned by a user
  * @param {Request} req - Contains userId in the query
- * @param {Response} res - Returns the user's gift cards
+ * @param {Response} res - Returns the user's travel passes
  */
 router.get('/user-travelpasses', async (req, res) => {
     const { userId } = req.query;
@@ -612,9 +686,9 @@ router.get('/user-travelpasses', async (req, res) => {
 
 /**
  * @route GET /travelpasses
- * @description Fetches gift cards owned by a user
+ * @description Fetches travel passes
  * @param {Request} req - Contains userId in the query
- * @param {Response} res - Returns the user's gift cards
+ * @param {Response} res - Returns the travel passes
  */
 router.get('/travelpasses', async (req, res) => {
     try {
