@@ -1,16 +1,23 @@
 /** 
- * Sanitization function 
- * Description - Sanitizes values from class 
- * Make sure we do not have values like ) ( ; etc 
- * Easy way to do this is via regex
+ * Sanitization / Security Function 
+ * Sanitizes any user input to prevent SQL Injection attacks by preventing special characters and common sql characters
+ * - Injections prevented include: (Cases found here: on Codeacademy prevent SQL injection linked below)
+ * DROP TABLE; --
+ * Union Based Injections as (;, --) are prevented 
+ * Error Based Injections as ((, ), ;, -) are prevented 
+ * Boolean Based Injections as (', -) are prevented 
+ * Time Based Injections as ((, -, ')) ar prevented
  * @function sanitization
- * @param {string} inputString - input string for user
- * @returns {boolean} - a true false statement
+ * @param {string} inputString - input string from user / router request 
+ * @returns {boolean} - a true false statement indicating if inputString is approved
 */
 function sanitization(inputString){
-    // be aware of the following
-    // DROP TABLE Students; --  (from the comic in class)
-    // 'admin' <for the search query>
+    /**
+     * Prevents any special characters for input string 
+     * Includes ;, (, ), -, \, ", '
+     * This list is comprised from this source:
+     * https://www.codecademy.com/learn/seasp-defending-node-applications-from-sql-injection-xss-csrf-attacks/modules/seasp-preventing-sql-injection-attacks/cheatsheet
+     */
     const regex_pattern = /[;()\-"']/;
     if(regex_pattern.test(inputString)){
         return false;
