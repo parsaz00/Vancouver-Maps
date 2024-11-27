@@ -571,4 +571,40 @@ router.get('/all-notifications', async (req, res) => {
 });
 
 
+/**
+ * @route GET /user-travelpasses
+ * @description Fetches gift cards owned by a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
+router.get('/user-travelpasses', async (req, res) => {
+    const { userId } = req.query;
 
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserId is required' });
+    }
+
+    try {
+        const travelPass = await appService.getUserTravelPass(userId);
+        res.status(200).json({ success: true, data: travelPass });
+    } catch (error) {
+        console.error('Error fetching giftcards:', error);
+        res.status(500).json({ success:false, message: 'Failed to fetch gift cards' });
+    }
+});
+
+/**
+ * @route GET /travelpasses
+ * @description Fetches gift cards owned by a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's gift cards
+ */
+router.get('/travelpasses', async (req, res) => {
+    try {
+        const travelPass = await appService.fetchAvailableTravelPasses();
+        res.json({ success: true, data: giftCards });
+    } catch (error) {
+        console.error('Error fetching gift cards:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
