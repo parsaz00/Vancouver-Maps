@@ -221,21 +221,29 @@ async function fetchEvents() {
         upcomingList.innerHTML = '';
         pastList.innerHTML = '';
 
+        const formatDate = (dateString) => {
+            const eventDate = new Date(dateString);
+            return eventDate.toISOString().split('T')[0]; // Extract only the date part
+        };
+
         upcomingEvents.forEach(event => {
             const li = document.createElement('li');
-            li.textContent = `${event[1]} on ${event[2]} at ${event[4]}`;
+            const formattedDate = formatDate(event[2]);
+            li.textContent = `${event[1]} on ${formattedDate} at ${event[4]}`;
             upcomingList.appendChild(li);
         });
 
         pastEvents.forEach(event => {
             const li = document.createElement('li');
-            li.textContent = `${event[1]} on ${event[2]} at ${event[4]}`;
+            const formattedDate = formatDate(event[2]);
+            li.textContent = `${event[1]} on ${formattedDate} at ${event[4]}`;
             pastList.appendChild(li);
         });
     } catch (error) {
         console.error('Error fetching events:', error);
     }
 }
+
 
 async function addEvent(event) {
     event.preventDefault();
