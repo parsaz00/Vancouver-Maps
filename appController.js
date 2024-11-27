@@ -432,6 +432,23 @@ router.get('/highest-average-rating-restaurant', async (req, res) => {
     }
 });
 
+/**
+ * @route GET /places-reviewed-by-all
+ * @description Fetches places that have been reviewed by EVERY user
+ * @param {Request} req
+ * @param {Response} res - Returns places that have been reviewed by all users
+ */
+router.get('/places-reviewed-by-all', async (req, res) => {
+    try {
+        const reviewedPlaces = await appService.getPlacesReviewedByAll();
+        res.status(200).json({ success: true, data: reviewedPlaces });
+    } catch (error) {
+        console.error('Error fetching reviewed places:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch reviewed places.' });
+    }
+});
+
+
 module.exports = router;
 
 
