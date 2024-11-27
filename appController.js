@@ -602,7 +602,7 @@ router.get('/user-travelpasses', async (req, res) => {
 router.get('/travelpasses', async (req, res) => {
     try {
         const travelPass = await appService.fetchAvailableTravelPasses();
-        res.json({ success: true, data: giftCards });
+        res.json({ success: true, data: travelPass });
     } catch (error) {
         console.error('Error fetching gift cards:', error);
         res.status(500).json({ success: false, message: error.message });
