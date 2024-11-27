@@ -341,6 +341,127 @@ async function redeemGiftCard(userId, giftCardId) {
 }
 
 /**
+ * Description - Function to retrieve the travelpass owned by a user 
+ * Gets them based on UserId
+ * 
+ * @async 
+ * @function getUserTravelPass
+ * @param {number} userId - fetch userId
+ * @returns {Promise<Array<Object>} A promise for each array of gift cards
+ */
+async function getUserTravelPass(userId) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query to obtain giftcards owned by User: ", userId);
+        const result = await connection.execute(
+            `SELECT u.UserID, u.Email, tp.PassID, tp.Name, tp.Cost, tp.StartDate, tp.EndDate 
+             FROM Users u
+             JOIN TravelPass tp ON u.UserID = tp.UserID
+             WHERE u.UserID = :userId`,
+            [userId],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    })
+}
+
+/**
+ * Fetches all available transit passes (unassigned to any user)
+ * @async
+ * @function fetchAvailableTravelPasses
+ * @returns {Promise<Array<Object>>} A promise that resolves to the list of available transit passes
+ */
+async function fetchAvailableTravelPasses() {
+    return await withOracleDB(async (connection) => {
+        console.log('Fetching available travel passes');
+        const result = await connection.execute(
+            `SELECT tp.PassID, tp.Name, tp.Cost, tp.StartDate, tp.EndDate
+             FROM TravelPass tp
+             WHERE tp.UserID IS NULL`,
+            [],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+        console.log('Available travel passes fetched successfully:', result.rows);
+        return result.rows;
+    });
+}
+
+/**
+ * Redeems a gift card
+ * @param {number} userId 
+ * @param {number} giftCardId 
+ * @returns the number of rows affected
+ */
+async function redeemGiftCard(userId, giftCardId) {
+    return await withOracleDB(async (connection) => {
+        await connection.execute(`SAVEPOINT redeemGiftCard`);
+
+        try {
+            const cardResult = await connection.execute(
+                `SELECT g.VALUE, p.POINTS
+                 FROM GiftCard g
+                 JOIN GCPoints p ON g.VALUE = p.VALUE
+                 WHERE g.GCID = :giftCardId AND g.USERID IS NULL`,
+                [giftCardId],
+                { outFormat: oracledb.OUT_FORMAT_OBJECT }
+            );
+
+            if (!cardResult.rows.length) {
+                return { success: false, message: 'Gift card not available or already redeemed.' };
+            }
+
+            const { POINTS } = cardResult.rows[0];
+            const userResult = await connection.execute(
+                `SELECT POINTS FROM Users WHERE USERID = :userId`,
+                [userId],
+                { outFormat: oracledb.OUT_FORMAT_OBJECT }
+            );
+
+            if (!userResult.rows.length) {
+                return { success: false, message: 'User not found.' };
+            }
+
+            const userPoints = userResult.rows[0].POINTS;
+            if (userPoints < POINTS) {
+                return {
+                    success: false,
+                    message: `Insufficient points to redeem the gift card. You need ${POINTS - userPoints} more points.`,
+                };
+            }
+
+            const userUpdateResult = await connection.execute(
+                `UPDATE Users SET POINTS = POINTS - :points WHERE USERID = :userId`,
+                [POINTS, userId],
+                { autoCommit: false }
+            );
+
+            const giftCardUpdateResult = await connection.execute(
+                `UPDATE GiftCard SET USERID = :userId WHERE GCID = :giftCardId`,
+                [userId, giftCardId],
+                { autoCommit: false }
+            );
+
+            if (giftCardUpdateResult.rowsAffected === 0) {
+                throw new Error('Failed to update gift card.');
+            }
+
+            await connection.commit();
+
+            return {
+                success: true,
+                message: 'Gift card redeemed successfully.',
+                rowsUpdated: userUpdateResult.rowsAffected + giftCardUpdateResult.rowsAffected,
+            };
+        } catch (error) {
+            await connection.execute(`ROLLBACK TO SAVEPOINT redeemGiftCard`);
+            throw error;
+        }
+    });
+}
+
+
+
+/**
  * Find all events occuring at a Place, example of join --> WILL USE THIS FOR MY DYNAMIC JOIN FOR NOW, IF I HAVE TIME I WILL SUPPOPRT OTHER ONES
  * 
  * @aync 
@@ -839,5 +960,7 @@ module.exports = {
     fetchAvailableGiftCards,
     redeemGiftCard,
     getAllNotifications,
+    getUserTravelPass,
+    fetchAvailableTravelPasses,
     getPlacesReviewedByAll
 };
