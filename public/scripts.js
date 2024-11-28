@@ -200,7 +200,7 @@ async function loginUser(event) {
     const messageElement = document.getElementById('loginResultMsg');
 
     if (responseData.success) {
-        const userId = responseData.data[0][0]; // Assuming the first column in the response is UserID
+        const userId = responseData.data[0][0]; // First column in the response is UserID
         localStorage.setItem('userId', userId); // Store the UserID
         messageElement.textContent = "Login was successful, redirecting you to the app!";
         window.location.href = "mainApp.html";
@@ -209,7 +209,8 @@ async function loginUser(event) {
     }
 }
 
-
+// Citation: Followed info in this website https://bobbyhadz.com/blog/display-json-data-in-html-using-javascript?utm_source=chatgpt.com to 
+//           to fetch and display JSON data in HTML, specifically iterating over JSON arrays and creating <li> elements to display the data
 async function fetchEvents() {
     try {
         const response = await fetch('/events');
@@ -465,6 +466,7 @@ async function addReview(event) {
         return;
     }
 
+    // Citation: Used https://www.geeksforgeeks.org/how-to-format-a-date-in-javascript/ to help with date formatting and converting
     // Convert date to DD-MON-YYYY format
     const date = new Date(reviewDate);
     const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -519,6 +521,7 @@ async function fetchAndDisplayPlaces(attributes = []) {
         const data = await response.json();
         console.log('Fetched Data:', data);
 
+        // Citation: https://developer.mozilla.org/en-US/ was used to help guide creating the placesList 
         if (data.success) {
             data.data.forEach(place => {
                 const listItem = document.createElement('li');
