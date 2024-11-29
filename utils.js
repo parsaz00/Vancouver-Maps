@@ -25,6 +25,21 @@ function sanitization(inputString){
     return true;
 }
 
+/**
+ * Alternative sanitization function for inserts since dates have "-" 
+ * @param {*} inputString - input string from user / router request
+ * @returns {boolean} - a true false statement indicating if inputString is approved
+ */
+function insertSanitization(inputString){
+    const regex_pattern = /[;()\"']/;
+    if(regex_pattern.test(inputString)){
+        return false;
+    }
+    return true;
+}
+
+
 module.exports = {
-    sanitization
+    sanitization,
+    insertSanitization
 };

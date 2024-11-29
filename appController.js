@@ -2,7 +2,7 @@ const express = require('express');
 const appService = require('./appService');
 const { events } = require('oracledb');
 const { withOracleDB } = require('./appService');
-const { sanitization } = require('./utils');
+const { insertSanitization, sanitization } = require('./utils');
 const router = express.Router();
 
 // ----------------------------------------------------------
@@ -84,12 +84,18 @@ router.get('/count-demotable', async (req, res) => {
 router.post('/insert', async (req, res) => {
     const { tableName, columns, values } = req.body;
 
-    // Basic validation of input 
-    if (!tableName || !Array.isArray(columns) || !Array.isArray(values)) {
-        return res.status(400).json({ success: false, message: 'Invalid input format. Ensure that tableName, columns, and values are provided in the correct format.' });
+    if (!insertSanitization(tableName)) {
+        return res.status(400).json({ success: false, message: 'Invalid tableName format.' });
     }
-    if (columns.length !== values.length) {
-        return res.status(400).json({ success: false, message: 'The number of columns and values must match.' });
+    for (const column of columns) {
+        if (!insertSanitization(column)) {
+            return res.status(400).json({ success: false, message: `Invalid column name detected: ${column}` });
+        }
+    }
+    for (const value of values) {
+        if (!insertSanitization(value)) {
+            return res.status(400).json({ success: false, message: `Invalid value detected: ${value}` });
+        }
     }
 
     try {
@@ -552,6 +558,15 @@ router.post('/add-event', async (req, res) => {
 
     if (!title || !date || !name || !address) {
         return res.status(400).json({ error: 'Missing required fields: title, date, name, address' });
+    }
+
+    const inputs = { title, date, description, name, address };
+    for (const [key, value] of Object.entries(inputs)) {
+        if (value && !insertSanitization(value)) {
+            return res.status(400).json({
+                error: `Invalid characters detected in the field: ${key}`,
+            });
+        }
     }
 
     try {
