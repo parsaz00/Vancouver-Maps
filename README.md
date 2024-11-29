@@ -1,8 +1,11 @@
 # Vancouver Maps  <img height=35 width=35 src=https://github.students.cs.ubc.ca/CPSC304-2024W-T1/project_d0l9u_p7m3b_y7n9r/assets/29139/2f2644d4-3c06-462f-bc27-eb8e100f1a63>
 
 [Milestone 1](milestones/milestone1.pdf)
+
 [Milestone 2](milestones/milestone2.pdf)
+
 [Milestone 3](milestones/milestone3.pdf)
+
 [Milestone 4](milestones/milestone4.pdf)
 
 ## Project Description
