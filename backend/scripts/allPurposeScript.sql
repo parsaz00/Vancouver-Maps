@@ -325,6 +325,24 @@ VALUES(5, 'Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V
 
 --Reviews
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Amazing and beautiful location. Food is fantastic.', 'Granville Island Rocks');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'I bought some awesome red pens', 'Great pens');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 2, 'I bought some awesome blue pens', 'Ok pens');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-12-01', 'YYYY-MM-DD'), 4, 'I bought some awesome black pens', 'Awesome pens');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-01-01', 'YYYY-MM-DD'), 2, 'I bought some awesome yellow pens', 'Decent pens');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-02-01', 'YYYY-MM-DD'), 5, 'I bought some awesome green pens', 'Life Changing pens');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (2, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'It was an average experience.', 'It''s a Park');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
