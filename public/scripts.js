@@ -262,16 +262,25 @@ async function addEvent(event) {
         });
 
         const result = await response.json();
-        if (result.success) {
-            alert('Event added successfully!');
-            fetchEvents();
+        if (response.ok) {
+            if (result.success) {
+                alert('Event added successfully!');
+                fetchEvents();
+            } else {
+                alert(result.message || 'Failed to add event.');
+            }
         } else {
-            alert(result.message || 'Failed to add event.');
+            if (result.error) {
+                alert(`Error: ${result.error}`);
+            } else {
+                alert('An unknown error occurred. Please try again.');
+            }
         }
     } catch (error) {
         console.error('Error adding event:', error);
     }
 }
+
 
 async function handleLogout() {
     console.log("Logout button clicked");

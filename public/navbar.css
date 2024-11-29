@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-    color: #333;
+    color: #000000;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -16,6 +16,7 @@ body {
 
 /* Navigation Bar */
 nav {
+    font-family: 'pacifico';
     position: sticky;
     top: 0;
     background-color: #a7e6f2;
@@ -36,7 +37,7 @@ nav .logo {
 nav .logo-text {
     font-size: 2rem; 
     font-weight: bold;
-    color: #333;
+    color: #000000;
     text-decoration: none; 
     transition: color 0.2s ease; 
 }
@@ -62,7 +63,7 @@ nav ul {
 
 nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: #000000;
     font-weight: bold;
     font-size: 1.2rem; 
     padding: 0.7rem 1.2rem; 
@@ -76,7 +77,7 @@ nav ul li a:hover {
 }
 
 nav .login-button {
-    background-color: #333; 
+    background-color: #000000; 
     color: #fff;
     font-size: 1.2rem; 
     border: none;
@@ -93,7 +94,7 @@ nav .login-button:hover {
 }
 
 footer {
-    background-color: #333; 
+    background-color: #000000; 
     color: #fff; 
     text-align: center;
     padding: 1.5rem 0; 
