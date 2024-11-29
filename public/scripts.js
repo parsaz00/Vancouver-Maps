@@ -1037,6 +1037,7 @@ async function fetchAndDisplayNotifications() {
                         <strong>${Source}</strong>: ${Message} 
                         ${Type ? `(Type: ${Type})` : ''}
                     </span>
+                    <button onclick="deleteNotification(${NotifID})" class="delete-btn">Delete</button>
                 `;
                 notificationsList.appendChild(li);
             });
@@ -1046,6 +1047,35 @@ async function fetchAndDisplayNotifications() {
     } catch (error) {
         console.error('Error fetching notifications:', error);
         notificationsList.innerHTML = '<li>Failed to fetch notifications.</li>';
+    }
+}
+
+async function deleteNotification(notifID) {
+    if (!confirm('Are you sure you want to delete this notification?')) return;
+
+    try {
+        const response = await fetch(`/notifications`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ notifID }),
+        });
+
+        if (!response.ok) {
+            const { message } = await response.json();
+            throw new Error(message);
+        }
+
+        const { success, message } = await response.json();
+
+        if (success) {
+            alert(message);
+            fetchAndDisplayNotifications();
+        } else {
+            alert('Failed to delete notification: ' + message);
+        }
+    } catch (error) {
+        console.error('Error deleting notification:', error);
+        alert('An error occurred while deleting the notification.');
     }
 }
 

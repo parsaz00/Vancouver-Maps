@@ -183,6 +183,40 @@ router.delete('/reviews', async (req, res) => {
 });
 
 /**
+ * Extra delete on notifications to achieve on-delete-cascade
+ * 
+ * @route DELETE /notifications
+ * @description Deletes a review by notifID
+ * @param {Request} req - Contains notifID
+ * @param {Response} res - Returns success or failure status.
+ */
+router.delete('/notifications', async (req, res) => { 
+    const { notifID } = req.body;
+
+    // Validate notifID
+    if (!notifID) {
+        console.error("Notification ID not provided.");
+        return res.status(400).json({ success: false, message: "Notification ID is required." });
+    }
+
+    try {
+        console.log(`Attempting to delete notification with ID: ${notifID}`);
+        const rowsDeleted = await appService.deleteNotification(notifID);
+
+        if (rowsDeleted > 0) {
+            console.log(`Notification with ID: ${notifID} successfully deleted.`);
+            res.status(200).json({ success: true, message: 'Notification deleted successfully.' });
+        } else {
+            console.warn(`Notification with ID: ${notifID} not found.`);
+            res.status(404).json({ success: false, message: 'Notification not found.' });
+        }
+    } catch (error) {
+        console.error('Error occurred while deleting notification:', error.message);
+        res.status(500).json({ success: false, message: 'Failed to delete notification.' });
+    }
+});
+
+/**
  * 2.1.4 Selection
  * Selects a particular place given a user input
  * 

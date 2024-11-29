@@ -274,6 +274,32 @@ async function deleteReview(userID, name, address) {
     });
 }
 
+/**
+ * 2.1.3 Delete
+ * Deletes a review from the Notifications table using NotifID (added to achieve on-delete cascade requirement)
+ * 
+ * @async
+ * @function deleteReview
+ * @param {number} userID - The ID of the notification to be deleted
+ * @returns {Promise<number>} A promise to the number of rows deleted.
+ */
+async function deleteNotification(notifID) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const sql = `DELETE FROM Notification WHERE NotifID = :notifID`;
+            const binds = { notifID };
+
+            const result = await connection.execute(sql, binds, { autoCommit: true });
+
+            console.log(`Rows affected: ${result.rowsAffected}`);
+            return result.rowsAffected; // Returns number of rows deleted
+        } catch (error) {
+            console.error(`Database error: ${error.message}`);
+            throw error; // Rethrow to be handled in the router
+        }
+    });
+}
+
 /** 
  * 2.1.4 Selection
  * Select records from the Place table based on user input.
@@ -456,7 +482,7 @@ async function getCuisinesAboveThreshold(threshold) {
  * 
  * @async 
  * @function getHighestAverageRatingRestaurant
- * @returns {Promise<Array<Object>>} A promise to the number of rows needed to be deleted
+ * @returns {Promise<Array<Object>>} A promise to resolve an array to the object
  */
 async function getHighestAverageRatingRestaurant() {
     return await withOracleDB(async (connection) => {
@@ -963,5 +989,6 @@ module.exports = {
     getAllNotifications,
     getUserTravelPass,
     fetchAvailableTravelPasses,
-    getPlacesReviewedByAll
+    getPlacesReviewedByAll,
+    deleteNotification
 };
