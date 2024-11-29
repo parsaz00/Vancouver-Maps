@@ -334,7 +334,31 @@ async function projectFromPlace(selectedAttributes) {
 }
 
 /**
- * 2.1.6 Join
+ * 2.1.6 JOIN
+ * Find all events occuring at a Place
+ * 
+ * @aync 
+ * @function getEventsAtPlace
+ * @param {string} placeName - Name of place 
+ * @param {string} placeADdress - Address of place 
+ * @returns {Promise<Array<Object>>} - A promise to resolve an array of the event
+ */
+async function getEventsAtPlace(placeName, placeAddress) {
+    return await withOracleDB(async (connection) => {
+        console.log("Executing join query to obtain all events occuring in a place: ", placeName, placeAddress);
+        const result = await connection.execute(
+            `SELECT p.Name, p.Address, e.EventID, e.Title, e.EventDate, e.Description
+             FROM Place p
+             JOIN Event e ON p.Name = e.Name AND p.Address = e.Address
+             WHERE p.Name = :placeName AND p.Address = :placeAddress`,
+            [placeName, placeAddress] // binds placeName and placeAddress to query parameters
+        );
+        console.log("Query executed successfully:", result.rows);
+        return result.rows;
+    })
+}
+
+/**
  * Retrieves notifications for a specific user by performing a join query
  *
  * @async
@@ -494,7 +518,9 @@ async function getPlacesReviewedByAll() {
                 )
             )
         `;
+        console.log("Executing division query");
         const result = await connection.execute(query);
+        console.log("Results of query: ", result);
         return result.rows.map(row => ({
             Name: row[0],
             Address: row[1]
@@ -689,29 +715,7 @@ async function fetchAvailableTravelPasses() {
     });
 }
 
-/**
- * Find all events occuring at a Place, example of join --> WILL USE THIS FOR MY DYNAMIC JOIN FOR NOW, IF I HAVE TIME I WILL SUPPOPRT OTHER ONES
- * 
- * @aync 
- * @function getEventsAtPlace
- * @param {string} placeName - Name of place 
- * @param {string} placeADdress - Address of place 
- * @returns {Promise<Array<Object>>} - A promise to resolve an array of the event
- */
-async function getEventsAtPlace(placeName, placeAddress) {
-    return await withOracleDB(async (connection) => {
-        console.log("Executing join query to obtain all events occuring in a place: ", placeName, placeAddress);
-        const result = await connection.execute(
-            `SELECT p.Name, p.Address, e.EventID, e.Title, e.EventDate, e.Description
-             FROM Place p
-             JOIN Event e ON p.Name = e.Name AND p.Address = e.Address
-             WHERE p.Name = :placeName AND p.Address = :placeAddress`,
-            [placeName, placeAddress] // binds placeName and placeAddress to query parameters
-        );
-        console.log("Query executed successfully:", result.rows);
-        return result.rows;
-    })
-}
+
 
 /**
  * Find events before a specific date
