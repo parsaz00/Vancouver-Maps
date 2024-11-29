@@ -36,7 +36,6 @@ nav .logo {
 
 nav .logo-text {
     font-size: 2rem; 
-    font-weight: bold;
     color: #000000;
     text-decoration: none; 
     transition: color 0.2s ease; 
@@ -64,7 +63,6 @@ nav ul {
 nav ul li a {
     text-decoration: none;
     color: #000000;
-    font-weight: bold;
     font-size: 1.2rem; 
     padding: 0.7rem 1.2rem; 
     transition: all 0.3s ease;
