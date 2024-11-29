@@ -287,7 +287,7 @@ router.get('/projectFromPlace', async (req, res) => {
 
 /**
  * 2.1.6 Join 
- * Retrieves notifications for a specific user by performing a join query
+ * Retrieve events occuring at a specific place
  * @route GET /place-events
  * @description Retrieves events at a specific place
  * @param {Request} req - Contains placeName and placeAddress in the query
@@ -312,7 +312,7 @@ router.get('/place-events', async (req, res) => {
 
 /**
  * 2.1.7 Aggregation with Group By
- * Get the average rating of each event
+ * Get the average rating of events that occur at a specific place
  * @route GET /average-event-rating
  * @description Fetches average event ratings for each place
  * @param {Request} req
