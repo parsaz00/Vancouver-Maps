@@ -187,6 +187,12 @@ async function insertWithForeignKeyCheck(tableName, columns, values) {
                     message: `Foreign key constraint violated. Ensure referenced values exist.`,
                 };
             } else if (error.errorNum === 1) { // ORA-00001: unique constraint violation
+                if(tableName == 'Reviews') {
+                    return {
+                        success: false,
+                        message: `Titles must be unique!`,
+                    };
+                }
                 return {
                     success: false,
                     message: `Unique constraint violated. Record with this primary key may already exist.`,
