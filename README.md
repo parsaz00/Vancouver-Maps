@@ -1,5 +1,7 @@
 # Vancouver Maps  <img height=35 width=35 src=https://github.students.cs.ubc.ca/CPSC304-2024W-T1/project_d0l9u_p7m3b_y7n9r/assets/29139/2f2644d4-3c06-462f-bc27-eb8e100f1a63>
 
+[Link Text] (milestones/milestone1.pdf)
+
 ## Project Description
 Our application focuses on community engagement, local exploration, and tourism. This project will help users discover Vancouver’s hidden gems of lesser-known foods, events, and recreation activities encouraging users to explore the whole extent of Vancouver. By providing references like costs, reviews, and transit options, this application will be a city exploration tool that highlights community experiences. 
 
