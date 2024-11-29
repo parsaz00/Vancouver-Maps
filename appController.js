@@ -288,32 +288,6 @@ router.get('/projectFromPlace', async (req, res) => {
 /**
  * 2.1.6 Join 
  * Retrieves notifications for a specific user by performing a join query
- * 
- * @route GET /user-notifications
- * @description Fetches notifications for a user
- * @param {Request} req - Contains userId in the query
- * @param {Response} res - Returns the user's notifications
- */
-router.get('/user-notifications', async (req, res) => {
-    const { userId } = req.query;
-
-    if (!userId) {
-        return res.status(400).json({ success: false, message: 'UserID is required' });
-    }
-
-    try {
-        const notifications = await appService.getUserNotifications(userId);
-        res.status(200).json({ sucess: true, data: notifications });
-    } catch (error) {
-        console.error('Error fetching notifications:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
-    }
-});
-
-/**
- * 2.1.7 Aggregation with Group By
- * Get the average rating of each event
- * 
  * @route GET /place-events
  * @description Retrieves events at a specific place
  * @param {Request} req - Contains placeName and placeAddress in the query
@@ -332,6 +306,25 @@ router.get('/place-events', async (req, res) => {
     } catch (error) {
         console.error('Error fetching events: ', error);
         res.status(500).json({ success:false, message: 'Failed to fetch notifications' });
+    }
+});
+
+
+/**
+ * 2.1.7 Aggregation with Group By
+ * Get the average rating of each event
+ * @route GET /average-event-rating
+ * @description Fetches average event ratings for each place
+ * @param {Request} req
+ * @param {Response} res - Returns average ratings
+ */
+router.get('/average-event-rating', async (req, res) => {
+    try {
+        const ratings = await appService.getAverageEventRatingPerPlace();
+        res.status(200).json({ success: true, data: ratings });
+    } catch (error) {
+        console.error('Error fetching average event rating:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
     }
 });
 
@@ -397,6 +390,29 @@ router.get('/places-reviewed-by-all', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to fetch reviewed places.' });
     }
 });
+
+/** * 
+ * @route GET /user-notifications
+ * @description Fetches notifications for a user
+ * @param {Request} req - Contains userId in the query
+ * @param {Response} res - Returns the user's notifications
+ */
+router.get('/user-notifications', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    try {
+        const notifications = await appService.getUserNotifications(userId);
+        res.status(200).json({ sucess: true, data: notifications });
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
 
 // ----------------------------------------------------------
 // Routes for our utility functions
@@ -468,23 +484,6 @@ router.put('/redeem', async (req, res) => {
             success: false,
             message: 'Failed to redeem gift card.',
         });
-    }
-});
-
-
-/**
- * @route GET /average-event-rating
- * @description Fetches average event ratings for each place
- * @param {Request} req
- * @param {Response} res - Returns average ratings
- */
-router.get('/average-event-rating', async (req, res) => {
-    try {
-        const ratings = await appService.getAverageEventRatingPerPlace();
-        res.status(200).json({ success: true, data: ratings });
-    } catch (error) {
-        console.error('Error fetching average event rating:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch average event ratings'});
     }
 });
 
