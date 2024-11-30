@@ -794,7 +794,5 @@ VALUES (10, 'Okanagan Valley Wine Tours', 'Kelowna, BC V1V 2Y6');
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (10, 'Summerhill Pyramid Winery', '4870 Chute Lake Rd, Kelowna, BC V1W 4M3');
 
--- SET DEFINE OFF;
-
 -- Commit all changes to make them visible
 COMMIT;
