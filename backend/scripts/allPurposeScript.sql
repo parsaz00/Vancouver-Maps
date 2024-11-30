@@ -181,21 +181,6 @@ VALUES (4, '4445556666', 'dave@example.com', 250);
 INSERT INTO USERS (UserID, Phone, Email, Points) 
 VALUES (5, '7778889999', 'eve@example.com', 300);
 
-INSERT INTO USERS (UserID, Phone, Email, Points) 
-VALUES (6, '1234567890', 'hello@gmail.com', 350);
-
-INSERT INTO USERS (UserID, Phone, Email, Points) 
-VALUES (7, '5678901234', 'noway@gmail.com', 400);
-
-INSERT INTO USERS (UserID, Phone, Email, Points) 
-VALUES (8, '9876543210', 'why@outlook.com', 500);
-
-INSERT INTO USERS (UserID, Phone, Email, Points) 
-VALUES (9, '1122334455', 'cpsc304@ubc.ca', 450);
-
-INSERT INTO USERS (UserID, Phone, Email, Points) 
-VALUES (10, '2233445566', 'big@example.com', 600);
-
 --Users' Names
 INSERT INTO EmailName (Email, Name) 
 VALUES ('parsaz@shaw.ca', 'Parsa');
@@ -504,12 +489,6 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Amazing and beautiful location. Food is fantastic.', 'Granville Island Rocks');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (9, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-12-01', 'YYYY-MM-DD'), 5, 'Amazing variety of fresh foods.', 'Food Paradise');
-
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (10, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-12-05', 'YYYY-MM-DD'), 4, 'Great atmosphere but parking is tough.', 'Parking Woes');
-
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'I bought some awesome red pens', 'Great pens');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
@@ -540,15 +519,6 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.', 'Great Park');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (6, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 5, 'Great for a family picnic.', 'Picnic Perfect');
-
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (7, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 4, 'Lots of wildlife and trails.', 'Nature at Its Best');
-
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (8, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-11-10', 'YYYY-MM-DD'), 3, 'A bit crowded but nice views.', 'Crowded but Nice');
-
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (3, 'Science World', '1455 Quebec St, Vancouver, BC V6A 3Z7', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 5, 'Incredible exhibits and activities.', 'Science Rocks');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
@@ -573,19 +543,16 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (3, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!', 'Delicious');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (5, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'Amazing Indian cuisine!', 'A True Gem');
+VALUES (2, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'Amazing Indian cuisine!', 'A True Gem');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (6, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Fantastic sushi and ambiance.', 'Sushi Heaven');
+VALUES (4, 'Hawksworth Restaurant', '801 W Georgia St, Vancouver, BC V6C 1P7', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 5, 'Elegant dining experience.', 'Fine Dining Excellence');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (7, 'Hawksworth Restaurant', '801 W Georgia St, Vancouver, BC V6C 1P7', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 5, 'Elegant dining experience.', 'Fine Dining Excellence');
+VALUES (4, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'Delicious waffles and coffee.', 'Waffle Wonder');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (8, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'Delicious waffles and coffee.', 'Waffle Wonder');
-
-INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (9, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 5, 'Best seafood in town.', 'Seafood Bliss');
+VALUES (5, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 5, 'Best seafood in town.', 'Seafood Bliss');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (4, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 4, 'Amazing seafood and great atmosphere.', 'Good Food!');
@@ -594,7 +561,7 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (5, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Best brunch in Vancouver, their waffles are outstanding!', 'Best in VanCity');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (10, 'Roots', '779 Granville St, Vancouver, BC V6Z 1E4', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 4, 'Good selection of Canadian wear.', 'Canadian Cool');
+VALUES (2, 'Roots', '779 Granville St, Vancouver, BC V6Z 1E4', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 4, 'Good selection of Canadian wear.', 'Canadian Cool');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Indigo', '1033 Robson St, Vancouver, BC V6E 1A9', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 5, 'Best place for book lovers.', 'Books Galore');
@@ -630,7 +597,7 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (5, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 5, 'The tasting menu is divine, with creative and flavorful dishes that rival the best in the world.', 'Refined and Delicious'),
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (6, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 5, 'Absolutely loved the attention to detail and the wine pairings. A must-visit for food lovers.', 'Exceptional Dining Experience');
+VALUES (2, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 5, 'Absolutely loved the attention to detail and the wine pairings. A must-visit for food lovers.', 'Exceptional Dining Experience');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (5, 'Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 'Tacos gave me good poisoining, beware', 'Go at your own risk, tacos suck');
@@ -803,17 +770,17 @@ VALUES (2, 'Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC 
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (5, 'Museum of Vancouver', '1100 Chestnut St, Vancouver, BC V6J 3J9');
 
--- INSERT INTO Includes (PassID, Name, Address) 
--- VALUES (6, 'Butchart Gardens', '800 Benvenuto Ave, Brentwood Bay, BC V8M 1J8');
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (6, 'Butchart Gardens', '800 Benvenuto Ave, Brentwood Bay, BC V8M 1J8');
 
--- INSERT INTO Includes (PassID, Name, Address) 
--- VALUES (6, 'Victoria Butterfly Gardens', '1461 Benvenuto Ave, Brentwood Bay, BC V8M 1J5');
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (6, 'Victoria Butterfly Gardens', '1461 Benvenuto Ave, Brentwood Bay, BC V8M 1J5');
 
--- INSERT INTO Includes (PassID, Name, Address) 
--- VALUES (7, 'English Bay Beach', 'Beach Ave, Vancouver, BC V6C 3E2');
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (7, 'English Bay Beach', 'Beach Ave, Vancouver, BC V6C 3E2');
 
--- INSERT INTO Includes (PassID, Name, Address) 
--- VALUES (7, 'Jericho Beach', '3941 Point Grey Rd, Vancouver, BC V6R 1B5');
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (7, 'Jericho Beach', '3941 Point Grey Rd, Vancouver, BC V6R 1B5');
 
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (8, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9');
@@ -827,8 +794,5 @@ VALUES (10, 'Okanagan Valley Wine Tours', 'Kelowna, BC V1V 2Y6');
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (10, 'Summerhill Pyramid Winery', '4870 Chute Lake Rd, Kelowna, BC V1W 4M3');
 
-SET DEFINE OFF;
-
 -- Commit all changes to make them visible
 COMMIT;
-
