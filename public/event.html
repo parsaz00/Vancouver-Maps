@@ -201,43 +201,46 @@
         </ul>
         <button id="logoutButton" class="login-button">Logout</button>
     </nav>
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>Events in Vancouver</h1>
-        <p>View Upcoming Events in Vancouver or Plan One Yourself!</p>
-    </section>
 
-    <h2>Add a New Event</h2>
-    <form id="addEventForm">
-        <input type="text" id="eventTitle" placeholder="Title" required>
-        <input type="date" id="eventDate" required>
-        <input type="text" id="eventDescription" placeholder="Description">
-        <input type="text" id="eventName" placeholder="Place Name" required>
-        <input type="text" id="eventAddress" placeholder="Place Address" required>
-        <button type="submit">Add Event</button>
-    </form>
+    <div class="content"></div>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Events in Vancouver</h1>
+            <p>View Upcoming Events in Vancouver or Plan One Yourself!</p>
+        </section>
 
-    <!-- Form to select a place and display events -->
-    <h2>Find Events at a Place</h2>
-    <div class="events-container" id="eventFormContainer" style="margin-top: 2rem;">
-        <form id="eventsForm">
-            <label for="placeSelector">Select a Place:</label>
-            <select style="width:100%;" id="placeSelector" required>
-                <!-- Dynamically populated with places -->
-            </select>
-            <button type="submit" style="margin-top: 1rem;">View Events</button>
-            <ul id="eventsList" style="list-style: none; padding: 0;">
-                <!-- Events will be displayed here -->
-            </ul>
+        <h2>Add a New Event</h2>
+        <form id="addEventForm">
+            <input type="text" id="eventTitle" placeholder="Title" required>
+            <input type="date" id="eventDate" required>
+            <input type="text" id="eventDescription" placeholder="Description">
+            <input type="text" id="eventName" placeholder="Place Name" required>
+            <input type="text" id="eventAddress" placeholder="Place Address" required>
+            <button type="submit">Add Event</button>
         </form>
-        
+
+        <!-- Form to select a place and display events -->
+        <h2>Find Events at a Place</h2>
+        <div class="events-container" id="eventFormContainer" style="margin-top: 2rem;">
+            <form id="eventsForm">
+                <label for="placeSelector">Select a Place:</label>
+                <select style="width:100%;" id="placeSelector" required>
+                    <!-- Dynamically populated with places -->
+                </select>
+                <button type="submit" style="margin-top: 1rem;">View Events</button>
+                <ul id="eventsList" style="list-style: none; padding: 0;">
+                    <!-- Events will be displayed here -->
+                </ul>
+            </form>
+            
+        </div>
+
+        <h2>Upcoming Events</h2>
+        <ul id="upcomingEventsList"></ul>
+
+        <h2>Past Events</h2>
+        <ul id="pastEventsList"></ul>
     </div>
-
-    <h2>Upcoming Events</h2>
-    <ul id="upcomingEventsList"></ul>
-
-    <h2>Past Events</h2>
-    <ul id="pastEventsList"></ul>
 
     <footer>
         <p>&copy; 2024 Discover Vancouver</p>
