@@ -355,6 +355,36 @@ VALUES ('Apple Store', '701 W Georgia St, Vancouver, BC V7Y 1G5', '(604) 555-567
 INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
 VALUES ('The Body Shop', '750 W Pender St, Vancouver, BC V6C 1G8', '(604) 555-6781', '10:00:00', '19:00:00', 'Cosmetics and skincare.', 7);
 
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', NULL, '17:00:00', '22:00:00', 'Known for their superlatively crispy and juicy duck, as well as other delicacies like birds nest, sea cucumber, and whole king crab.', 7);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', NULL, '17:30:00', '21:30:00', 'Memorable omakase experience featuring hyper-seasonal fish, bamboo leaf carving, and dishes like chawanmushi with crab and wagashi.', 8);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', NULL, '17:00:00', '23:00:00', 'Offers polished dining with seasonally inspired tasting menus and exceptional wine pairings.', 9);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Butchart Gardens', '800 Benvenuto Ave, Brentwood Bay, BC V8M 1J8', '(250) 652-5256', '09:00:00', '17:00:00', 'A stunning collection of floral displays and gardens.', 2);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Victoria Butterfly Gardens', '1461 Benvenuto Ave, Brentwood Bay, BC V8M 1J5', '(250) 544-0472', '10:00:00', '16:00:00', 'A tropical rainforest experience with butterflies and exotic plants.', 3);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('English Bay Beach', 'Beach Ave, Vancouver, BC V6C 3E2', '(604) 555-7890', '06:00:00', '22:00:00', 'A popular beach with scenic waterfront views and activities.', 4);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Jericho Beach', '3941 Point Grey Rd, Vancouver, BC V6R 1B5', '(604) 555-6789', '06:00:00', '21:00:00', 'A sandy beach with stunning views of the mountains.', 5);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Lynn Canyon Park', '3663 Park Rd, North Vancouver, BC V7J 3G3', '(604) 555-2345', '08:00:00', '18:00:00', 'A park with trails, waterfalls, and a suspension bridge.', 9);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Okanagan Valley Wine Tours', 'Kelowna, BC V1V 2Y6', '(250) 555-1234', '10:00:00', '17:00:00', 'Explore wineries and taste local wines in the Okanagan Valley.', 10);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Summerhill Pyramid Winery', '4870 Chute Lake Rd, Kelowna, BC V1W 4M3', '(250) 555-5678', '11:00:00', '18:00:00', 'An organic winery with stunning views and a unique pyramid structure.', 6);
+
 -- RetailBusiness
 INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
 VALUES ('Hills of Kerrisdale', '2125 W 41st Ave, Vancouver, BC V6M 1Z6', 'Clothing Boutique', '$$$');
@@ -416,6 +446,18 @@ VALUES ('Chambar', '568 Beatty St, Vancouver, BC V6B 2L3', 'Belgian', 120);
 
 INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
 VALUES ('Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', 'Mexican', 80);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES 
+('iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', 'Chinese', 80);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES 
+('Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', 'Japanese', 20);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES 
+('AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', 'Contemporary', 60);
 
 -- Event
 INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
@@ -572,6 +614,35 @@ VALUES (1, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2', TO_DAT
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (2, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2', TO_DATE('2024-11-12', 'YYYY-MM-DD'), 4, 'Educational and fun for kids.', 'Great for Kids');
 
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 5, 'The crispy duck is phenomenal, and the atmosphere is luxurious yet welcoming. Highly recommend!', 'Best Duck in Town');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', TO_DATE('2024-11-15', 'YYYY-MM-DD'), 5, 'Every dish was a masterpiece! From the signature duck to the delicate abalone broth, everything exceeded expectations.', 'A Culinary Delight');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 5, 'An unforgettable omakase experience! The chefs are artists, and the ambiance is magical.', 'A True Omakase Experience'),
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES(4, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-11-10', 'YYYY-MM-DD'), 5, 'Every detail was perfection. The uni petals and wagashi were absolute highlights of the night!', 'Perfect from Start to Finish');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 5, 'The tasting menu is divine, with creative and flavorful dishes that rival the best in the world.', 'Refined and Delicious'),
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (6, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 5, 'Absolutely loved the attention to detail and the wine pairings. A must-visit for food lovers.', 'Exceptional Dining Experience');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 'Tacos gave me good poisoining, beware', 'Go at your own risk, tacos suck');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'TThey have a great taco tuesday deal', 'Great tacos');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'Some of the best food I have had', 'Awesome japanese spot');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Some of the best food I have had wow', 'Awesome amazing japanese spot');
 
 -- Notification
 INSERT INTO Notification (NotifID, Time, Message)
@@ -701,21 +772,6 @@ VALUES (4, 'History Enthusiast', 180.00, TO_DATE('2024-09-20', 'YYYY-MM-DD'), TO
 INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
 VALUES (5, 'Cultural Experience', 150.00, TO_DATE('2024-10-15', 'YYYY-MM-DD'), TO_DATE('2024-10-22', 'YYYY-MM-DD'), 5);
 
-INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
-VALUES (6, 'City Explorer', 120.00, TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2024-10-07', 'YYYY-MM-DD'), NULL);
-
-INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
-VALUES (7, 'Outdoor Fun', 250.00, TO_DATE('2024-11-05', 'YYYY-MM-DD'), TO_DATE('2024-11-12', 'YYYY-MM-DD'), NULL);
-
-INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
-VALUES (8, 'Mountain Adventure', 300.00, TO_DATE('2024-12-01', 'YYYY-MM-DD'), TO_DATE('2024-12-10', 'YYYY-MM-DD'), NULL);
-
-INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
-VALUES (9, 'History Enthusiast', 180.00, TO_DATE('2024-09-20', 'YYYY-MM-DD'), TO_DATE('2024-09-28', 'YYYY-MM-DD'), NULL);
-
-INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
-VALUES (10, 'Cultural Experience', 150.00, TO_DATE('2024-10-15', 'YYYY-MM-DD'), TO_DATE('2024-10-22', 'YYYY-MM-DD'), NULL);
-
 --Travel Pass Inclusions
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (4, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2');
@@ -732,5 +788,32 @@ VALUES (2, 'Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC 
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (5, 'Museum of Vancouver', '1100 Chestnut St, Vancouver, BC V6J 3J9');
 
+-- INSERT INTO Includes (PassID, Name, Address) 
+-- VALUES (6, 'Butchart Gardens', '800 Benvenuto Ave, Brentwood Bay, BC V8M 1J8');
+
+-- INSERT INTO Includes (PassID, Name, Address) 
+-- VALUES (6, 'Victoria Butterfly Gardens', '1461 Benvenuto Ave, Brentwood Bay, BC V8M 1J5');
+
+-- INSERT INTO Includes (PassID, Name, Address) 
+-- VALUES (7, 'English Bay Beach', 'Beach Ave, Vancouver, BC V6C 3E2');
+
+-- INSERT INTO Includes (PassID, Name, Address) 
+-- VALUES (7, 'Jericho Beach', '3941 Point Grey Rd, Vancouver, BC V6R 1B5');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (8, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (9, 'Lynn Canyon Park', '3663 Park Rd, North Vancouver, BC V7J 3G3');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (10, 'Okanagan Valley Wine Tours', 'Kelowna, BC V1V 2Y6');
+
+INSERT INTO Includes (PassID, Name, Address) 
+VALUES (10, 'Summerhill Pyramid Winery', '4870 Chute Lake Rd, Kelowna, BC V1W 4M3');
+
+SET DEFINE OFF;
+
 -- Commit all changes to make them visible
 COMMIT;
+

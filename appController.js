@@ -747,3 +747,35 @@ router.get('/travelpasses', async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 });
+
+/**
+ * @route PUT /buy-travelpasss
+ * @description makes the travelpass the user's
+ * @param {Request} req - Contains userID and passID
+ * @param {Response} res - Returns success or failure status.
+ */
+router.put('/buy-travelpass', async (req, res) => {
+    const { userId, passID } = req.body;
+
+    try {
+        const result = await appService.buyTravelPass(userId, passID);
+        if (!result.success) {
+            return res.status(400).json({
+                success: false,
+                message: result.message,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: result.message,
+            rowsUpdated: result.rowsUpdated,
+        });
+    } catch (error) {
+        console.error('Error redeeming travel pass:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to redeem travel pass.',
+        });
+    }
+});
