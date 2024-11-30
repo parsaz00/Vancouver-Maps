@@ -181,6 +181,21 @@ VALUES (4, '4445556666', 'dave@example.com', 250);
 INSERT INTO USERS (UserID, Phone, Email, Points) 
 VALUES (5, '7778889999', 'eve@example.com', 300);
 
+INSERT INTO USERS (UserID, Phone, Email, Points) 
+VALUES (6, '1234567890', 'hello@gmail.com', 350);
+
+INSERT INTO USERS (UserID, Phone, Email, Points) 
+VALUES (7, '5678901234', 'noway@gmail.com', 400);
+
+INSERT INTO USERS (UserID, Phone, Email, Points) 
+VALUES (8, '9876543210', 'why@outlook.com', 500);
+
+INSERT INTO USERS (UserID, Phone, Email, Points) 
+VALUES (9, '1122334455', 'cpsc304@ubc.ca', 450);
+
+INSERT INTO USERS (UserID, Phone, Email, Points) 
+VALUES (10, '2233445566', 'big@example.com', 600);
+
 --Users' Names
 INSERT INTO EmailName (Email, Name) 
 VALUES ('parsaz@shaw.ca', 'Parsa');
@@ -197,6 +212,20 @@ VALUES ('dave@example.com', 'Dave Williams');
 INSERT INTO EmailName (Email, Name) 
 VALUES ('eve@example.com', 'Eve Thompson');
 
+INSERT INTO EmailName (Email, Name) 
+VALUES ('hello@gmail.com', 'Bob Jim');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('noway@gmail.com', 'Cookie Monster');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('why@outlook.com', 'Big Bird');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('cpsc304@ubc.ca', 'Bob Dylan');
+
+INSERT INTO EmailName (Email, Name) 
+VALUES ('big@example.com', 'Freddy Mercury');
 
 -- Insert for TransitStop
 INSERT INTO TransitStop (StopID, Type, Latitude, Longitude) 
@@ -213,6 +242,21 @@ VALUES (4, 'SkyTrain', 48.856613, 2.352222);
 
 INSERT INTO TransitStop (StopID, Type, Latitude, Longitude)
 VALUES (5, 'SeaBus', -33.868820, 151.209296);
+
+INSERT INTO TransitStop (StopID, Type, Latitude, Longitude) 
+VALUES (6, 'Ferry', 49.282730, -123.120735);
+
+INSERT INTO TransitStop (StopID, Type, Latitude, Longitude) 
+VALUES (7, 'Train', 49.195138, -123.176478);
+
+INSERT INTO TransitStop (StopID, Type, Latitude, Longitude) 
+VALUES (8, 'Bus', 49.164686, -123.143936);
+
+INSERT INTO TransitStop (StopID, Type, Latitude, Longitude) 
+VALUES (9, 'SkyTrain', 49.211642, -123.115207);
+
+INSERT INTO TransitStop (StopID, Type, Latitude, Longitude) 
+VALUES (10, 'SeaBus', 49.309056, -123.082818);
 
 -- Insert for Place
 INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
@@ -266,6 +310,50 @@ VALUES ('Grouse Mountain', '6400 Nancy Greene Way, North Vancouver, BC V7R 4K9',
 INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
 VALUES ('Museum of Vancouver', '1100 Chestnut St, Vancouver, BC V6J 3J9', '(604) 555-5678', '10:00:00', '17:00:00', 'A museum showcasing the history of Vancouver and its culture.', 5);
 
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Queen Elizabeth Park', '4600 Cambie St, Vancouver, BC V5Z 2Z1', '(604) 555-8901', '08:00:00', '21:00:00', 'A nice park in the middle of the city', 6);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Kitsilano Beach', '1499 Arbutus St, Vancouver, BC V6J 5N2', '(604) 555-7890', '06:00:00', '22:00:00', 'A nice beach around.', 7);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Canada Place', '999 Canada Pl, Vancouver, BC V6C 3E1', '(604) 555-6789', '09:00:00', '20:00:00', 'Iconic event space.', 8);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Pacific Centre', '701 W Georgia St, Vancouver, BC V7Y 1G5', '(604) 555-5678', '10:00:00', '21:00:00', 'Large shopping mall downtown.', 9);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('VanDusen Botanical Garden', '5151 Oak St, Vancouver, BC V6M 4H1', '(604) 555-4567', '09:00:00', '17:00:00', 'Expansive and interesting garden with seasonal events.', 10);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Glowbal', '590 W Georgia St, Vancouver, BC V6E 1A3', '(604) 555-2345', '11:00:00', '23:00:00', 'Nice modern dining experience.', 7);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Black+Blue', '1032 Alberni St, Vancouver, BC V6E 1A3', '(604) 555-4567', '12:00:00', '23:00:00', 'Highly rated steakhouse.', 8);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Joe Fortes', '777 Thurlow St, Vancouver, BC V6E 3V5', '(604) 555-6789', '11:30:00', '22:00:00', 'Famous seafood restaurant.', 9);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Chambar', '568 Beatty St, Vancouver, BC V6B 2L3', '(604) 555-9876', '08:00:00', '22:00:00', 'Belgian-inspired cuisine.', 6);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', '(604) 555-1234', '11:00:00', '22:00:00', 'Laid-back Mexican dining.', 7);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Roots', '779 Granville St, Vancouver, BC V6Z 1E4', '(604) 555-2341', '10:00:00', '21:00:00', 'Iconic Canadian clothing store', 6);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Indigo', '1033 Robson St, Vancouver, BC V6E 1A9', '(604) 555-3412', '10:00:00', '21:00:00', 'Books and lifestyle products.', 8);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Holt Renfrew', '737 Dunsmuir St, Vancouver, BC V7Y 1E4', '(604) 555-4561', '11:00:00', '20:00:00', 'High-end luxury retailer.', 9);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('Apple Store', '701 W Georgia St, Vancouver, BC V7Y 1G5', '(604) 555-5671', '10:00:00', '21:00:00', 'Tech and iPhones.', 10);
+
+INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
+VALUES ('The Body Shop', '750 W Pender St, Vancouver, BC V6C 1G8', '(604) 555-6781', '10:00:00', '19:00:00', 'Cosmetics and skincare.', 7);
 
 -- RetailBusiness
 INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
@@ -283,6 +371,21 @@ VALUES ('Lululemon', '970 Robson St, Vancouver, BC V6Z 2E7', 'Athletic Wear', '$
 INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
 VALUES ('Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', 'Specialty Retail', '$$$');
 
+INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
+VALUES ('Roots', '779 Granville St, Vancouver, BC V6Z 1E4', 'Clothing', '$$');
+
+INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
+VALUES ('Indigo', '1033 Robson St, Vancouver, BC V6E 1A9', 'Books', '$$');
+
+INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
+VALUES ('Holt Renfrew', '737 Dunsmuir St, Vancouver, BC V7Y 1E4', 'Luxury Retail', '$$$$');
+
+INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
+VALUES ('Apple Store', '701 W Georgia St, Vancouver, BC V7Y 1G5', 'Electronics', '$$$');
+
+INSERT INTO RetailBusiness (Name, Address, Industry, PriceRange)
+VALUES ('The Body Shop', '750 W Pender St, Vancouver, BC V6C 1G8', 'Cosmetics', '$');
+
 -- Restaurant
 INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
 VALUES ('Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', 'Indian', 100);
@@ -298,6 +401,21 @@ VALUES ('Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', 'Mediterranean'
 
 INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
 VALUES ('Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', 'Seafood', 180);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES ('Glowbal', '590 W Georgia St, Vancouver, BC V6E 1A3', 'Contemporary', 200);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES ('Black+Blue', '1032 Alberni St, Vancouver, BC V6E 1A3', 'Steakhouse', 180);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES ('Joe Fortes', '777 Thurlow St, Vancouver, BC V6E 3V5', 'Seafood', 150);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES ('Chambar', '568 Beatty St, Vancouver, BC V6B 2L3', 'Belgian', 120);
+
+INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
+VALUES ('Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', 'Mexican', 80);
 
 -- Event
 INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
@@ -323,9 +441,31 @@ VALUES(4, 'Science World', '1455 Quebec St, Vancouver, BC V6A 3Z7', 'New Tech Ex
 INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
 VALUES(5, 'Capilano Suspension Bridge', '3735 Capilano Rd, North Vancouver, BC V7R 4J1', 'Bridge Illumination', TO_DATE('2024-12-20', 'YYYY-MM-DD'), 5, 'The bridge is lit with thousands of lights.');
 
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (12, 'Queen Elizabeth Park', '4600 Cambie St, Vancouver, BC V5Z 2Z1', 'Jazz Concert', TO_DATE('2024-12-05', 'YYYY-MM-DD'), 5, 'Live jazz!!');
+
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (11, 'Kitsilano Beach', '1499 Arbutus St, Vancouver, BC V6J 5N2', 'Beach Volleyball Tournament', TO_DATE('2024-08-15', 'YYYY-MM-DD'), 4, 'Annual national volleyball competition');
+
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (15, 'Canada Place', '999 Canada Pl, Vancouver, BC V6C 3E1', 'Fireworks Festival', TO_DATE('2024-07-01', 'YYYY-MM-DD'), 5, 'Spectacular Canada Day fireworks.');
+
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (19, 'Pacific Centre', '701 W Georgia St, Vancouver, BC V7Y 1G5', 'Fashion Show', TO_DATE('2024-11-20', 'YYYY-MM-DD'), 4, 'Showcasing latest trends in Vancouver!');
+
+INSERT INTO Event (EventID, Name, Address, Title, EventDate, Rating, Description)
+VALUES (20, 'VanDusen Botanical Garden', '5151 Oak St, Vancouver, BC V6M 4H1', 'Garden Lights', TO_DATE('2024-12-20', 'YYYY-MM-DD'), 5, 'Holiday light display.');
+
+
 --Reviews
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Amazing and beautiful location. Food is fantastic.', 'Granville Island Rocks');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (9, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-12-01', 'YYYY-MM-DD'), 5, 'Amazing variety of fresh foods.', 'Food Paradise');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (10, 'Granville Island Public Market', '1669 Johnston St, Vancouver, BC V6H 3R9', TO_DATE('2024-12-05', 'YYYY-MM-DD'), 4, 'Great atmosphere but parking is tough.', 'Parking Woes');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Vancouver Pen Shop', '512 W Hastings St, Vancouver, BC V6B 1L5', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 3, 'I bought some awesome red pens', 'Great pens');
@@ -358,6 +498,21 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 5, 'Beautiful park with amazing views and trails.', 'Great Park');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (6, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 5, 'Great for a family picnic.', 'Picnic Perfect');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (7, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 4, 'Lots of wildlife and trails.', 'Nature at Its Best');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (8, 'Stanley Park', 'Vancouver, BC V6G 1Z4', TO_DATE('2024-11-10', 'YYYY-MM-DD'), 3, 'A bit crowded but nice views.', 'Crowded but Nice');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Science World', '1455 Quebec St, Vancouver, BC V6A 3Z7', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 5, 'Incredible exhibits and activities.', 'Science Rocks');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'Science World', '1455 Quebec St, Vancouver, BC V6A 3Z7', TO_DATE('2024-11-15', 'YYYY-MM-DD'), 3, 'Nice place but a bit expensive.', 'Overpriced Fun');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (1, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Delicious sushi, though a bit pricey.', 'Yummyy!');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
@@ -376,10 +531,46 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (3, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'The best Indian food I have ever tasted!', 'Delicious');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Vijs', '3106 Cambie St, Vancouver, BC V5Z 2W2', TO_DATE('2024-09-30', 'YYYY-MM-DD'), 5, 'Amazing Indian cuisine!', 'A True Gem');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (6, 'Miku', '200 Granville St #70, Vancouver, BC V6C 1S4', TO_DATE('2024-09-28', 'YYYY-MM-DD'), 4, 'Fantastic sushi and ambiance.', 'Sushi Heaven');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (7, 'Hawksworth Restaurant', '801 W Georgia St, Vancouver, BC V6C 1P7', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 5, 'Elegant dining experience.', 'Fine Dining Excellence');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (8, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'Delicious waffles and coffee.', 'Waffle Wonder');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (9, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 5, 'Best seafood in town.', 'Seafood Bliss');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (4, 'Blue Water Cafe', '1095 Hamilton St, Vancouver, BC V6B 5T4', TO_DATE('2024-09-25', 'YYYY-MM-DD'), 4, 'Amazing seafood and great atmosphere.', 'Good Food!');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (5, 'Medina Cafe', '780 Richards St, Vancouver, BC V6B 3A4', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Best brunch in Vancouver, their waffles are outstanding!', 'Best in VanCity');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (10, 'Roots', '779 Granville St, Vancouver, BC V6Z 1E4', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 4, 'Good selection of Canadian wear.', 'Canadian Cool');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Indigo', '1033 Robson St, Vancouver, BC V6E 1A9', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 5, 'Best place for book lovers.', 'Books Galore');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Holt Renfrew', '737 Dunsmuir St, Vancouver, BC V7Y 1E4', TO_DATE('2024-11-10', 'YYYY-MM-DD'), 3, 'Too pricey for my taste.', 'Luxury Overload');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Apple Store', '701 W Georgia St, Vancouver, BC V7Y 1G5', TO_DATE('2024-11-15', 'YYYY-MM-DD'), 4, 'Great service but crowded.', 'Apple Frenzy');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (4, 'The Body Shop', '750 W Pender St, Vancouver, BC V6C 1G8', TO_DATE('2024-12-01', 'YYYY-MM-DD'), 5, 'Love their natural products.', 'Natural Beauty');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2', TO_DATE('2024-10-10', 'YYYY-MM-DD'), 5, 'Loved the dolphin show!', 'Dolphin Delight');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2', TO_DATE('2024-11-12', 'YYYY-MM-DD'), 4, 'Educational and fun for kids.', 'Great for Kids');
 
 
 -- Notification
