@@ -957,6 +957,44 @@ async function getAllNotifications(userId) {
     });
 }
 
+/**
+ * Buy a travelpass
+ * @param {number} userId 
+ * @param {number} passId
+ * @returns the number of rows affected
+ */
+async function buyTravelPass(userId, passId) {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`SAVEPOINT buyTravelPass`);
+
+            const travelPassUpdateResult = await connection.execute(
+                `UPDATE TravelPass SET USERID = :userId WHERE PassID = :passId`,
+                [userId, passId],
+                { autoCommit: false }
+            );
+
+            if (travelPassUpdateResult.rowsAffected === 0) {
+                throw new Error('Failed to update travel pass ownership.');
+            }
+
+            await connection.commit();
+
+            return {
+                success: true,
+                message: 'Travel pass purchased successfully.',
+                rowsUpdated: travelPassUpdateResult.rowsAffected,
+            };
+        } catch (error) {
+            try {
+                await connection.execute(`ROLLBACK TO SAVEPOINT buyTravelPass`);
+            } catch (rollbackError) {
+                console.error('Error during rollback:', rollbackError);
+            }
+            throw error;
+        }
+    });
+}
 
 module.exports = {
     testOracleConnection,
@@ -990,5 +1028,6 @@ module.exports = {
     getUserTravelPass,
     fetchAvailableTravelPasses,
     getPlacesReviewedByAll,
-    deleteNotification
+    deleteNotification,
+    buyTravelPass
 };

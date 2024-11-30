@@ -64,7 +64,7 @@ async function fetchAndDisplayTravelPasses() {
                 <h3>${pass.NAME}</h3>
                 <p class="cost">$${pass.COST}</p>
                 <p class="date-range">${formatDate(pass.STARTDATE)} - ${formatDate(pass.ENDDATE)}</p>
-                <button class="redeem-button" data-passid="${pass.PASSID}">Redeem</button>
+                <button class="redeem-button" data-passid="${pass.PASSID}">Buy</button>
             `;
             travelPassList.appendChild(card);
         });
@@ -80,17 +80,17 @@ async function fetchAndDisplayTravelPasses() {
 function handleRedeemButtonClick(event) {
     const button = event.target;
     const travelPassId = button.dataset.passid;
-    redeemTravelPass(travelPassId);
+    buyTravelPass(travelPassId);
 }
 
-async function redeemTravelPass(travelPassId) {
+async function buyTravelPass(passID) {
     const userId = localStorage.getItem('userId');
 
     try {
-        const response = await fetch('/redeem-travelpass', {
+        const response = await fetch('/buy-travelpass', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, travelPassId }),
+            body: JSON.stringify({ userId, passID }),
         });
 
         const result = await response.json();
@@ -103,8 +103,8 @@ async function redeemTravelPass(travelPassId) {
             alert(result.message);
         }
     } catch (error) {
-        console.error('Error redeeming travel pass:', error);
-        alert('An error occurred while redeeming the travel pass.');
+        console.error('Error buying travel pass:', error);
+        alert('An error occurred while buygin the travel pass.');
     }
 }
 //fixing formatting of the travelpass
