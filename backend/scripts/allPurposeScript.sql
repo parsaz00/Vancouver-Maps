@@ -356,7 +356,7 @@ INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, 
 VALUES ('The Body Shop', '750 W Pender St, Vancouver, BC V6C 1G8', '(604) 555-6781', '10:00:00', '19:00:00', 'Cosmetics and skincare.', 7);
 
 INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
-VALUES ('iDen \& QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', NULL, '17:00:00', '22:00:00', 'Known for their superlatively crispy and juicy duck, as well as other delicacies like birds nest, sea cucumber, and whole king crab.', 7);
+VALUES ('iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', NULL, '17:00:00', '22:00:00', 'Known for their superlatively crispy and juicy duck, as well as other delicacies like birds nest, sea cucumber, and whole king crab.', 7);
 
 INSERT INTO Place (Name, Address, Phone, OpeningTime, ClosingTime, Description, StopID)
 VALUES ('Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', NULL, '17:30:00', '21:30:00', 'Memorable omakase experience featuring hyper-seasonal fish, bamboo leaf carving, and dishes like chawanmushi with crab and wagashi.', 8);
@@ -449,7 +449,7 @@ VALUES ('Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', 'Mexican', 80);
 
 INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
 VALUES 
-('iDen \& QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', 'Chinese', 80);
+('iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', 'Chinese', 80);
 
 INSERT INTO Restaurant (Name, Address, Cuisine, Capacity)
 VALUES 
@@ -615,10 +615,10 @@ INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (2, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2', TO_DATE('2024-11-12', 'YYYY-MM-DD'), 4, 'Educational and fun for kids.', 'Great for Kids');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (1, 'iDen \& QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 5, 'The crispy duck is phenomenal, and the atmosphere is luxurious yet welcoming. Highly recommend!', 'Best Duck in Town');
+VALUES (1, 'iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', TO_DATE('2024-11-01', 'YYYY-MM-DD'), 5, 'The crispy duck is phenomenal, and the atmosphere is luxurious yet welcoming. Highly recommend!', 'Best Duck in Town');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
-VALUES (2, 'iDen \& QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', TO_DATE('2024-11-15', 'YYYY-MM-DD'), 5, 'Every dish was a masterpiece! From the signature duck to the delicate abalone broth, everything exceeded expectations.', 'A Culinary Delight');
+VALUES (2, 'iDen and QuanJuDe Beijing Duck House', '2808 Cambie St., Vancouver, V5Z 2V5, Canada', TO_DATE('2024-11-15', 'YYYY-MM-DD'), 5, 'Every dish was a masterpiece! From the signature duck to the delicate abalone broth, everything exceeded expectations.', 'A Culinary Delight');
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (3, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 5, 'An unforgettable omakase experience! The chefs are artists, and the ambiance is magical.', 'A True Omakase Experience'),
@@ -631,6 +631,18 @@ VALUES (5, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('
 
 INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
 VALUES (6, 'AnnaLena', '1809 W. 1st Ave., Vancouver, V6J 5B8, Canada', TO_DATE('2024-11-05', 'YYYY-MM-DD'), 5, 'Absolutely loved the attention to detail and the wine pairings. A must-visit for food lovers.', 'Exceptional Dining Experience');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (5, 'Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 'Tacos gave me good poisoining, beware', 'Go at your own risk, tacos suck');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (1, 'Tacofino', '15 W Cordova St, Vancouver, BC V6B 1C8', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'TThey have a great taco tuesday deal', 'Great tacos');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (2, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 4, 'Some of the best food I have had', 'Awesome japanese spot');
+
+INSERT INTO Reviews (UserID, Name, Address, ReviewDate, Rating, Message, Title)
+VALUES (3, 'Okeya Kyujiro', '1038 Mainland St., Vancouver, V6B 2T4, Canada', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 5, 'Some of the best food I have had wow', 'Awesome amazing japanese spot');
 
 -- Notification
 INSERT INTO Notification (NotifID, Time, Message)
@@ -815,5 +827,8 @@ VALUES (10, 'Okanagan Valley Wine Tours', 'Kelowna, BC V1V 2Y6');
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (10, 'Summerhill Pyramid Winery', '4870 Chute Lake Rd, Kelowna, BC V1W 4M3');
 
+SET DEFINE OFF;
+
 -- Commit all changes to make them visible
 COMMIT;
+
