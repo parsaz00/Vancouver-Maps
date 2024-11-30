@@ -20,21 +20,24 @@ async function fetchAndDisplayMyTravelPasses() {
         if (!data.success) {
             throw new Error(data.message || 'Failed to fetch your travel passes.');
         }
+
         myTravelPassList.innerHTML = '';
 
         data.data.forEach((pass) => {
-            const listItem = document.createElement('li');
-            listItem.className = 'travelpass-item';
-            listItem.innerHTML = `
-                <span>\$${pass.COST} - ${pass.NAME}</span>
-                <span>${pass.STARTDATE} to ${pass.ENDDATE}</span>
+            const card = document.createElement('div');
+            card.className = 'travel-pass-card';
+            card.innerHTML = `
+                <h3>${pass.NAME}</h3>
+                <p class="cost">$${pass.COST}</p>
+                <p class="date-range">${formatDate(pass.STARTDATE)} - ${formatDate(pass.ENDDATE)}</p>
             `;
-            myTravelPassList.appendChild(listItem);
+            myTravelPassList.appendChild(card);
         });
     } catch (error) {
         console.error('Error fetching and displaying user travel passes:', error);
     }
 }
+
 
 async function fetchAndDisplayTravelPasses() {
     const travelPassList = document.getElementById('travelPassList');
@@ -51,17 +54,19 @@ async function fetchAndDisplayTravelPasses() {
         if (!data.success) {
             throw new Error(data.message || 'Failed to fetch travel passes.');
         }
+
         travelPassList.innerHTML = '';
 
         data.data.forEach((pass) => {
-            const listItem = document.createElement('li');
-            listItem.className = 'travelpass-item';
-            listItem.innerHTML = `
-                <span>\$${pass.COST} - ${pass.NAME}</span>
-                <span>${pass.STARTDATE} to ${pass.ENDDATE}</span>
+            const card = document.createElement('div');
+            card.className = 'travel-pass-card';
+            card.innerHTML = `
+                <h3>${pass.NAME}</h3>
+                <p class="cost">$${pass.COST}</p>
+                <p class="date-range">${formatDate(pass.STARTDATE)} - ${formatDate(pass.ENDDATE)}</p>
                 <button class="redeem-button" data-passid="${pass.PASSID}">Redeem</button>
             `;
-            travelPassList.appendChild(listItem);
+            travelPassList.appendChild(card);
         });
 
         document.querySelectorAll('.redeem-button').forEach((button) => {
@@ -102,6 +107,12 @@ async function redeemTravelPass(travelPassId) {
         alert('An error occurred while redeeming the travel pass.');
     }
 }
+//fixing formatting of the travelpass
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); 
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchAndDisplayMyTravelPasses();
