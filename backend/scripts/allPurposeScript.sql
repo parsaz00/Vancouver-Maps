@@ -701,6 +701,21 @@ VALUES (4, 'History Enthusiast', 180.00, TO_DATE('2024-09-20', 'YYYY-MM-DD'), TO
 INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
 VALUES (5, 'Cultural Experience', 150.00, TO_DATE('2024-10-15', 'YYYY-MM-DD'), TO_DATE('2024-10-22', 'YYYY-MM-DD'), 5);
 
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (6, 'City Explorer', 120.00, TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2024-10-07', 'YYYY-MM-DD'), NULL);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (7, 'Outdoor Fun', 250.00, TO_DATE('2024-11-05', 'YYYY-MM-DD'), TO_DATE('2024-11-12', 'YYYY-MM-DD'), NULL);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (8, 'Mountain Adventure', 300.00, TO_DATE('2024-12-01', 'YYYY-MM-DD'), TO_DATE('2024-12-10', 'YYYY-MM-DD'), NULL);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (9, 'History Enthusiast', 180.00, TO_DATE('2024-09-20', 'YYYY-MM-DD'), TO_DATE('2024-09-28', 'YYYY-MM-DD'), NULL);
+
+INSERT INTO TravelPass (PassID, Name, Cost, StartDate, EndDate, UserID) 
+VALUES (10, 'Cultural Experience', 150.00, TO_DATE('2024-10-15', 'YYYY-MM-DD'), TO_DATE('2024-10-22', 'YYYY-MM-DD'), NULL);
+
 --Travel Pass Inclusions
 INSERT INTO Includes (PassID, Name, Address) 
 VALUES (4, 'Vancouver Aquarium', '845 Avison Way, Vancouver, BC V6G 3E2');

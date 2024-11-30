@@ -727,7 +727,7 @@ router.get('/user-travelpasses', async (req, res) => {
         const travelPass = await appService.getUserTravelPass(userId);
         res.status(200).json({ success: true, data: travelPass });
     } catch (error) {
-        console.error('Error fetching giftcards:', error);
+        console.error('Error fetching travel passes:', error);
         res.status(500).json({ success:false, message: 'Failed to fetch gift cards' });
     }
 });
@@ -743,7 +743,7 @@ router.get('/travelpasses', async (req, res) => {
         const travelPass = await appService.fetchAvailableTravelPasses();
         res.json({ success: true, data: travelPass });
     } catch (error) {
-        console.error('Error fetching gift cards:', error);
+        console.error('Error fetching travel pass:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
