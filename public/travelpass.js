@@ -1,4 +1,4 @@
-// Similar code for giftcards.js but adjusted for travelpass 
+// Similar code for giftcards.js but adjusted for travelpass for all functions 
 async function fetchAndDisplayMyTravelPasses() {
     const myTravelPassList = document.getElementById('myTravelPassList');
     const userId = localStorage.getItem('userId');
@@ -108,6 +108,7 @@ async function redeemTravelPass(travelPassId) {
     }
 }
 //fixing formatting of the travelpass
+// citation on how I did it https://stackoverflow.com/questions/3552461/how-do-i-format-a-date-in-javascript
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString(); 
